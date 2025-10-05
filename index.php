@@ -1,4 +1,5 @@
 <?php
+echo "hello";
 include_once 'configs/app_config.php';
 session_start();
 require_once("configs/db_config.php");
