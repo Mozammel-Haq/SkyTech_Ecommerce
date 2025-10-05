@@ -189,7 +189,7 @@
             </a>
             <ul class='dropdown-menu'>
                 <li>
-                    <a href='edit-product.html' class='dropdown-item d-flex align-items-center'>
+                    <a href='$base_url/products/edit/{$row['id']}' class='dropdown-item d-flex align-items-center'>
                         <i class='isax isax-edit me-2'></i>Edit
                     </a>
                 </li>

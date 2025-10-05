@@ -71,6 +71,18 @@
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Brand <span class="text-danger">*</span></label>
+                                        <select class="select" name="brand">
+                                            <option value="">Select</option>
+                                            <option value="1">Asus</option>
+                                            <option value="2">HP</option>
+                                            <option value="3">Dell</option>
+                                            <option value="4">Logitech</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Selling Price ($) <span class="text-danger">*</span></label>
                                         <input name="selling_price" type="text" class="form-control" value="">
                                     </div>

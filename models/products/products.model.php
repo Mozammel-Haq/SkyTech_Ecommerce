@@ -39,9 +39,39 @@ class Product
         return $db->insert_id;
     }
     // Find to get Values For Edit
+    public static function findProduct($id)
+    {
+        global $db;
+        $stmt = $db->prepare("SELECT * from products WHERE id= ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_all(MYSQLI_ASSOC);
+        return $data;
+    }
+    public static function findMainImage($product_id)
+    {
+        global $db;
+        $stmt = $db->prepare("SELECT image_path FROM product_images WHERE product_id = ? AND is_main = 1 LIMIT 1");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc()['image_path'] ?? null;
+    }
+
+    public static function findGalleryImage($id)
+    {
+        global $db;
+        $stmt = $db->prepare("SELECT * from product_images WHERE product_id= ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $galleryImages = $result->fetch_all(MYSQLI_ASSOC);
+        return $galleryImages;
+    }
 
     // Update
-
+    public function updateProduct() {}
 
 
     // Delete 
@@ -52,28 +82,33 @@ class Product
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+    public static function deleteProductMainImage($id)
+    {
+        global $db;
+        $stmt = $db->prepare("DELETE FROM product_images WHERE product_id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    }
 }
 
 class ProductImage
 {
-    public $id, $product_id, $image_path;
+    public $id, $product_id, $image_path, $is_main;
 
-    public function __construct($id = null, $product_id, $image_path)
+    public function __construct($id = null, $product_id, $image_path, $is_main)
     {
         $this->id = $id;
         $this->product_id = $product_id;
         $this->image_path = $image_path;
+        $this->is_main = $is_main;
     }
 
     public function saveProductImage()
     {
         global $db;
-        $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path) VALUES (?, ?)");
-        $stmt->bind_param("is", $this->product_id, $this->image_path);
+        $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path,is_main) VALUES (?, ?,?)");
+        $stmt->bind_param("isi", $this->product_id, $this->image_path, $this->is_main);
         $stmt->execute();
         return true;
     }
 }
-
-
-
