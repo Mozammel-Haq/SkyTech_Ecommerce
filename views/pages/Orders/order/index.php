@@ -1,5 +1,5 @@
 <?php
-
+print_r($data);
 ?>
 
 <div class="content content-two">
@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="d-flex d-block align-items-center justify-content-between flex-wrap gap-3 mb-3">
         <div>
-            <h6>orders</h6>
+            <h6>Orders</h6>
         </div>
         <div class="d-flex my-xl-auto right-content align-items-center flex-wrap gap-2">
             <div class="dropdown">
@@ -24,7 +24,7 @@
                 </ul>
             </div>
             <div>
-                <a href="add-customer.html" class="btn btn-primary d-flex align-items-center">
+                <a href="<?= $base_url ?>/order/create" class="btn btn-primary d-flex align-items-center">
                     <i class="isax isax-add-circle5 me-1"></i>New Order
                 </a>
             </div>
@@ -142,11 +142,11 @@
                                 <input class="form-check-input" type="checkbox" id="select-all">
                             </div>
                         </th>
-                        <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending">Product</th>
-                        <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="OrderNumber: activate to sort column ascending">Order ID</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Quantity: activate to sort column ascending">Quantity</th>
+                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="OrderNumber: activate to sort column ascending">Order ID</th>
+                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending">Product</th>
+                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Quantity: activate to sort column ascending">Quantity</th>
 
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Total Amount: activate to sort column ascending">Total Amount</th>
+                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Total Amount: activate to sort column ascending">Total Amount</th>
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Tracking: activate to sort column ascending">Tracking</th>
 
@@ -159,77 +159,71 @@
                 </thead>
                 <tbody>
 
+                    <?php
+                    foreach ($data as $row) :
+                    ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-                    <tr class="odd">
-                        <td class="sorting_1">
-                            <div class="form-check form-check-md">
-                                <input class="form-check-input" type="checkbox">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                    <img src="<?= $base_url ?>/assets/img/products/product-01.jpg" class="rounded-circle" alt="img">
-                                </a>
-                                <div>
-                                    <h6 class="fs-14 fw-medium mb-0"><a href="javascript:void(0);">Dell Inspiron Laptop</a></h6>
+                        <tr class="odd">
+                            <td class="sorting_1">
+                                <div class="form-check form-check-md">
+                                    <input class="form-check-input" type="checkbox">
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            #34234
-                        </td>
-                        <td>
-                            12
-                        </td>
+                            </td>
+                            <td>
+                                #<?= $row->order_id ?>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                        <img src="<?= $base_url ?>/assets/img/products/<?= $row->image_path ?>" class="rounded-circle" alt="img">
+                                    </a>
+                                    <div>
+                                        <h6 class="fs-14 fw-medium mb-0"><a href="javascript:void(0);"><?= $row->product_name ?></a></h6>
+                                    </div>
+                                </div>
+                            </td>
 
-                        <td>$10000</td>
-                        <td>
-                            <span class="badge badge-soft-success d-inline-flex align-items-center">Active <i class="isax isax-tick-circle ms-1"></i></span>
-                        </td>
-                        <td>
-                            <span class="badge badge-soft-success d-inline-flex align-items-center">Active <i class="isax isax-tick-circle ms-1"></i></span>
-                        </td>
-                        <td>2020/02/12</td>
-                        <td>
-                            <a href="add-invoice.html" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                <i class="isax isax-add-circle me-1"></i> Invoice
-                            </a>
-                        </td>
+                            <td>
+                                <?= $row->quantity ?>
+                            </td>
 
-                        <td class="action-item">
-                            <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="">
-                                <i class="isax isax-more"></i>
-                            </a>
-                            <ul class="dropdown-menu" style="">
-                                <li>
-                                    <a href="customer-details.html" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
-                                </li>
-                                <li>
-                                    <a href="edit-customer.html" class="dropdown-item d-flex align-items-center"><i class="isax isax-edit me-2"></i>Edit</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="isax isax-trash me-2"></i>Delete</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
+                            <td>$ <?= $row->total_amount ?></td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"> <?= $row->status ?> <i class="isax isax-tick-circle ms-1"></i></span>
+                            </td>
+                            <td>
+                                <span class="badge badge-soft-success d-inline-flex align-items-center"> <?= $row->tracking ?> <i class="isax isax-tick-circle ms-1"></i></span>
+                            </td>
+                            <td> <?= $row->order_date ?></td>
+                            <td>
+                                <a href="add-invoice.html" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                    <i class="isax isax-add-circle me-1"></i> Invoice
+                                </a>
+                            </td>
 
+                            <td class="action-item">
+                                <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="">
+                                    <i class="isax isax-more"></i>
+                                </a>
+                                <ul class="dropdown-menu" style="">
+                                    <li>
+                                        <a href="customer-details.html" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= $base_url ?>/order/edit/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-trash me-2"></i>Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?= $base_url ?>/order/confirm/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-trash me-2"></i>Delete</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    <?php
+                    endforeach;
+                    ?>
                 </tbody>
             </table>
 
@@ -237,3 +231,7 @@
         <!-- /Table List -->
 
     </div>
+
+
+
+</div>
