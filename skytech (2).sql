@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 05, 2025 at 09:28 AM
+-- Generation Time: Oct 06, 2025 at 09:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -222,27 +222,29 @@ CREATE TABLE `inventory` (
   `supplier_id` int(11) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `transaction_type_id` int(11) DEFAULT NULL,
+  `remarks` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`id`, `product_id`, `warehouse_id`, `supplier_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 10, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 1, 2, 2, 5, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(3, 2, 1, 1, 8, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(4, 3, 1, 2, 15, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(5, 4, 1, 1, 50, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(6, 5, 2, 2, 20, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(7, 6, 1, 1, 5, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(8, 6, 2, 2, 3, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(9, 2, 1, 2, 7, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(10, 3, 1, 1, 12, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(11, 4, 2, 1, 40, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(12, 5, 2, 2, 25, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(13, 7, 1, 2, 10, '2025-09-30 23:03:15', '2025-09-30 23:03:15');
+INSERT INTO `inventory` (`id`, `product_id`, `warehouse_id`, `supplier_id`, `quantity`, `created_at`, `updated_at`, `transaction_type_id`, `remarks`) VALUES
+(1, 1, 1, 1, 10, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(2, 1, 2, 2, 5, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(3, 2, 1, 1, 8, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(4, 3, 1, 2, 15, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(5, 4, 1, 1, 50, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(6, 5, 2, 2, 20, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(7, 6, 1, 1, 5, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(8, 6, 2, 2, 3, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(9, 2, 1, 2, 7, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(10, 3, 1, 1, 12, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(11, 4, 2, 1, 40, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(12, 5, 2, 2, 25, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(13, 7, 1, 2, 10, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -342,18 +344,21 @@ CREATE TABLE `orders` (
   `status` varchar(50) DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `delivery_date` date DEFAULT NULL,
+  `shipping_address` varchar(255) DEFAULT NULL,
+  `paid_amount` double DEFAULT NULL,
+  `discount` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(3, 1, '2025-09-30 23:03:15', 'pending', 2300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(4, 2, '2025-09-30 23:03:15', 'completed', 1080.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15');
+INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `paid_amount`, `discount`) VALUES
+(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL),
+(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL),
+(3, 1, '2025-09-30 23:03:15', 'pending', 2300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -369,21 +374,23 @@ CREATE TABLE `order_details` (
   `quantity` int(11) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `discount` float DEFAULT NULL,
+  `vat` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_details`
 --
 
-INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `variation_id`, `quantity`, `price`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 1, 700.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 1, 3, 3, 1, 520.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(3, 2, 2, NULL, 1, 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(4, 3, 6, 6, 1, 2500.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(5, 3, 3, 8, 1, 999.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(6, 4, 2, 2, 1, 1300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(7, 4, 4, 4, 1, 80.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15');
+INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `variation_id`, `quantity`, `price`, `created_at`, `updated_at`, `discount`, `vat`) VALUES
+(1, 1, 1, 1, 1, 700.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(2, 1, 3, 3, 1, 520.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(3, 2, 2, NULL, 1, 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(4, 3, 6, 6, 1, 2500.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(5, 3, 3, 8, 1, 999.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(6, 4, 2, 2, 1, 1300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(7, 4, 4, 4, 1, 80.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -792,6 +799,29 @@ INSERT INTO `transactions` (`id`, `type`, `reference_id`, `amount`, `transaction
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `transaction_type`
+--
+
+CREATE TABLE `transaction_type` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `factor` int(11) NOT NULL,
+  `created_at` date NOT NULL DEFAULT current_timestamp(),
+  `updated_at` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transaction_type`
+--
+
+INSERT INTO `transaction_type` (`id`, `name`, `factor`, `created_at`, `updated_at`) VALUES
+(1, 'Transfer', -2, '2025-10-06', '2025-10-06'),
+(2, 'Sale', 15, '2025-10-06', '2025-10-06'),
+(3, 'damage', -5, '2025-10-06', '2025-10-06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `units`
 --
 
@@ -818,9 +848,7 @@ INSERT INTO `units` (`id`, `name`, `created_at`, `updated_at`, `short_name`, `st
 (7, 'Meter', '2025-09-30 23:17:50', '2025-09-30 23:17:50', 'm', NULL),
 (8, 'Centimeter', '2025-09-30 23:20:11', '2025-09-30 23:20:11', 'cm', NULL),
 (9, 'Liter', '2025-09-30 23:22:42', '2025-09-30 23:22:42', 'l', NULL),
-(10, 'Milliliter', '2025-09-30 23:25:05', '2025-09-30 23:25:05', 'ml', NULL),
-(12, 'Gram (g)', NULL, NULL, NULL, NULL),
-(13, 'Pack', NULL, NULL, NULL, NULL);
+(10, 'Milliliter', '2025-09-30 23:25:05', '2025-09-30 23:25:05', 'ml', NULL);
 
 -- --------------------------------------------------------
 
@@ -1109,6 +1137,12 @@ ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `transaction_type`
+--
+ALTER TABLE `transaction_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `units`
 --
 ALTER TABLE `units`
@@ -1327,6 +1361,12 @@ ALTER TABLE `tax_rates`
 --
 ALTER TABLE `transactions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `transaction_type`
+--
+ALTER TABLE `transaction_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `units`
