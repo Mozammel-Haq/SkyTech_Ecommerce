@@ -144,7 +144,6 @@ class ProductsController
                     $image = null;
                 }
             }
-
             $save = new Category($name, $desc, $image, $status);
             $save->saveCategory();
             redirect("categories");
@@ -161,7 +160,7 @@ class ProductsController
             $status = isset($_POST['status']) ? 1 : 0;
 
             $image = null;
-            // Handle file upload if new image is provided
+            //new image
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $uploadDir = __DIR__ . "/../../assets/img/products/";
                 $fileName  = basename($_FILES['image']['name']);

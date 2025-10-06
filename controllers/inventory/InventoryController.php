@@ -6,4 +6,6 @@ class InventoryController
     {
         view("inventory");
     }
+
+    
 }
