@@ -1,4 +1,4 @@
-// ===================== CATEGORY IMAGE PREVIEW =====================
+// ===================== IMAGE PREVIEW =====================
 document.querySelectorAll(".category_image").forEach((input) => {
   input.addEventListener("change", function (event) {
     const wrapper = this.closest(".image-wrapper");

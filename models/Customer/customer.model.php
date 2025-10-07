@@ -1,0 +1,93 @@
+<?php
+class Customer extends Model implements JsonSerializable
+{
+	public $id;
+	public $name;
+	public $email;
+	public $phone;
+	public $photo;
+	public $address;
+	public $status;
+	public $created_at;
+	public $updated_at;
+
+	public function __construct() {}
+	public function set($id, $name, $email, $phone, $photo, $address, $status, $created_at, $updated_at)
+	{
+		$this->id = $id;
+		$this->name = $name;
+		$this->email = $email;
+		$this->phone = $phone;
+		$this->photo = $photo;
+		$this->address = $address;
+		$this->status = $status;
+		$this->created_at = $created_at;
+		$this->updated_at = $updated_at;
+	}
+	public function save()
+	{
+		global $db, $tx;
+		$db->query("insert into {$tx}customers(id,name,email,phone,photo,address,status,created_at,updated_at)values('$this->id' ,'$this->name','$this->email','$this->phone','$this->photo','$this->address','$this->status','$this->created_at','$this->updated_at')");
+		return $db->insert_id;
+	}
+	public function update()
+	{
+		global $db, $tx;
+		$db->query("update {$tx}customers set name='$this->name',email='$this->email',phone='$this->phone',photo='$this->photo',address='$this->address',status='$this->status',created_at='$this->created_at',updated_at='$this->updated_at' where id='$this->id'");
+	}
+	public static function delete($id)
+	{
+		global $db, $tx;
+		$db->query("delete from {$tx}customers where id={$id}");
+	}
+	public function jsonSerialize(): mixed
+	{
+		return get_object_vars($this);
+	}
+	public static function all()
+	{
+		global $db, $tx;
+		$result = $db->query("select id,name,email,phone,photo,address,status,created_at,updated_at from {$tx}customers");
+		$data = [];
+		while ($customer = $result->fetch_object()) {
+			$data[] = $customer;
+		}
+		return $data;
+	}
+	public static function pagination($page = 1, $perpage = 10, $criteria = "")
+	{
+		global $db, $tx;
+		$top = ($page - 1) * $perpage;
+		$result = $db->query("select id,name,email,phone,photo,address,status,created_at,updated_at from {$tx}customers $criteria limit $top,$perpage");
+		$data = [];
+		while ($customer = $result->fetch_object()) {
+			$data[] = $customer;
+		}
+		return $data;
+	}
+	public static function count($criteria = "")
+	{
+		global $db, $tx;
+		$result = $db->query("select count(*) from {$tx}customers $criteria");
+		list($count) = $result->fetch_row();
+		return $count;
+	}
+	public static function find($id)
+	{
+		global $db;
+		$stmt = $db->query("select * from customers where id='$id' ;");
+		$customer = $stmt->fetch_object();
+		return $customer;
+	}
+	static function get_last_id()
+	{
+		global $db, $tx;
+		$result = $db->query("select max(id) last_id from {$tx}customers");
+		$customer = $result->fetch_object();
+		return $customer->last_id;
+	}
+	public function json()
+	{
+		return json_encode($this);
+	}
+}

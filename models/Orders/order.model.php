@@ -140,9 +140,4 @@ ORDER BY o.id, od.id;
 	{
 		return json_encode($this);
 	}
-	
-
-	
-	
-	
 }
