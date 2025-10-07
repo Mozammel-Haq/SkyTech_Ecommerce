@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2025 at 09:22 AM
+-- Generation Time: Oct 07, 2025 at 08:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -146,7 +146,9 @@ CREATE TABLE `customers` (
   `name` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
-  `address` text DEFAULT NULL,
+  `photo` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -155,9 +157,25 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `address`, `created_at`, `updated_at`) VALUES
-(1, 'Ali Khan', 'ali@example.com', '01711111111', 'Dhaka', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 'Sara Rahman', 'sara@example.com', '01712222222', 'Chittagong', '2025-09-30 23:02:31', '2025-09-30 23:02:31');
+INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `photo`, `address`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Ali Khan', 'ali@example.com', '01711111111', 'avatar-01.jpg', 'Karachi', 'Active', '2025-10-07 22:20:08', '2025-10-07 22:20:08'),
+(2, 'Sara Rahman', 'sara@example.com', '01712222222', 'avatar-07.jpg', 'Kashmir', 'Active', '2025-10-07 22:21:07', '2025-10-07 22:21:07'),
+(12, 'Robi', 'robi@example.com', '12121212121', 'avatar-23-jpg.jpg', 'Delhi', 'Active', '2025-10-07 22:21:58', '2025-10-07 22:21:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_addresses`
+--
+
+CREATE TABLE `customer_addresses` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `shipping_address` varchar(255) NOT NULL,
+  `billing_address` varchar(255) NOT NULL,
+  `created_at` date NOT NULL DEFAULT current_timestamp(),
+  `updated_at` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -254,10 +272,13 @@ INSERT INTO `inventory` (`id`, `product_id`, `warehouse_id`, `supplier_id`, `qua
 
 CREATE TABLE `invoices` (
   `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
   `order_id` int(11) DEFAULT NULL,
   `invoice_date` datetime DEFAULT NULL,
   `due_date` datetime DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  `payment_method` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -266,11 +287,11 @@ CREATE TABLE `invoices` (
 -- Dumping data for table `invoices`
 --
 
-INSERT INTO `invoices` (`id`, `order_id`, `invoice_date`, `due_date`, `total_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, '2025-09-30 23:02:31', '2025-10-07 23:02:31', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 2, '2025-09-30 23:02:31', '2025-10-07 23:02:31', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(3, 3, '2025-09-30 23:03:15', '2025-10-07 23:03:15', 3499.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(4, 4, '2025-09-30 23:03:15', '2025-10-07 23:03:15', 1380.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15');
+INSERT INTO `invoices` (`id`, `customer_id`, `order_id`, `invoice_date`, `due_date`, `total_amount`, `status`, `payment_method`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2025-09-30 23:02:31', '2025-10-07 23:02:31', 1220.00, '', '', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
+(2, 1, 2, '2025-09-30 23:02:31', '2025-10-07 23:02:31', 730.00, '', '', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
+(3, 1, 3, '2025-09-30 23:03:15', '2025-10-07 23:03:15', 3499.00, '', '', '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
+(4, 2, 4, '2025-09-30 23:03:15', '2025-10-07 23:03:15', 1380.00, '', '', '2025-09-30 23:03:15', '2025-09-30 23:03:15');
 
 -- --------------------------------------------------------
 
@@ -347,19 +368,19 @@ CREATE TABLE `orders` (
   `updated_at` datetime DEFAULT NULL,
   `delivery_date` date DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
+  `billing_address` varchar(255) NOT NULL,
   `paid_amount` double DEFAULT NULL,
   `discount` float DEFAULT NULL,
-  `tracking_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL
+  `tracking_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `paid_amount`, `discount`, `tracking_id`, `quantity`) VALUES
-(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL, 0, 0),
-(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL, 0, 0);
+INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `billing_address`, `paid_amount`, `discount`, `tracking_id`) VALUES
+(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, 'Mohammadpur', 'Dhanmondi', NULL, NULL, 0),
+(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, 'Dhanmondi', 'Bosila', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -702,6 +723,29 @@ INSERT INTO `settings` (`id`, `key_name`, `value`, `created_at`, `updated_at`) V
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `status`
+--
+
+CREATE TABLE `status` (
+  `id` int(11) NOT NULL,
+  `person_status` varchar(255) NOT NULL,
+  `item_status` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `status`
+--
+
+INSERT INTO `status` (`id`, `person_status`, `item_status`) VALUES
+(1, 'Active', 'Available'),
+(2, 'Offline', 'Out of Stock'),
+(3, '', 'Discontinued'),
+(4, '', 'Comming Soon'),
+(5, '', 'Pre-order');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `suppliers`
 --
 
@@ -1015,6 +1059,12 @@ ALTER TABLE `customers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `customer_addresses`
+--
+ALTER TABLE `customer_addresses`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -1141,6 +1191,12 @@ ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `status`
+--
+ALTER TABLE `status`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `suppliers`
 --
 ALTER TABLE `suppliers`
@@ -1244,7 +1300,13 @@ ALTER TABLE `currencies`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `customer_addresses`
+--
+ALTER TABLE `customer_addresses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -1371,6 +1433,12 @@ ALTER TABLE `role_permissions`
 --
 ALTER TABLE `settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `status`
+--
+ALTER TABLE `status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
