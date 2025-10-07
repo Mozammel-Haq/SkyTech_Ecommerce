@@ -1,18 +1,11 @@
                         <li class="menu-title"><span>Orders</span></li>
                         <li>
                             <ul>
-                                <li class="submenu">
-                                    <a href="javascript:void(0);">
+                                <li>
+                                    <a href="<?= $base_url ?>/order">
                                         <i class="isax isax-box5"></i><span>Orders</span>
-                                        <span class="menu-arrow"></span>
                                     </a>
-                                    <ul>
-                                        <li><a href="products.html">All Orders</a></li>
-                                        <li><a href="category.html">Pending</a></li>
-                                        <li><a href="units.html">Shipped</a></li>
-                                        <li><a href="units.html">Completed</a></li>
-                                        <li><a href="units.html">Return & Refunds</a></li>
-                                    </ul>
+
                                 </li>
                                 <li class="submenu">
                                     <a href="javascript:void(0);">

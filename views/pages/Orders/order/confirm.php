@@ -1,7 +1,7 @@
 <?php
 
 $data1 = $data['data1'] ?? null;
-$data2 = $data['data2'];
+$data2 = $data['data2']?? null;
 
 // print_r($data1);
 // print_r($data2);
@@ -30,8 +30,8 @@ while ($row = $data2->fetch_object()): ?>
                     </div>
                 </div>
 
-                <form method="POST" action="delete_order.php" class="d-flex justify-content-center gap-3">
-                    <input type="hidden" name="order_id" value="<?= $row->id ?>">
+                <form method="POST" action="<?= $base_url ?>/order/delete/<?= $row->order_id ?>" class="d-flex justify-content-center gap-3">
+                    <input type="hidden" name="order_id" value="<?= $row->order_id ?>">
                     <button type="submit" name="confirm_delete" class="btn btn-danger px-4">
                         <i class="fa fa-trash me-2"></i> Yes, Delete
                     </button>

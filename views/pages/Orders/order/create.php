@@ -1,11 +1,15 @@
-<div class="content content-two">
-	<div class="card border-0 mx-auto" style="max-width: 900px;">
+<?php
+print_r($data);
+?>
+
+<div class="card border-0 mx-auto" style="max-width: 900px;">
 		<div class="card-body p-5">
 			<h4 class="card-title mb-4 text-primary fw-bold">Create New Order</h4>
-			<form method="POST" action="<?= $base_url ?>/order">
+			<form method="POST" action="<?= $base_url ?>/order/save">
 
 				<div class="row">
 					<!-- Product -->
+					<input type="hidden" name="id" value="">
 					<div class="col-md-6 mb-3">
 						<label class="form-label">Product <span class="text-danger">*</span></label>
 						<select class="form-select" name="product" required>

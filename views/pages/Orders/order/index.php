@@ -1,5 +1,5 @@
 <?php
-print_r($data);
+// print_r($data);
 ?>
 
 <div class="content content-two">

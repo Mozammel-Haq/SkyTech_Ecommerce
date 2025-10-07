@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2025 at 09:11 AM
+-- Generation Time: Oct 07, 2025 at 09:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -348,17 +348,18 @@ CREATE TABLE `orders` (
   `delivery_date` date DEFAULT NULL,
   `shipping_address` varchar(255) DEFAULT NULL,
   `paid_amount` double DEFAULT NULL,
-  `discount` float DEFAULT NULL
+  `discount` float DEFAULT NULL,
+  `tracking_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `paid_amount`, `discount`) VALUES
-(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL),
-(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL),
-(3, 1, '2025-09-30 23:03:15', 'pending', 2300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL, NULL, NULL);
+INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `paid_amount`, `discount`, `tracking_id`, `quantity`) VALUES
+(1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL, 0, 0),
+(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL, NULL, NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -771,6 +772,27 @@ INSERT INTO `tax_rates` (`id`, `name`, `rate`, `created_at`, `updated_at`) VALUE
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `trackings`
+--
+
+CREATE TABLE `trackings` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `trackings`
+--
+
+INSERT INTO `trackings` (`id`, `name`) VALUES
+(1, 'processing'),
+(2, 'Out for Delivery'),
+(3, 'Shipped'),
+(4, 'Delivered');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `transactions`
 --
 
@@ -935,16 +957,22 @@ CREATE TABLE `warehouses` (
   `name` varchar(255) DEFAULT NULL,
   `location` text DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
+  `updated_at` datetime DEFAULT NULL,
+  `manager` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `warehouses`
 --
 
-INSERT INTO `warehouses` (`id`, `name`, `location`, `created_at`, `updated_at`) VALUES
-(1, 'Main Warehouse', 'Dhaka, Bangladesh', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 'Secondary Warehouse', 'Chittagong, Bangladesh', '2025-09-30 23:02:31', '2025-09-30 23:02:31');
+INSERT INTO `warehouses` (`id`, `name`, `location`, `created_at`, `updated_at`, `manager`, `email`, `phone`) VALUES
+(2, 'Secondary Warehouse', 'Chittagong, Bangladesh', '2025-10-07 12:00:52', '2025-10-07 12:00:52', 'Rashid', 'rashid@gamil.com', '01799007398'),
+(3, 'Main Storage', '123 Banani, Dhaka', NULL, NULL, 'Rahim Uddin', 'rahim@example.com', '+8801765432100'),
+(4, 'Secondary Warehouse', '456 Agrabad, Chittagong', NULL, NULL, 'Hasan Ali', 'hasan@example.com', '+8801987654321'),
+(5, 'Central Depot', '789 Motijheel, Dhaka', NULL, NULL, 'Karim Hossain', 'karim@example.com', '+8801555555555'),
+(7, 'Test', 'Vill: Hizlain, P.O: Lemubari-1800,P.S: Manikganj Sadar, District', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 'Harun Vai', 'admin@shoppro.com', '01799007398');
 
 --
 -- Indexes for dumped tables
@@ -1131,6 +1159,12 @@ ALTER TABLE `tax_rates`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `trackings`
+--
+ALTER TABLE `trackings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -1258,7 +1292,7 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `order_details`
@@ -1357,6 +1391,12 @@ ALTER TABLE `tax_rates`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `trackings`
+--
+ALTER TABLE `trackings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
@@ -1396,7 +1436,7 @@ ALTER TABLE `vendor_payments`
 -- AUTO_INCREMENT for table `warehouses`
 --
 ALTER TABLE `warehouses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

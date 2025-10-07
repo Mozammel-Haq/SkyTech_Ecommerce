@@ -20,9 +20,9 @@
             </a>
             <ul>
                 <li><a href="<?= $base_url ?>/products">Inventory</a></li>
-                <li><a href="<?= $base_url ?>/products/categories">Warehouses</a></li>
-                <li><a href="<?= $base_url ?>/products/categories">Suppliers</a></li>
-                <li><a href="<?= $base_url ?>/products/units">Purchase Orders</a></li>
+                <li><a href="<?= $base_url ?>/warehouse">Warehouses</a></li>
+                <li><a href="<?= $base_url ?>/supplier">Suppliers</a></li>
+                <li><a href="<?= $base_url ?>/purchase_order">Purchase Orders</a></li>
             </ul>
         </li>
     </ul>

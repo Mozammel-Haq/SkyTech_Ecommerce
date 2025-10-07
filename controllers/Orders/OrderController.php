@@ -13,46 +13,17 @@ class OrderController extends Controller
 	}
 	public function save($data, $file)
 	{
-		if (isset($data["create"])) {
-			$errors = [];
-			/*
-	if(!preg_match("/^[\s\S]+$/",$data["customer_id"])){
-		$errors["customer_id"]="Invalid customer_id";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["quantity"])){
-		$errors["quantity"]="Invalid quantity";
-	}
-	if(!preg_match("/^[\s\S]+$/",$_POST["txtStatus"])){
-		$errors["status"]="Invalid status";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["tracking_id"])){
-		$errors["tracking_id"]="Invalid tracking_id";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["total_amount"])){
-		$errors["total_amount"]="Invalid total_amount";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["delivery_date"])){
-		$errors["delivery_date"]="Invalid delivery_date";
-	}
-	if(!preg_match("/^[\s\S]+$/",$_POST["txtShippingAddress"])){
-		$errors["shipping_address"]="Invalid shipping_address";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["paid_amount"])){
-		$errors["paid_amount"]="Invalid paid_amount";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["discount"])){
-		$errors["discount"]="Invalid discount";
-	}
-
-*/
-			if (count($errors) == 0) {
+		if (isset($data["save_btn"])) {
+			print_r($data);
+		
+			
 				global $now;
 				$order = new Order();
-				$order->customer_id = $data["customer_id"];
+				// $order->customer_id = $data["customer_id"];
 				$order->quantity = $data["quantity"];
 				$order->order_date = date("Y-m-d", strtotime($data["order_date"]));
 				$order->status = $data["status"];
-				$order->tracking_id = $data["tracking_id"];
+				$order->tracking_id = $data["tracking"];
 				$order->total_amount = $data["total_amount"];
 				$order->created_at = $now;
 				$order->updated_at = $now;
@@ -63,9 +34,9 @@ class OrderController extends Controller
 
 				$order->save();
 				redirect("index");
-			} else {
-				print_r($errors);
-			}
+			
+				;
+			
 		}
 	}
 	public function edit()
@@ -77,37 +48,9 @@ class OrderController extends Controller
 	{
 		if (isset($data["update"])) {
 			$errors = [];
-			/*
-	if(!preg_match("/^[\s\S]+$/",$data["customer_id"])){
-		$errors["customer_id"]="Invalid customer_id";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["quantity"])){
-		$errors["quantity"]="Invalid quantity";
-	}
-	if(!preg_match("/^[\s\S]+$/",$_POST["txtStatus"])){
-		$errors["status"]="Invalid status";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["tracking_id"])){
-		$errors["tracking_id"]="Invalid tracking_id";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["total_amount"])){
-		$errors["total_amount"]="Invalid total_amount";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["delivery_date"])){
-		$errors["delivery_date"]="Invalid delivery_date";
-	}
-	if(!preg_match("/^[\s\S]+$/",$_POST["txtShippingAddress"])){
-		$errors["shipping_address"]="Invalid shipping_address";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["paid_amount"])){
-		$errors["paid_amount"]="Invalid paid_amount";
-	}
-	if(!preg_match("/^[\s\S]+$/",$data["discount"])){
-		$errors["discount"]="Invalid discount";
-	}
 
-*/
 			if (count($errors) == 0) {
+				global $now;
 				$order = new Order();
 				$order->id = $data["id"];
 				$order->customer_id = $data["customer_id"];
