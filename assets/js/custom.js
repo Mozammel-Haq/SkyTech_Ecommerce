@@ -72,16 +72,20 @@ if (imageInput) {
 const galleryInput = document.querySelector(".gallery-input");
 const galleryContainer = document.querySelector(".gallery-preview");
 const browseLink = document.querySelector(".browse-link");
+let galleryFiles = []; // keep track of files
 
-if (browseLink && galleryInput) {
-  browseLink.addEventListener("click", function (e) {
+if (galleryInput && browseLink) {
+  browseLink.addEventListener("click", (e) => {
     e.preventDefault();
     galleryInput.click();
   });
 
   galleryInput.addEventListener("change", function (event) {
     const files = Array.from(event.target.files);
+
     files.forEach((file) => {
+      galleryFiles.push(file); // track file
+
       const reader = new FileReader();
       reader.onload = function (e) {
         const div = document.createElement("div");
@@ -100,13 +104,18 @@ if (browseLink && galleryInput) {
         `;
         galleryContainer.appendChild(div);
 
-        div
-          .querySelector(".gallery-trash")
-          .addEventListener("click", () => div.remove());
+        // remove file from preview and array
+        div.querySelector(".gallery-trash").addEventListener("click", () => {
+          const index = Array.from(galleryContainer.children).indexOf(div);
+          if (index > -1) galleryFiles.splice(index, 1);
+          div.remove();
+        });
       };
       reader.readAsDataURL(file);
     });
-    galleryInput.value = "";
+
+    // Important: do NOT clear galleryInput.value here
+    // Otherwise PHP will not see the files
   });
 }
 

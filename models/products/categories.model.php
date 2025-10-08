@@ -71,4 +71,20 @@ class Category
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+
+    // HTML
+
+
+    static function html_select($name = "cmbCategory")
+    {
+        global $db, $tx;
+        $html = "<select id='$name' name='$name' class='select'> ";
+        $html .= "<option value=''>Select $name</option>";
+        $result = $db->query("select id,name from {$tx}categories");
+        while ($category = $result->fetch_object()) {
+            $html .= "<option value ='$category->id'>$category->name</option>";
+        }
+        $html .= "</select>";
+        return $html;
+    }
 }

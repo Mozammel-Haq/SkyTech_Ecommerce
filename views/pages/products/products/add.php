@@ -60,25 +60,17 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Category <span class="text-danger">*</span></label>
-                                        <select class="select" name="category">
-                                            <option value="">Select</option>
-                                            <option value="1">Smartphones</option>
-                                            <option value="2">Laptops</option>
-                                            <option value="3">Headphones</option>
-                                            <option value="4">Computer Service</option>
-                                        </select>
+                                        <?php
+                                        echo Category::html_select("category");
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Brand <span class="text-danger">*</span></label>
-                                        <select class="select" name="brand">
-                                            <option value="">Select</option>
-                                            <option value="1">Asus</option>
-                                            <option value="2">HP</option>
-                                            <option value="3">Dell</option>
-                                            <option value="4">Logitech</option>
-                                        </select>
+                                        <?php
+                                        echo Brand::html_select("brand");
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
@@ -102,26 +94,17 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Units <span class="text-danger">*</span></label>
-                                        <select class="select" name="unit">
-                                            <option>Select</option>
-                                            <option>Kilograms (Kg)</option>
-                                            <option>Gram (g)</option>
-                                            <option>Liter (l)</option>
-                                            <option>Millimetre (mm)</option>
-                                            <option>Milliliter (ml)</option>
-                                            <option value="1">Pack (pk)</option>
-                                            <option selected value="2">Piece (pc)</option>
-                                        </select>
+                                        <?php
+                                        echo Unit::html_select("unit");
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Discount Type <span class="text-danger">*</span></label>
-                                        <select class="select" name="discount_type">
-                                            <option>Select</option>
-                                            <option selected value="1">%</option>
-                                            <option value="2">Fixed</option>
-                                        </select>
+                                        <?php
+                                        echo DiscountType::html_select("discount_type");
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">
@@ -142,12 +125,9 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tax <span class="text-danger">*</span></label>
-                                        <select class="select" name="tax">
-                                            <option>Select</option>
-                                            <option selected value="1">VAT (10%)</option>
-                                            <option value="2">CGST (08%)</option>
-                                            <option value="3">SGST (10%)</option>
-                                        </select>
+                                        <?php
+                                        echo Tax::html_select("tax");
+                                        ?>
                                     </div>
                                 </div>
 
@@ -170,7 +150,7 @@
                                         <p class="mb-0 text-gray-9 fw-semibold">Drop Your Files or
                                             <a href="#" class="browse-link text-primary text-decoration-underline">Browse</a>
                                         </p>
-                                        <input name="gallery" type="file" accept="image/*" multiple class="gallery-input">
+                                        <input name="gallery[]" type="file" accept="image/*" multiple class="gallery-input">
                                         <p class="fs-13">Max Upload Size 800x800px. PNG / JPEG file, Maximum Upload size 5MB</p>
                                     </div>
                                     <div class="d-flex align-items-center gap-3 gallery-preview"></div>

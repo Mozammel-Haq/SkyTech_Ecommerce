@@ -116,9 +116,10 @@ class ProductImage
     public function saveProductImage()
     {
         global $db;
-        $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path,is_main) VALUES (?, ?,?)");
+        $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path, is_main) VALUES (?, ?, ?)");
         $stmt->bind_param("isi", $this->product_id, $this->image_path, $this->is_main);
         $stmt->execute();
+        $stmt->close();
         return true;
     }
 }

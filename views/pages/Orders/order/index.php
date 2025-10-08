@@ -196,7 +196,7 @@
                             </td>
                             <td> <?= $row->order_date ?></td>
                             <td>
-                                <a href="add-invoice.html" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                <a href="<?= $base_url ?>/order/create/<?= $row->order_id ?>" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                     <i class="isax isax-add-circle me-1"></i> Invoice
                                 </a>
                             </td>
@@ -208,9 +208,6 @@
                                 <ul class="dropdown-menu" style="">
                                     <li>
                                         <a href="<?= $base_url ?>/order/show/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= $base_url ?>/order/edit/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-trash me-2"></i>Edit</a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>

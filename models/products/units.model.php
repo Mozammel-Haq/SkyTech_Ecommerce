@@ -50,4 +50,16 @@ class Unit
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+    static function html_select($name = "cmbunit")
+    {
+        global $db, $tx;
+        $html = "<select id='$name' name='$name'class='select'> ";
+        $html .= "<option value=''>Select $name</option>";
+        $result = $db->query("select id,name from {$tx}units");
+        while ($unit = $result->fetch_object()) {
+            $html .= "<option value ='$unit->id'>$unit->name</option>";
+        }
+        $html .= "</select>";
+        return $html;
+    }
 }

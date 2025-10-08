@@ -50,4 +50,18 @@ class Brand
         $stmt->bind_param("i", $id);
         $stmt->execute();
     }
+    // HTML 
+
+    static function html_select($name = "cmbbrand")
+    {
+        global $db, $tx;
+        $html = "<select id='$name' name='$name' class='select'> ";
+        $html .= "<option value=''>Select $name</option>";
+        $result = $db->query("select id,name from {$tx}brands");
+        while ($brand = $result->fetch_object()) {
+            $html .= "<option value ='$brand->id'>$brand->name</option>";
+        }
+        $html .= "</select>";
+        return $html;
+    }
 }
