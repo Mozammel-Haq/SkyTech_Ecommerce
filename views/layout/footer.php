@@ -27,6 +27,8 @@
 <!-- Bootstrap Core JS -->
 <script src="<?= $base_url ?>/assets/js/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script src="<?= $base_url ?>/assets/js/dataTables.bootstrap5.min.js" type="text/javascript"></script>
+<script src="<?= $base_url ?>/assets/js/moment.js" type="text/javascript"></script>
+<script src="<?= $base_url ?>/assets/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 
 <!-- Select2 JS -->
 <script src="<?= $base_url ?>/assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>

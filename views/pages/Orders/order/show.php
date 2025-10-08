@@ -49,7 +49,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                     <div>
                                         <h6 class="mb-2 fs-16 fw-semibold">Invoice Details</h6>
                                         <div>
-                                            <p class="mb-1">Invoice Number : <span class="text-dark"><?= $order->id ?></span></p>
+                                            <p class="mb-1">Invoice ID : <span class="text-dark"><?= $order->id ?></span></p>
                                             <p class="mb-1">Issued On : <span class="text-dark"><?= $order->created_at ?></span></p>
                                             <p class="mb-1">Due Date : <span class="text-dark">Date87</span></p>
                                             <p class="mb-1">Recurring Invoice : <span class="text-dark">Monthly</span></p>
@@ -97,36 +97,43 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                             <div class="table-responsive rounded border-bottom-0 border table-nowrap">
                                 <table class="table m-0">
                                     <thead class="table-dark">
-                                        <?php
-                                        print_r($order_details);
-                                        foreach ($order_details as  $row) :
-                                            // =====================================Fix product coming as ASSOC as well
-                                            $product = Product::findProduct($row['id']);
-                                            print_r($product['name']);
-                                            $total_price = $row['price'] * $row['quantity'];
-                                        ?>
+                                        <thead class="table-dark">
                                             <tr>
-                                                <th>#<?= $row['order_id'] ?></th>
-                                                <th><?= $product['name'] ?></th>
-                                                <th><?= $row['quantity'] ?></th>
-                                                <th><?= $row['price'] ?></th>
-                                                <th>$total_price</th>
+                                                <th>No.</th>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Rate</th>
+                                                <th>Discount</th>
+                                                <th>Tax</th>
+                                                <th>Amount</th>
                                             </tr>
-                                        <?php
-                                        endforeach;
-                                        ?>
+                                        </thead>
+
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="text-dark">T-Shirt</td>
-                                            <td>2</td>
-                                            <td>Pcs</td>
-                                            <td>$200.00</td>
-                                            <td>10%</td>
-                                            <td>$36.00</td>
-                                            <td>$396.00</td>
-                                        </tr>
+                                        <?php
+                                        $count = 1;
+                                        $total = 0;
+                                        foreach ($order_details as  $row) :
+                                            $product = Product::findProductRow($row['order_id']);
+                                            $total_price = ($row['price'] * $row['quantity']);
+                                            // print_r($product);
+                                        ?>
+                                            <tr>
+                                                <td><?= $count ?></td>
+                                                <td><?= $product['name'] ?></td>
+                                                <td><?= $row['quantity'] ?></td>
+                                                <td><?= $row['price'] ?></td>
+                                                <td><?= $row['discount'] ?></td>
+                                                <td><?= $row['vat'] ?></td>
+                                                <td><?=$total_price?></td>
+                                            </tr>
+
+                                        <?php
+                                        $count++;
+                                        $total += $total_price;
+                                        endforeach;
+                                        ?>
 
                                     </tbody>
                                 </table>

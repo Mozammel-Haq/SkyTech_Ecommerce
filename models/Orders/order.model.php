@@ -16,11 +16,10 @@ class Order extends Model implements JsonSerializable
 	public $discount;
 
 	public function __construct() {}
-	public function set($id, $customer_id, $quantity, $order_date, $status, $tracking_id, $total_amount, $created_at, $updated_at, $delivery_date, $shipping_address, $paid_amount, $discount)
+	public function set($id, $customer_id, $order_date, $status, $tracking_id, $total_amount, $created_at, $updated_at, $delivery_date, $shipping_address, $paid_amount, $discount)
 	{
 		$this->id = $id;
 		$this->customer_id = $customer_id;
-		$this->quantity = $quantity;
 		$this->order_date = $order_date;
 		$this->status = $status;
 		$this->tracking_id = $tracking_id;
@@ -35,13 +34,13 @@ class Order extends Model implements JsonSerializable
 	public function save()
 	{
 		global $db;
-		$db->query("insert into orders(id,quantity,order_date,status,tracking_id,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount) values(null,'$this->quantity','$this->order_date','$this->status','$this->tracking_id','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->paid_amount','$this->discount')");
+		$db->query("insert into orders(id,order_date,status,tracking_id,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount) values(null,'$this->quantity','$this->order_date','$this->status','$this->tracking_id','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->paid_amount','$this->discount')");
 		return $db->insert_id;
 	}
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}orders set customer_id='$this->customer_id',quantity='$this->quantity',order_date='$this->order_date',status='$this->status',tracking_id='$this->tracking_id',total_amount='$this->total_amount',created_at='$this->created_at',updated_at='$this->updated_at',delivery_date='$this->delivery_date',shipping_address='$this->shipping_address',paid_amount='$this->paid_amount',discount='$this->discount' where id='$this->id'");
+		$db->query("update {$tx}orders set customer_id='$this->customer_id',order_date='$this->order_date',status='$this->status',tracking_id='$this->tracking_id',total_amount='$this->total_amount',created_at='$this->created_at',updated_at='$this->updated_at',delivery_date='$this->delivery_date',shipping_address='$this->shipping_address',paid_amount='$this->paid_amount',discount='$this->discount' where id='$this->id'");
 	}
 	public static function delete($id)
 	{
@@ -85,7 +84,7 @@ ORDER BY o.id, od.id;
 	{
 		global $db, $tx;
 		$top = ($page - 1) * $perpage;
-		$result = $db->query("select id,customer_id,quantity,order_date,status,tracking_id,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount from {$tx}orders $criteria limit $top,$perpage");
+		$result = $db->query("select id,customer_id,order_date,status,tracking_id,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount from {$tx}orders $criteria limit $top,$perpage");
 		$data = [];
 		while ($order = $result->fetch_object()) {
 			$data[] = $order;
@@ -111,7 +110,6 @@ ORDER BY o.id, od.id;
 		global $db;
 		$result = $db->query("SELECT 
 		o.id AS order_id,
-		o.quantity,
 		o.total_amount,
 		o.status,
 		o.tracking_id,

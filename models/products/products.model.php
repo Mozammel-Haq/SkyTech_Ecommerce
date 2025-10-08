@@ -49,6 +49,16 @@ class Product
         $data = $result->fetch_all(MYSQLI_ASSOC);
         return $data;
     }
+    public static function findProductRow($id)
+    {
+        global $db;
+        $stmt = $db->prepare("SELECT * from products WHERE id= ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        return $data;
+    }
     public static function findMainImage($product_id)
     {
         global $db;

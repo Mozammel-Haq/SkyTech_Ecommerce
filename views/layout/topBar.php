@@ -73,7 +73,8 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb breadcrumb-divide mb-0">
                                 <li class="breadcrumb-item d-flex align-items-center"><a href="<?= $base_url ?>/home"><i class="isax isax-home-2 me-1"></i>Home</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="<?= $base_url ?>/<?= $_GET["class"] ?>"><?= $_GET["class"] ?></a> </li>
+                                <li class="breadcrumb-item active" aria-current="page"> <a href="<?= $base_url ?>/<?= $_GET["class"] ?>/<?= $_GET["method"] ?>"><?= $_GET["method"] ?></a> </li>
                             </ol>
                         </nav>
                         <!-- End Breadcrumb -->

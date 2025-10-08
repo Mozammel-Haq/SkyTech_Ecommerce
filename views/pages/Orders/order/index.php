@@ -207,7 +207,7 @@
                                 </a>
                                 <ul class="dropdown-menu" style="">
                                     <li>
-                                        <a href="customer-details.html" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
+                                        <a href="<?= $base_url ?>/order/show/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
                                     </li>
                                     <li>
                                         <a href="<?= $base_url ?>/order/edit/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-trash me-2"></i>Edit</a>

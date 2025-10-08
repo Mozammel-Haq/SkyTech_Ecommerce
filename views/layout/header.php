@@ -35,7 +35,7 @@ require_once("controllers/controller.php");
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="<?= $base_url ?>/assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="<?= $base_url ?>/assets/css/dataTables.bootstrap5.min.css">
-
+  <link rel="stylesheet" href="<?= $base_url ?>/assets/css/bootstrap-datetimepicker.min.css">
   <!-- Tabler Icon CSS -->
   <link rel="stylesheet" href="<?= $base_url ?>/assets/plugins/tabler-icons/tabler-icons.min.css">
 
