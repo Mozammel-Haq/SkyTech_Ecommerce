@@ -58,6 +58,10 @@
 <!-- Custom JS -->
 <script>
     const BASE_URL = "<?= $base_url ?>";
+
+    $(function() {
+        $("select").select2();
+    })
 </script>
 <script script src="<?= $base_url ?>/assets/js/custom.js">
 </script>

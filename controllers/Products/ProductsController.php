@@ -45,14 +45,14 @@ class ProductsController
         $description = $_POST['description'];
         $barcode = $_POST['barcode'];
         $alert_quantity = $_POST['alert_quantity'];
-        $discount_type = $_POST['discount_type'];
+        $discount = $_POST['discount'];
 
         // Insert product
-        $stmt = $db->prepare("INSERT INTO products (sku, name, selling_price, purchase_price, description, barcode, alert_quantity, discount_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO products (sku, name, selling_price, purchase_price, description, barcode, alert_quantity, discount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         if (!$stmt) {
             die("Prepare failed: " . $db->error);
         }
-        $stmt->bind_param("ssiissis", $code, $name, $selling_price, $purchase_price, $description, $barcode, $alert_quantity, $discount_type);
+        $stmt->bind_param("ssiissis", $code, $name, $selling_price, $purchase_price, $description, $barcode, $alert_quantity, $discount);
         if (!$stmt->execute()) {
             die("Execute failed: " . $stmt->error);
         }
@@ -129,7 +129,7 @@ class ProductsController
             $selling_price = $_POST['selling_price'];
             $purchase_price = $_POST['purchase_price'];
             $unit = $_POST['unit'];
-            $discount_type = $_POST['discount_type'];
+            $discount = $_POST['discount'];
             $barcode = $_POST['barcode'];
             $alert_quantity = $_POST['alert_quantity'];
             $tax = $_POST['tax'];
@@ -152,9 +152,9 @@ class ProductsController
             }
             // Update main product info
             $sql = $db->prepare("UPDATE products 
-            SET name=?, sku=?, category_id=?, selling_price=?, purchase_price=?, unit_id=?, discount_type=?, barcode=?, alert_quantity=?, tax_id=?, description=? 
+            SET name=?, sku=?, category_id=?, selling_price=?, purchase_price=?, unit_id=?, discount=?, barcode=?, alert_quantity=?, tax_id=?, description=? 
             WHERE id=?");
-            $sql->execute([$name, $code, $category, $selling_price, $purchase_price, $unit, $discount_type, $barcode, $alert_quantity, $tax, $description, $id]);
+            $sql->execute([$name, $code, $category, $selling_price, $purchase_price, $unit, $discount, $barcode, $alert_quantity, $tax, $description, $id]);
 
             // Check if a product_images row exists
             $check = $db->prepare("SELECT id FROM product_images WHERE product_id=?");

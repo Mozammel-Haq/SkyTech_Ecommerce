@@ -52,7 +52,6 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             <p class="mb-1">Invoice ID : <span class="text-dark"><?= $order->id ?></span></p>
                                             <p class="mb-1">Issued On : <span class="text-dark"><?= $order->created_at ?></span></p>
                                             <p class="mb-1">Due Date : <span class="text-dark">Date87</span></p>
-                                            <p class="mb-1">Recurring Invoice : <span class="text-dark">Monthly</span></p>
                                             <span class="badge bg-danger badge-sm">Due in 8 days</span>
                                         </div>
                                     </div>
@@ -61,19 +60,19 @@ $order_details = OrderDetail::find_by_order_id($order->id);
 
                                 <div class="col-lg-4">
                                     <div>
-                                        <h6 class="mb-2 fs-16 fw-semibold">Bill To</h6>
+                                        <h6 class="mb-2 fs-16 fw-semibold">Bill From</h6>
                                         <div>
-                                            <h6 class="fs-14 fw-semibold mb-1"><?= $customer->name ?></h6>
-                                            <p class="mb-1"><?= $customer->address ?></p>
-                                            <p class="mb-1"><?= $customer->phone ?></p>
-                                            <p class="mb-1"><?= $customer->email ?></p>
+                                            <h6 class="fs-14 fw-semibold mb-1">SkyTech</h6>
+                                            <p class="mb-1">23 Distilary Road, Dhaka-1204</p>
+                                            <p class="mb-1">+09666666</p>
+                                            <p class="mb-1">skytech@infy.uk</p>
                                             <p class="mb-0">GST : 243E45767889</p>
                                         </div>
                                     </div>
                                 </div><!-- end col -->
                                 <div class="col-lg-4">
                                     <div>
-                                        <h6 class="mb-2 fs-16 fw-semibold">Ship To</h6>
+                                        <h6 class="mb-2 fs-16 fw-semibold">Bill To</h6>
                                         <div class="bg-white rounded p-3">
                                             <div class="d-flex align-items-center mb-1">
                                                 <img src="<?= $base_url ?>/assets/img/icons/billing-to-image.svg" alt="img" class="avatar avatar-lg me-2">
@@ -97,41 +96,38 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                             <div class="table-responsive rounded border-bottom-0 border table-nowrap">
                                 <table class="table m-0">
                                     <thead class="table-dark">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>No.</th>
-                                                <th>Product</th>
-                                                <th>Quantity</th>
-                                                <th>Rate</th>
-                                                <th>Discount</th>
-                                                <th>Tax</th>
-                                                <th>Amount</th>
-                                            </tr>
-                                        </thead>
-
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Rate</th>
+                                            <th>Discount</th>
+                                            <th>Amount</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                         $count = 1;
-                                        $total = 0;
+                                        $discount = 0;
+                                        $line_total = 0;
                                         foreach ($order_details as  $row) :
                                             $product = Product::findProductRow($row['order_id']);
-                                            $total_price = ($row['price'] * $row['quantity']);
-                                            // print_r($product);
+                                            $total_amount = ($row['price'] * $row['quantity']) - $product['discount'];
                                         ?>
                                             <tr>
                                                 <td><?= $count ?></td>
                                                 <td><?= $product['name'] ?></td>
                                                 <td><?= $row['quantity'] ?></td>
                                                 <td><?= $row['price'] ?></td>
-                                                <td><?= $row['discount'] ?></td>
-                                                <td><?= $row['vat'] ?></td>
-                                                <td><?=$total_price?></td>
+                                                <td><?= $product['discount'] ?></td>
+                                                <td><?= $total_amount ?></td>
                                             </tr>
 
                                         <?php
-                                        $count++;
-                                        $total += $total_price;
+                                            $count++;
+                                            $discount +=  $product['discount'];
+                                            $line_total += $total_amount;
+                                            $vat = $row['vat'];
                                         endforeach;
                                         ?>
 
@@ -163,24 +159,20 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                 <div class="col-lg-6">
                                     <div class="mb-3 p-4">
                                         <div class="d-flex align-items-center justify-content-between mb-3">
-                                            <h6 class="fs-14 fw-semibold">Amount</h6>
-                                            <h6 class="fs-14 fw-semibold">$1,793.12</h6>
+                                            <h6 class="fs-14 fw-semibold">Total</h6>
+                                            <h6 class="fs-14 fw-semibold">$<?= $line_total ?></h6>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mb-3">
-                                            <h6 class="fs-14 fw-semibold">CGST (9%)</h6>
-                                            <h6 class="fs-14 fw-semibold">$18</h6>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-between mb-3">
-                                            <h6 class="fs-14 fw-semibold">SGST (9%)</h6>
-                                            <h6 class="fs-14 fw-semibold">$18</h6>
+                                            <h6 class="fs-14 fw-semibold">Tax/Vat</h6>
+                                            <h6 class="fs-14 fw-semibold">$<?= $vat ?></h6>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
                                             <h6 class="fs-14 fw-semibold">Discount</h6>
-                                            <h6 class="fs-14 fw-semibold text-danger">$18</h6>
+                                            <h6 class="fs-14 fw-semibold text-danger">$<?= $discount ?></h6>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                                            <h6>Total (USD)</h6>
-                                            <h6>$1,972.43</h6>
+                                            <h6>Grand Total (USD)</h6>
+                                            <h6>$<?= ($line_total + $vat) - $discount ?></h6>
                                         </div>
                                         <div>
                                             <h6 class="fs-14 fw-semibold mb-1">Total In Words</h6>

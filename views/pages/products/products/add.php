@@ -101,10 +101,8 @@
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Discount Type <span class="text-danger">*</span></label>
-                                        <?php
-                                        echo DiscountType::html_select("discount_type");
-                                        ?>
+                                        <label class="form-label">Discount <span class="text-danger">*</span></label>
+                                        <input name="discount" type="text" class="form-control" value="">
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-6">

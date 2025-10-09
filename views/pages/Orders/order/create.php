@@ -42,30 +42,7 @@
 													<a href="#" class="d-inline-flex align-items-center"><i class="isax isax-add-circle5 text-primary me-1"></i>Add Due Date</a>
 												</div>
 											</div>
-											<div class="col-md-12">
-												<div class="d-flex align-items-center flex-wrap gap-2 mb-3">
-													<div class="form-check form-switch me-4">
-														<input class="form-check-input" type="checkbox" role="switch" id="require_check" checked="">
-														<label class="form-check-label" for="require_check">Recurring</label>
-													</div>
-													<div class="d-flex align-items-center flex-fill">
-														<div class="flex-fill me-3">
-															<select class="select select2-hidden-accessible"tabindex="-1" aria-hidden="true">
-																<optionMonthly</option>
-																<option>Weekly</option>
-																<option>Yearly</option>
-															</select><span class="select2 select2-container select2-container--default" dir="ltr"style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-yiy8-container" aria-controls="select2-yiy8-container"><span class="select2-selection__rendered" id="select2-yiy8-container" role="textbox" aria-readonly="true" title="Monthly">Monthly</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-														</div>
-														<div class="flex-fill">
-															<select class="select select2-hidden-accessible"tabindex="-1" aria-hidden="true">
-																<option1 Month</option>
-																<option>1 Week</option>
-																<option>1 Year</option>
-															</select><span class="select2 select2-container select2-container--default" dir="ltr"style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-u1q9-container" aria-controls="select2-u1q9-container"><span class="select2-selection__rendered" id="select2-u1q9-container" role="textbox" aria-readonly="true" title="1 Month">1 Month</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-														</div>
-													</div>
-												</div>
-											</div>
+
 										</div>
 									</div><!-- end col -->
 									<div class="col-xl-4 col-lg-5">
@@ -80,14 +57,14 @@
 												<div class="row gx-3">
 													<div class="col-md-6">
 														<div class="mb-3">
-															<select class="select select2-hidden-accessible"tabindex="-1" aria-hidden="true">
-																<optionSelect Status</option>
+															<select class="select select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+																<option> Select Status</option>
 																<option>Paid</option>
 																<option>Unpaid</option>
 																<option>Cancelled</option>
 																<option>Partially Paid</option>
 																<option>Uncollectable</option>
-															</select><span class="select2 select2-container select2-container--default" dir="ltr"style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-tzou-container" aria-controls="select2-tzou-container"><span class="select2-selection__rendered" id="select2-tzou-container" role="textbox" aria-readonly="true" title="Select Status">Select Status</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+															</select>
 														</div>
 													</div>
 													<div class="col-md-6">
@@ -99,22 +76,12 @@
 																<option>Yen</option>
 																<option>Pound</option>
 																<option>Rupee</option>
-															</select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-pq7f-container" aria-controls="select2-pq7f-container"><span class="select2-selection__rendered" id="select2-pq7f-container" role="textbox" aria-readonly="true" title="Currency">Currency</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+															</select>
 														</div>
 													</div>
 												</div>
 											</div>
-											<div class="col-md-12">
-												<div class="d-flex align-items-center justify-content-between border rounded p-2 mb-3">
-													<div class="form-check form-switch me-4">
-														<input class="form-check-input" type="checkbox" role="switch" id="enabe_tax" checked="">
-														<label class="form-check-label" for="enabe_tax">Enable Tax</label>
-													</div>
-													<div>
-														<a href="#" class="btn btn-icon btn-sm btn-soft-primary border-0"><i class="isax isax-setting-2 text-primary fs-16"></i></a>
-													</div>
-												</div>
-											</div>
+
 										</div>
 									</div><!-- end col -->
 								</div>
@@ -134,7 +101,8 @@
 													<select class="select select2-hidden-accessible" tabindex="-1" aria-hidden="true">
 														<option>Select</option>
 														<option>Kanakku</option>
-													</select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-pqdd-container" aria-controls="select2-pqdd-container"><span class="select2-selection__rendered" id="select2-pqdd-container" role="textbox" aria-readonly="true" title="Select">Select</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+													</select>
+													<textarea id="Address" class="form-control form-control-sm mt-2 billAddress" rows="2">Branch address City, Country</textarea>
 												</div>
 											</div><!-- end card body -->
 										</div><!-- end card -->
@@ -208,7 +176,6 @@
 												<th>Unit</th>
 												<th>Rate</th>
 												<th>Discount</th>
-												<th>Tax (%)</th>
 												<th>Amount</th>
 												<th></th>
 											</tr>
@@ -227,9 +194,7 @@
 												<td>
 													<input type="text" class="form-control" value="$1360.00" style="min-width: 66px;">
 												</td>
-												<td>
-													<input type="text" class="form-control" value="0%" style="min-width: 66px;">
-												</td>
+
 												<td>
 													<input type="text" class="form-control" value="18" style="min-width: 66px;">
 												</td>
@@ -252,9 +217,7 @@
 												<td>
 													<input type="text" class="form-control" value="0">
 												</td>
-												<td>
-													<input type="text" class="form-control" value="0%">
-												</td>
+
 												<td>
 													<input type="text" class="form-control" value="0">
 												</td>
