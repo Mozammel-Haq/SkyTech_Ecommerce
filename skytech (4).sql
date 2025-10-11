@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2025 at 08:30 PM
+-- Generation Time: Oct 11, 2025 at 09:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -176,6 +176,25 @@ CREATE TABLE `customer_addresses` (
   `created_at` date NOT NULL DEFAULT current_timestamp(),
   `updated_at` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discount_types`
+--
+
+CREATE TABLE `discount_types` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `discount_types`
+--
+
+INSERT INTO `discount_types` (`id`, `name`) VALUES
+(1, '%'),
+(2, 'Fixed');
 
 -- --------------------------------------------------------
 
@@ -380,7 +399,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount`, `created_at`, `updated_at`, `delivery_date`, `shipping_address`, `billing_address`, `paid_amount`, `discount`, `tracking_id`) VALUES
 (1, 1, '2025-09-30 23:02:31', 'pending', 1220.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, 'Mohammadpur', 'Dhanmondi', NULL, NULL, 0),
-(2, 2, '2025-09-30 23:02:31', 'completed', 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, 'Dhanmondi', 'Bosila', NULL, NULL, 0);
+(20, 2, '2025-10-09 09:24:17', 'Pending', 560.00, '2025-10-09 09:26:11', '2025-10-16 09:26:11', '2025-10-16', 'Dhaka', 'Chittagong', 780, 23, 1),
+(21, 20, '2025-10-17 10:28:12', 'Pending', 560.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', '2025-10-16', 'Dhaka', 'Dhaka', 780, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -406,13 +426,13 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `variation_id`, `quantity`, `price`, `created_at`, `updated_at`, `discount`, `vat`) VALUES
-(1, 1, 1, 1, 1, 700.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
-(2, 1, 3, 3, 1, 520.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
-(3, 2, 2, NULL, 1, 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
-(4, 3, 6, 6, 1, 2500.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
-(5, 3, 3, 8, 1, 999.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
-(6, 4, 2, 2, 1, 1300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
-(7, 4, 4, 4, 1, 80.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL);
+(1, 1, 1, 1, 1, 700.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, 40),
+(2, 20, 20, 3, 1, 520.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', 10, 5),
+(3, 20, 2, NULL, 1, 730.00, '2025-09-30 23:02:31', '2025-09-30 23:02:31', NULL, NULL),
+(4, 20, 6, 6, 1, 2500.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', 10, 5),
+(5, 21, 3, 8, 1, 999.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(6, 21, 2, 2, 1, 1300.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', NULL, NULL),
+(7, 1, 4, 4, 1, 80.00, '2025-09-30 23:03:15', '2025-09-30 23:03:15', 10, 30);
 
 -- --------------------------------------------------------
 
@@ -527,7 +547,7 @@ CREATE TABLE `products` (
   `updated_at` datetime DEFAULT current_timestamp(),
   `barcode` varchar(50) DEFAULT NULL,
   `alert_quantity` int(11) DEFAULT NULL,
-  `discount_type` varchar(10) DEFAULT NULL,
+  `discount` varchar(100) DEFAULT NULL,
   `tax_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -535,8 +555,8 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `category_id`, `brand_id`, `unit_id`, `sku`, `selling_price`, `purchase_price`, `description`, `created_at`, `updated_at`, `barcode`, `alert_quantity`, `discount_type`, `tax_id`) VALUES
-(1, 'Dell Inspiron Laptop', 1, 1, 1, 'DL-INS-LAP-01', 700.00, 600.00, '15-inch laptop with Intel i5', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4597', 10, '%', 1),
+INSERT INTO `products` (`id`, `name`, `category_id`, `brand_id`, `unit_id`, `sku`, `selling_price`, `purchase_price`, `description`, `created_at`, `updated_at`, `barcode`, `alert_quantity`, `discount`, `tax_id`) VALUES
+(1, 'Dell Inspiron Laptop', 1, 1, 1, 'DL-INS-LAP-01', 700.00, 600.00, '15-inch laptop with Intel i5', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4597', 10, '10', 1),
 (2, 'HP Pavilion Desktop', 2, 2, 1, 'HP-PAV-DESK-01', 800.00, 650.00, 'Desktop PC with Intel i7', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4598', 5, '%', 1),
 (3, 'iPhone 14', 3, 3, 1, 'AP-IPH-14-01', 1200.00, 1000.00, 'Apple iPhone 14 128GB', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4599', 15, '%', 1),
 (4, 'Logitech Wireless Mouse', 4, 4, 1, 'LOG-MSE-01', 30.00, 20.00, 'Wireless mouse', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4600', 5, '%', 2),
@@ -579,9 +599,7 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `is_main`, `crea
 (14, 4, 'product-14.jpg', 1, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
 (15, 5, 'product-15.jpg', 1, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
 (16, 7, 'product-16.jpg', 1, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(17, 7, 'product-17.jpg', 0, '2025-09-30 23:03:15', '2025-09-30 23:03:15'),
-(24, 23, '1759406554_product-10.jpg', NULL, NULL, NULL),
-(25, 25, 'product-02.jpg', NULL, NULL, NULL);
+(17, 7, 'product-17.jpg', 0, '2025-09-30 23:03:15', '2025-09-30 23:03:15');
 
 -- --------------------------------------------------------
 
@@ -791,6 +809,25 @@ CREATE TABLE `support_tickets` (
 INSERT INTO `support_tickets` (`id`, `customer_id`, `subject`, `description`, `status`, `priority`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Laptop Issue', 'Screen flickering', 'open', 'High', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
 (2, 2, 'Mouse Issue', 'Wireless mouse not working', 'open', 'Medium', '2025-09-30 23:02:31', '2025-09-30 23:02:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taxes`
+--
+
+CREATE TABLE `taxes` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `taxes`
+--
+
+INSERT INTO `taxes` (`id`, `name`) VALUES
+(1, 'VAT(10%)'),
+(2, 'CGST(8%)');
 
 -- --------------------------------------------------------
 
@@ -1065,6 +1102,12 @@ ALTER TABLE `customer_addresses`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `discount_types`
+--
+ALTER TABLE `discount_types`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -1209,6 +1252,12 @@ ALTER TABLE `support_tickets`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `taxes`
+--
+ALTER TABLE `taxes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tax_rates`
 --
 ALTER TABLE `tax_rates`
@@ -1309,6 +1358,12 @@ ALTER TABLE `customer_addresses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `discount_types`
+--
+ALTER TABLE `discount_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
@@ -1354,7 +1409,7 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `order_details`
@@ -1390,13 +1445,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `product_variations`
@@ -1450,6 +1505,12 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `taxes`
+--
+ALTER TABLE `taxes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --

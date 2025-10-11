@@ -90,4 +90,17 @@ class Customer extends Model implements JsonSerializable
 	{
 		return json_encode($this);
 	}
+
+	static function html_select($name = "cmbcustomer")
+	{
+		global $db, $tx;
+		$html = "<select id='$name' name='$name'> ";
+		$html .= "<option value=''>Select $name</option>";
+		$result = $db->query("select id,name from {$tx}customers");
+		while ($customer = $result->fetch_object()) {
+			$html .= "<option value ='$customer->id'>$customer->name</option>";
+		}
+		$html .= "</select>";
+		return $html;
+	}
 }

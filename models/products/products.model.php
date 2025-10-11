@@ -49,6 +49,13 @@ class Product
         $data = $result->fetch_all(MYSQLI_ASSOC);
         return $data;
     }
+    public static function findProductObject($id)
+    {
+        global $db;
+        $stmt = $db->query("SELECT * from products where id=$id");
+        $data = $stmt->fetch_object();
+        return $data;
+    }
     public static function findProductRow($id)
     {
         global $db;
@@ -98,6 +105,18 @@ class Product
         $stmt = $db->prepare("DELETE FROM product_images WHERE product_id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
+    }
+    static function html_select($name = "cmbproduct")
+    {
+        global $db, $tx;
+        $html = "<select id='$name' name='$name' class = 'w-50'> ";
+        $html .= "<option value=''>Select $name</option>";
+        $result = $db->query("select id,name from {$tx}products");
+        while ($product = $result->fetch_object()) {
+            $html .= "<option value ='$product->id'>$product->name</option>";
+        }
+        $html .= "</select>";
+        return $html;
     }
 }
 

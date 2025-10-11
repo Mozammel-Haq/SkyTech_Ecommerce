@@ -59,8 +59,53 @@
 <script>
     const BASE_URL = "<?= $base_url ?>";
 
+    // JQUERY
     $(function() {
         $("select").select2();
+
+        $("#customer").on("change", function() {
+
+            let customer_id = $(this).val();
+
+            $.ajax({
+                url: "http://localhost/elctro_Ecom_project/Admin/api/customer/find",
+                type: "GET",
+                data: {
+                    id: customer_id
+                },
+                success: function(res) {
+                    let data = JSON.parse(res);
+                    $(".address").val(data.address);
+                    console.log(data);
+                },
+                error: function(err) {
+                    console.log(error)
+                }
+            })
+
+        })
+        $("#product").on("change", function() {
+            let product_id = $(this).val();
+
+            $.ajax({
+                url: 'http://localhost/elctro_Ecom_project/admin/api/product/find',
+                total: 'GET',
+                data: {
+                    id: product_id
+                },
+                success: function(res) {
+                    let data = JSON.parse(res).product;
+                    console.log(data)
+                    $("#selling_price").val(data.selling_price);
+                    $("#discount").val(data.discount);
+
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+        })
+
     })
 </script>
 <script script src="<?= $base_url ?>/assets/js/custom.js">
