@@ -26,7 +26,7 @@ class Tax extends Model implements JsonSerializable
 		global $db, $tx;
 		$db->query("delete from {$tx}taxes where id={$id}");
 	}
-	public function jsonSerialize()
+	public function jsonSerialize(): mixed
 	{
 		return get_object_vars($this);
 	}

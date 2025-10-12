@@ -10,7 +10,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
         <div class="col-md-10 mx-auto">
             <div>
                 <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3 mb-3">
-                    <h6><a href="invoices.html"><i class="isax isax-arrow-left me-2"></i>Invoice (Admin)</a></h6>
+                    <h6><a href="<?= $base_url ?>/order"><i class="isax isax-arrow-left me-2"></i>Invoice (Admin)</a></h6>
                     <div class="d-flex align-items-center flex-wrap row-gap-3">
                         <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3"><i class="isax isax-document-like me-1"></i>Download PDF</a>
                         <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3"><i class="isax isax-message-notif me-1"></i>Send Email</a>
@@ -93,16 +93,16 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                         </div>
                         <div class="mb-3">
                             <h6 class="mb-3">Product / Service Items</h6>
-                            <div class="table-responsive rounded border-bottom-0 border table-nowrap">
-                                <table class="table m-0">
-                                    <thead class="table-dark">
+                            <div class="table-responsive rounded border mb-3">
+                                <table class="table table-bordered table-striped table-hover align-middle m-0">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>No.</th>
+                                            <th class="text-center">No.</th>
                                             <th>Product</th>
-                                            <th>Quantity</th>
-                                            <th>Rate</th>
-                                            <th>Discount</th>
-                                            <th>Amount</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-end">Rate</th>
+                                            <th class="text-end">Discount</th>
+                                            <th class="text-end">Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -110,30 +110,29 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         $count = 1;
                                         $discount = 0;
                                         $line_total = 0;
-                                        foreach ($order_details as  $row) :
+                                        foreach ($order_details as $row) :
                                             $product = Product::findProductRow($row['order_id']);
                                             $total_amount = ($row['price'] * $row['quantity']) - $product['discount'];
                                         ?>
                                             <tr>
-                                                <td><?= $count ?></td>
+                                                <td class="text-center"><?= $count ?></td>
                                                 <td><?= $product['name'] ?></td>
-                                                <td><?= $row['quantity'] ?></td>
-                                                <td><?= $row['price'] ?></td>
-                                                <td><?= $product['discount'] ?></td>
-                                                <td><?= $total_amount ?></td>
+                                                <td class="text-center"><?= $row['quantity'] ?></td>
+                                                <td class="text-end"><?= $row['price'] ?></td>
+                                                <td class="text-end"><?= $product['discount'] ?></td>
+                                                <td class="text-end"><?= $total_amount ?></td>
                                             </tr>
-
                                         <?php
                                             $count++;
-                                            $discount +=  $product['discount'];
+                                            $discount += $product['discount'];
                                             $line_total += $total_amount;
                                             $vat = $row['vat'];
                                         endforeach;
                                         ?>
-
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                         <div class="border-bottom mb-3">
 

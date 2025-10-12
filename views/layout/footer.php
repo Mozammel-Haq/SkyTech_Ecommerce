@@ -76,7 +76,6 @@
                 success: function(res) {
                     let data = JSON.parse(res);
                     $(".address").val(data.address);
-                    console.log(data);
                 },
                 error: function(err) {
                     console.log(error)
@@ -98,13 +97,42 @@
                     console.log(data)
                     $("#selling_price").val(data.selling_price);
                     $("#discount").val(data.discount);
-
+                    $('#line_total').val(data.selling_price)
                 },
                 error: function(err) {
                     console.log(err)
                 }
             })
         })
+
+        $("#qty").on("change", function() {
+            let val = $(this).val();
+            let price = $("#selling_price").val();
+            let line_total = $('#line_total').val(val * price);
+        })
+
+        $(".add_btn").on("click", function(e) {
+            e.preventDefault();
+            let product = $("#product").find("option:selected").text();
+            let qty = $("#qty").val()
+            let price = $("#selling_price").val();
+            let discount = $("#discount").val();
+            let line_total = $("#line_total").val();
+
+            let html = `<tr>
+            <td>${product}</td>
+            <td>${qty}</td>
+            <td>${price}</td>
+            <td>${discount}</td>
+            <td>${line_total}</td>
+            <td><div><a href="javascript:void(0);" class="text-danger remove-table"><i class="isax isax-close-circle"></i></a></div>
+			</td>
+            </tr>
+            `
+            $("#add_row").append(html);
+        })
+
+
 
     })
 </script>

@@ -4,7 +4,7 @@ class Product
 
     public $id, $code, $name, $selling_price, $purchase_price, $description, $barcode, $alert_quantity, $discount_type;
 
-    public function __construct($id = null, $code, $name, $selling_price, $purchase_price, $description, $barcode, $alert_quantity, $discount_type)
+    public function __construct($code, $name, $selling_price, $purchase_price, $description, $barcode, $alert_quantity, $discount_type, $id = null)
     {
         $this->id = $id;
         $this->code = $code;
@@ -22,7 +22,25 @@ class Product
     public static function getAllProducts()
     {
         global $db;
-        $sql = $db->prepare("SELECT p.id, p.sku as code, pi.image_path,p.name,c.name as category,u.name as unit,p.selling_price, p.purchase_price from products as p LEFT JOIN categories as c ON p.category_id = c.id LEFT JOIN units as u ON p.unit_id = u.id LEFT JOIN product_images as pi ON p.id = pi.product_id  GROUP BY p.id");
+        $sql = $db->prepare("SELECT 
+  p.id, 
+  p.sku AS code, 
+  (
+    SELECT pi.image_path 
+    FROM product_images AS pi 
+    WHERE pi.product_id = p.id AND pi.is_main = 1
+    LIMIT 1
+  ) AS image_path,
+  p.name, 
+  c.name AS category, 
+  u.name AS unit, 
+  p.selling_price, 
+  p.purchase_price
+FROM products AS p
+LEFT JOIN categories AS c ON p.category_id = c.id
+LEFT JOIN units AS u ON p.unit_id = u.id
+ORDER BY p.id DESC;
+");
         $sql->execute();
         $result = $sql->get_result();
         $data = $result->fetch_all(MYSQLI_ASSOC);
@@ -124,7 +142,7 @@ class ProductImage
 {
     public $id, $product_id, $image_path, $is_main;
 
-    public function __construct($id = null, $product_id, $image_path, $is_main)
+    public function __construct($product_id, $image_path, $is_main, $id = null)
     {
         $this->id = $id;
         $this->product_id = $product_id;

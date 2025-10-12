@@ -142,71 +142,45 @@
 
 
 										<!-- Table List Start -->
-										<div class="table-responsive rounded border-bottom-0 border mb-3">
-											<table class="table table-nowrap add-table m-0">
-												<thead class="table-dark">
+										<div class="table-responsive rounded border mb-3">
+											<table class="table table-bordered table-striped table-hover align-middle m-0">
+												<thead class="table-light">
 													<tr>
 														<th>Product</th>
-														<th>Quantity</th>
-														<th>Rate</th>
-														<th>Discount</th>
-														<th>Amount</th>
-														<th></th>
+														<th class="text-center">Quantity</th>
+														<th class="text-end">Rate</th>
+														<th class="text-end">Discount</th>
+														<th class="text-end">Amount</th>
+														<th class="text-center">Action</th>
+													</tr>
+													<tr>
+														<td>
+															<?php echo Product::html_select('product') ?>
+														</td>
+														<td>
+															<input id="qty" type="number" min="0" class="form-control text-center" value="1">
+														</td>
+														<td>
+															<input id="selling_price" type="number" min="0" class="form-control text-end" value="" readonly>
+														</td>
+														<td>
+															<input id="discount" type="number" min="0" class="form-control text-end" value="" readonly>
+														</td>
+														<td>
+															<input id="line_total" type="number" min="0" class="form-control text-end" value="" style="min-width: 80px;" readonly>
+														</td>
+														<td class="text-center">
+															<button type="button" class="btn btn-success add_btn">Add</button>
+														</td>
 													</tr>
 												</thead>
-												<tbody class="add-tbody">
-													<tr>
-														<td>
-															<?php
-															echo Product::html_select('product')
-															?>
-														</td>
-														<td>
-															<input id="qty" type="number" min="0" class="form-control" value="1">
-														</td>
-
-														<td>
-															<input id="selling_price" type="number" min="0" class="form-control" value="">
-														</td>
-
-														<td>
-															<input id="discount" type="number" min="0" class="form-control" value="">
-														</td>
-														<td>
-															<input type="number" min="0" class="form-control" value="" style="min-width: 66px;">
-														</td>
-														<td>
-															<div><a href="#" class="btn btn-primary">Add</a></div>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															name
-														</td>
-														<td>
-															Quantity
-														</td>
-
-														<td>
-															Rate
-														</td>
-
-														<td>
-															Discount
-														</td>
-														<td>
-															Amount
-														</td>
-														<td>
-															<div>
-																<a href="javascript:void(0);" class="text-danger remove-table"><i class="isax isax-close-circle"></i></a>
-															</div>
-														</td>
-													</tr>
+												<tbody id="add_row">
+													<!-- Added rows will appear here -->
 												</tbody>
 											</table>
 										</div>
 										<!-- Table List End -->
+
 
 									</div>
 									<div class="border-bottom mb-3">

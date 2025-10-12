@@ -67,7 +67,7 @@ class ProductsController
         if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
             $image_name = basename($_FILES['image']['name']);
             if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $image_name)) {
-                $image = new ProductImage(null, $product_id, $image_name, 1);
+                $image = new ProductImage($product_id, $image_name, 1, null);
                 if (!$image->saveProductImage()) {
                     echo "Failed to save main image record.<br>";
                 }
@@ -93,7 +93,7 @@ class ProductsController
 
                 if (move_uploaded_file($tmp, $uploadDir . $fileName)) {
                     echo "File moved successfully: $fileName<br>";
-                    $gallery = new ProductImage(null, $product_id, $fileName, 0);
+                    $gallery = new ProductImage($product_id, $fileName, 0, null);
                     if ($gallery->saveProductImage()) {
                         echo "Database record created for gallery image: $fileName<br>";
                     } else {
