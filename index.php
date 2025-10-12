@@ -10,27 +10,22 @@ if (isset($_POST["btnSignIn"])) {
   $username = trim($_POST["txtUsername"]);
   $password = trim($_POST["txtPassword"]);
 
-  if (!empty($username) && !empty($password)) {
-    header("location:home");
-  } else {
-    header("location:index.php");
-  }
-
+  
 
   //echo $username," ",$password;
   //$result=$db->query("select u.id,u.username,r.name from {$tx}users u,{$tx}roles r where r.id=u.role_id and u.username='$username' and u.password='$password'");
-  $result = $db->query("select u.id,u.full_name,u.password,u.email,u.photo,u.mobile,u.role_id,r.name role from {$tx}users u,{$tx}roles r where r.id=u.role_id and u.name='$username' and u.inactive=0");
+  $result = $db->query("select u.id,u.name,u.password,u.email,u.photo,u.phone,u.role_id,r.name role from users u, roles r where r.id=u.role_id and u.username='$username'");
 
 
   $user = $result->fetch_object();
-
+  print_r($user);
   if ($user && password_verify($password, $user->password)) {
 
     $_SESSION["uid"] = $user->id;
-    $_SESSION["uname"] = $user->full_name;
+    $_SESSION["uname"] = $user->name;
     $_SESSION["uphoto"] = $user->photo;
     $_SESSION["email"] = $user->email;
-    $_SESSION["mobile"] = $user->mobile;
+    $_SESSION["phone"] = $user->phone;
     $_SESSION["role_id"] = $user->role_id;
     $_SESSION["urole"] = $user->role;
 

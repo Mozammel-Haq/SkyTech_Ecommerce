@@ -5,8 +5,8 @@ require_once("libraries/library.php");
 require_once("models/model.php");
 require_once("controllers/controller.php");
 
-// if (!isset($_SESSION["uid"])) header("location:$base_url");
-// $uid = $_SESSION["uid"];
+if (!isset($_SESSION["uid"])) header("location:$base_url");
+$uid = $_SESSION["uid"];
 
 ?>
 <!DOCTYPE html>

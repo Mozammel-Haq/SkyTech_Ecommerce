@@ -1,90 +1,141 @@
 <?php
+class Role extends Model implements JsonSerializable{
+	public $id;
+	public $name;
+	public $description;
+	public $created_at;
+	public $updated_at;
 
-class Role
-{
-    public $id;
-    public $name;
-    public $created_at;
-    public $updated_at;
+	public function __construct(){
+	}
+	public function set($id,$name,$description,$created_at,$updated_at){
+		$this->id=$id;
+		$this->name=$name;
+		$this->description=$description;
+		$this->created_at=$created_at;
+		$this->updated_at=$updated_at;
 
-    public function __construct($id, $name)
-    {
-        $this->id = $id;
-        $this->name = $name;
-    }
+	}
+	public function save(){
+		global $db,$tx;
+		$db->query("insert into {$tx}roles(name,description,created_at,updated_at)values('$this->name','$this->description','$this->created_at','$this->updated_at')");
+		return $db->insert_id;
+	}
+	public function update(){
+		global $db,$tx;
+		$db->query("update {$tx}roles set name='$this->name',description='$this->description',created_at='$this->created_at',updated_at='$this->updated_at' where id='$this->id'");
+	}
+	public static function delete($id){
+		global $db,$tx;
+		$db->query("delete from {$tx}roles where id={$id}");
+	}
+	public function jsonSerialize(){
+		return get_object_vars($this);
+	}
+	public static function all(){
+		global $db,$tx;
+		$result=$db->query("select id,name,description,created_at,updated_at from {$tx}roles");
+		$data=[];
+		while($role=$result->fetch_object()){
+			$data[]=$role;
+		}
+			return $data;
+	}
+	public static function pagination($page=1,$perpage=10,$criteria=""){
+		global $db,$tx;
+		$top=($page-1)*$perpage;
+		$result=$db->query("select id,name,description,created_at,updated_at from {$tx}roles $criteria limit $top,$perpage");
+		$data=[];
+		while($role=$result->fetch_object()){
+			$data[]=$role;
+		}
+			return $data;
+	}
+	public static function count($criteria=""){
+		global $db,$tx;
+		$result =$db->query("select count(*) from {$tx}roles $criteria");
+		list($count)=$result->fetch_row();
+			return $count;
+	}
+	public static function find($id){
+		global $db,$tx;
+		$result =$db->query("select id,name,description,created_at,updated_at from {$tx}roles where id='$id'");
+		$role=$result->fetch_object();
+			return $role;
+	}
+	static function get_last_id(){
+		global $db,$tx;
+		$result =$db->query("select max(id) last_id from {$tx}roles");
+		$role =$result->fetch_object();
+		return $role->last_id;
+	}
+	public function json(){
+		return json_encode($this);
+	}
+	public function __toString(){
+		return "		Id:$this->id<br> 
+		Name:$this->name<br> 
+		Description:$this->description<br> 
+		Created At:$this->created_at<br> 
+		Updated At:$this->updated_at<br> 
+";
+	}
 
-    function save()
-    {
-        global $db, $tx;
-        $result = $db->query("insert into {$tx}roles(name) values('$this->name')");
-        return $result;
-    }
-    static function display()
-    {
-        global $db, $tx, $base_url; 
-        $result = $db->query("select * from {$tx}roles");
-        $html = "
-        <table class=\"table table-sm\">
-        <thead>
-            <tr>
-                <th style=\"width: 10px\">Id</th>
-                <th>name</th>
-                <th>created at</th>
-                <th>action</th>
-            
-            </tr>
-        </thead>
-        <tbody>
-            
-            
-            ";
+	//-------------HTML----------//
 
-            while ($row = $result->fetch_object()) {
-                $html .= "
-            
-            
-            <tr class=\"align-middle\">
-                <td>$row->id</td>
-                <td>$row->name</td>
-                <td>$row->created_at</td>
-                <td> 
-                <a class='btn btn-success'href=\" \">Details</a> | 
-                <a class='btn btn-secondary'href=\"{$base_url}/role/edit/$row->id\">Edit</a> | 
-                <a class='btn btn-danger' href=\" {$base_url}/role/delete/$row->id\">Delete</a></td>
+	static function html_select($name="cmbRole"){
+		global $db,$tx;
+		$html="<select id='$name' name='$name'> ";
+		$result =$db->query("select id,name from {$tx}roles");
+		while($role=$result->fetch_object()){
+			$html.="<option value ='$role->id'>$role->name</option>";
+		}
+		$html.="</select>";
+		return $html;
+	}
+	static function html_table($page = 1,$perpage = 10,$criteria="",$action=true){
+		global $db,$tx,$base_url;
+		$count_result =$db->query("select count(*) total from {$tx}roles $criteria ");
+		list($total_rows)=$count_result->fetch_row();
+		$total_pages = ceil($total_rows /$perpage);
+		$top = ($page - 1)*$perpage;
+		$result=$db->query("select id,name,description,created_at,updated_at from {$tx}roles $criteria limit $top,$perpage");
+		$html="<table class='table'>";
+			$html.="<tr><th colspan='3'>".Html::link(["class"=>"btn btn-success","route"=>"role/create","text"=>"New Role"])."</th></tr>";
+		if($action){
+			$html.="<tr><th>Id</th><th>Name</th><th>Description</th><th>Created At</th><th>Updated At</th><th>Action</th></tr>";
+		}else{
+			$html.="<tr><th>Id</th><th>Name</th><th>Description</th><th>Created At</th><th>Updated At</th></tr>";
+		}
+		while($role=$result->fetch_object()){
+			$action_buttons = "";
+			if($action){
+				$action_buttons = "<td><div class='btn-group' style='display:flex;'>";
+				$action_buttons.= Event::button(["name"=>"show", "value"=>"Show", "class"=>"btn btn-info", "route"=>"role/show/$role->id"]);
+				$action_buttons.= Event::button(["name"=>"edit", "value"=>"Edit", "class"=>"btn btn-primary", "route"=>"role/edit/$role->id"]);
+				$action_buttons.= Event::button(["name"=>"delete", "value"=>"Delete", "class"=>"btn btn-danger", "route"=>"role/confirm/$role->id"]);
+				$action_buttons.= "</div></td>";
+			}
+			$html.="<tr><td>$role->id</td><td>$role->name</td><td>$role->description</td><td>$role->created_at</td><td>$role->updated_at</td> $action_buttons</tr>";
+		}
+		$html.="</table>";
+		$html.= pagination($page,$total_pages);
+		return $html;
+	}
+	static function html_row_details($id){
+		global $db,$tx,$base_url;
+		$result =$db->query("select id,name,description,created_at,updated_at from {$tx}roles where id={$id}");
+		$role=$result->fetch_object();
+		$html="<table class='table'>";
+		$html.="<tr><th colspan=\"2\">Role Show</th></tr>";
+		$html.="<tr><th>Id</th><td>$role->id</td></tr>";
+		$html.="<tr><th>Name</th><td>$role->name</td></tr>";
+		$html.="<tr><th>Description</th><td>$role->description</td></tr>";
+		$html.="<tr><th>Created At</th><td>$role->created_at</td></tr>";
+		$html.="<tr><th>Updated At</th><td>$role->updated_at</td></tr>";
 
-            </tr>";
-            }
-
-            $html .= " </tbody></table>";
-
-            return $html;
-    }
-
-    function update(){
-        global $db, $tx;
-        $result = $db->query("update {$tx}roles set name='$this->name'  where id=$this->id");
-        return $result;
-    }
-    static function search($id){
-        global $db, $tx;
-        $result = $db->query(" select * from  {$tx}roles where id=$id");
-        return $result->fetch_object();
-    }
-    static function delete($id){
-        global $db, $tx;
-        $result = $db->query(" delete from {$tx}roles where id=$id");
-        return $result;
-    }
-
+		$html.="</table>";
+		return $html;
+	}
 }
-
-
-
-
-
-
-
-
 ?>
-
-

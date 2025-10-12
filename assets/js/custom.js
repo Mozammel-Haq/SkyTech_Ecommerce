@@ -119,11 +119,12 @@ if (galleryInput && browseLink) {
   });
 }
 
-// ===================== MODAL POPULATION (CATEGORY / UNIT / BRAND) =====================
+// ===================== MODAL POPULATION (CATEGORY / UNIT / BRAND / USER) =====================
 document.addEventListener("click", function (e) {
   const brandBtn = e.target.closest(".editBrandBtn");
   const categoryBtn = e.target.closest(".editBtn");
   const unitBtn = e.target.closest(".editUnitBtn");
+  // const userBtn = e.target.closest(".editUserBtn")
 
   // === Brand Edit Modal ===
   if (brandBtn) {
@@ -160,6 +161,20 @@ document.addEventListener("click", function (e) {
       unitBtn.dataset.short_name || "";
   }
 });
+// user Edit
+// if (userBtn) {
+//   document.getElementById("edit_user_id").value =
+//     userBtn.dataset.id || "";
+//   document.getElementById("edit_user_name").value =
+//     userBtn.dataset.name || "";
+//   document.getElementById("edit_user_description").value =
+//     userBtn.dataset.description || "";
+//   const previewDiv = document.getElementById("edit_user_image_preview");
+//   if (previewDiv && userBtn.dataset.image) {
+//     previewDiv.src =
+//       "<?= $base_url ?>/assets/img/products/" + userBtn.dataset.image;
+//   }
+// }
 
 // ==== GET product Description from Quill Editor
 

@@ -1,50 +1,131 @@
-<?php
-if(isset($_POST["create"])){
-	$errors=[];
+<div class="content">
 
-	if(count($errors)==0){
-		$user=new User();
-		$user->name=$_POST["name"];
-		$user->role_id=$_POST["role_id"];
-		$user->password=password_hash($_POST["password"],PASSWORD_BCRYPT);
-		$user->email=$_POST["email"];
-		$user->full_name=$_POST["full_name"];
-		$user->created_at=$now;
-		$user->photo=upload($_FILES["photo"],"img",$user->name);
-		//$user->verify_code=$_POST["txtVerifyCode"];
-		//$user->inactive=isset($_POST["chkInactive"])?1:0;
-		$user->mobile=$_POST["mobile"];
-		$user->updated_at=$now;	
+	<!-- start row -->
+	<div class="row">
+		<div class="col-md-10 mx-auto">
+			<div>
+				<!-- Back link -->
+				<div class="d-flex align-items-center justify-content-between mb-3">
+					<h6><a href="<?= $base_url ?>/user"><i class="isax isax-arrow-left me-2"></i>User List</a></h6>
+				</div>
 
-		$user->save();
-	}else{
-		 print_r($errors);
-	}
-}
-?>
+				<!-- Main Card -->
+				<div class="card">
+					<div class="card-body">
+						<h5 class="mb-3">Add New User</h5>
+
+						<form action="<?= $base_url ?>/user/save" method="post" enctype="multipart/form-data">
+							<!-- Image Upload -->
+							<div class="mb-3 image-wrapper">
+								<label class="form-label">Profile Image</label>
+								<div class="d-flex align-items-center">
+									<div class="avatar avatar-xxl border border-dashed bg-light me-3 flex-shrink-0 d-flex align-items-center justify-content-center imagePreview">
+										<img id="user_image_preview" src="" class="rounded-circle d-none" alt="User Image">
+										<i class="isax isax-image text-primary fs-24" id="user_image_icon"></i>
+									</div>
+									<div class="d-inline-flex flex-column align-items-start">
+										<div class="drag-upload-btn btn btn-sm btn-primary position-relative mb-2">
+											<i class="isax isax-image me-1"></i>Upload Image
+											<input type="file" name="photo" class=" category_image form-control image-sign position-absolute top-0 start-0 w-100 h-100 opacity-0" accept="image/*">
+										</div>
+										<span class="imageName text-gray-9 fs-12">JPG or PNG format, max size 5MB.</span>
+									</div>
+								</div>
+							</div>
+
+							<input type="hidden" name="id" value="">
+
+							<div class="row gx-3">
+								<!-- First Name -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Full Name <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" name="name" required>
+									</div>
+								</div>
 
 
+								<!-- Username -->
+								<div class="col-lg-12">
+									<div class="mb-3">
+										<label class="form-label">Username <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" name="username" required>
+									</div>
+								</div>
 
-<?php
+								<!-- Email -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Email <span class="text-danger">*</span></label>
+										<input type="email" class="form-control" name="email" required>
+									</div>
+								</div>
 
-echo Page::title(["title"=>"Create User"]);
-echo Page::body_open();
-echo Page::context_open(["manage-button"=>"Manage User","route"=>"users"]);
+								<!-- Phone -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Phone Number <span class="text-danger">*</span></label>
+										<input type="text" class="form-control" name="phone" required>
+									</div>
+								</div>
 
-echo Form::open(["route"=>"create-user"]);
-	$html="";	
-	echo Form::input(["label"=>"User Name","name"=>"name","type"=>"text","placeholder"=>"Enter Name"]);	
-	echo Form::input(["label"=>"Role","name"=>"role_id","table"=>"roles"]);	
-	echo Form::input(["label"=>"Password","name"=>"password","type"=>"password","placeholder"=>"Enter Password"]);
-	echo Form::input(["label"=>"Email","name"=>"email","type"=>"text","placeholder"=>"Enter Email"]);	
-	echo Form::input(["label"=>"Full Name","name"=>"full_name","type"=>"text","placeholder"=>"Enter Full Name"]);
-	echo Form::input(["label"=>"Photo","name"=>"photo","type"=>"file"]);
-	echo Form::input(["label"=>"Mobile","name"=>"mobile","type"=>"text","placeholder"=>"Mobile"]);
-	echo Form::input(["name"=>"create","class"=>"btn btn-primary offset-2","value"=>"Save","type"=>"submit"]);
-	
-	echo Form::close();
-	echo $html;
+								<!-- Password -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Password</label>
+										<div class="position-relative">
+											<input type="password" class="form-control pass-input" name="password">
+											<span class="isax toggle-password isax-eye-slash text-gray-7 fs-14 position-absolute end-0 top-50 translate-middle-y me-3"></span>
+										</div>
+									</div>
+								</div>
 
-	echo Page::context_close();
-   echo Page::body_close();
-?>
+								<!-- Confirm Password -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+										<div class="position-relative">
+											<input type="password" class="form-control pass-confirm" name="confirm_password" required>
+											<span class="isax toggle-confirm isax-eye-slash text-gray-7 fs-14 position-absolute end-0 top-50 translate-middle-y me-3"></span>
+										</div>
+									</div>
+								</div>
+
+								<!-- Role -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Role</label>
+										<?php
+										echo Role::html_select('role');
+										?>
+									</div>
+								</div>
+
+								<!-- Status -->
+								<div class="col-lg-6 col-md-6">
+									<div class="mb-3">
+										<label class="form-label">Status</label>
+										<select class="select" name="status">
+											<option>Select</option>
+											<option>Active</option>
+											<option>offline</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<!-- Footer Buttons -->
+							<div class="d-flex align-items-center justify-content-between pt-4 border-top">
+								<a href="<?= $base_url ?>/user" class="btn btn-outline-white">Cancel</a>
+								<button type="submit" name="create" class="btn btn-primary">Create User</button>
+							</div>
+
+						</form>
+					</div><!-- end card body -->
+				</div><!-- end card -->
+			</div>
+		</div><!-- end col -->
+	</div>
+	<!-- end row -->
+
+</div>

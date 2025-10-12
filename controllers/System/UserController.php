@@ -1,101 +1,78 @@
 <?php
-class UserController{
-    function __construct(){
-       
-     }
-   //----Mange-----
-     function index(){       
-       view("system");
-     }
-   //-----Save---- 
-     function create(){
-        view("system");        
-     }
- 
-     function save($data,$file){  
-        global $now;
-        
-        if(isset($data["create"])){
-            $errors=[];
+class UserController extends Controller
+{
+	public function __construct() {}
+	public function index()
+	{
+		$data = User::all();
+		view("System", $data);
+	}
+	public function create()
+	{
+		view("System");
+	}
+	public function save($data, $file)
+	{
+		if (isset($data["create"])) {
+			global $now;
+			$user = new User();
+			$user->name = $data["name"];
+			$user->username = $data["username"];
+			$user->email = $data["email"];
+			$user->phone = $data["phone"];
+			$user->password = password_hash($data["password"], PASSWORD_DEFAULT);
+			$user->photo = File::upload($file["photo"], "img", $data["id"]);
+			$user->role_id = $data["role"];
+			$user->status = $data["status"];
+			$user->created_at = $now;
+			$user->updated_at = $now;
 
-            if(count($errors)==0){
-                $user=new User();
-                $user->name=$_POST["name"];
-                $user->role_id=$_POST["role_id"];
-                $user->password=password_hash($_POST["password"],PASSWORD_BCRYPT);
-                $user->email=$_POST["email"];
-                $user->full_name=$_POST["full_name"];
-                $user->created_at=$now;
-                $user->photo=upload($_FILES["photo"],"img",$user->name);
-                //$user->verify_code=$_POST["txtVerifyCode"];
-                //$user->inactive=isset($_POST["chkInactive"])?1:0;
-                $user->mobile=$_POST["mobile"];
-                $user->updated_at=$now;	
-        
-                $user->save();
-            }else{
-                 print_r($errors);
-            }
-        }
-        redirect("index");
-     }
- //------Edit-----
-     function edit($id){       
-        view("system",User::find($id));
-     }
- 
-     function update($data,$file){
-       global $now,$base_url;
+			$user->save();
+			redirect("");
+		}
+	}
+	public function edit($id)
+	{
+			$data = User::find($id);
+		view("System", $data);
+	}
+	public function update($data, $file)
+	{
+		if (isset($data["update"])) {
+			print_r($_POST);
+				$user = new User();
+				$user->id = $data["id"];
+				$user->name = $data["name"];
+				$user->username = $data["username"];
+				$user->email = $data["email"];
+				$user->phone = $data["phone"];
+				$user->password = password_hash($data["password"], PASSWORD_DEFAULT);
+				if ($file["photo"]["name"] != "") {
+					$user->photo = File::upload($file["photo"], "img", $data["id"]);
+				} else {
+					$user->photo = User::find($data["id"])->photo;
+				}
+				$user->role_id = $data["role"];
+				$user->status = $data["status"];
+				$user->created_at = $now;
+				$user->updated_at = $now;
 
-        $errors=[];
-        if(count($errors)==0){
-        
-		
-            $user=new User();
-            $user->id=$_POST["id"];
-            $user->name=$_POST["name"];
-            $user->role_id=$_POST["role_id"];
-            $user->password=password_hash($_POST["password"],PASSWORD_BCRYPT);
-            $user->email=$_POST["email"];
-            $user->full_name=$_POST["full_name"];
-            $user->created_at=$now;
-            if($_FILES["photo"]["name"]!=""){
-                $user->photo=File::upload($_FILES["photo"], "img",$user->name);
-            }else{
-                $user->photo=User::find($_POST["id"])->photo;
-            }
-            $user->verify_code=$_POST["verify_code"];
-            $user->inactive=isset($_POST["inactive"])?1:0;
-            $user->mobile=$_POST["mobile"];
-    
-            $user->update();
-        }else{
-             print_r($errors);
-        }
-
-        redirect("index");
-     }
-
- //------Delete-----
-     function confirm($id){     
-        view("system");
-     }
-
-     function delete($id){
-        
-         if(isset($id)){
-             User::delete($id);
-             redirect("index");
-         }
-     }
-  //------Show-----------
-     function show($id){
-        view("system",User::find($id));
-     }
-
-  //-------Search--------
-
-
-
- }
-
+				$user->update();
+				redirect("");
+			
+		}
+	}
+	public function confirm($id)
+	{
+		view("System");
+	}
+	public function delete($id)
+	{
+		User::delete($id);
+		redirect("");
+	}
+	public function show($id)
+	{
+		view("System", User::find($id));
+	}
+}
