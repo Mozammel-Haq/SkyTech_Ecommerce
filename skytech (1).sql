@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 11, 2025 at 09:18 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Oct 12, 2025 at 04:19 PM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bank_accounts` (
-  `id` int(11) NOT NULL,
-  `bank_name` varchar(255) DEFAULT NULL,
-  `account_number` varchar(50) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `bank_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `account_number` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -42,11 +42,11 @@ CREATE TABLE `bank_accounts` (
 --
 
 CREATE TABLE `brands` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -58,9 +58,7 @@ INSERT INTO `brands` (`id`, `name`, `description`, `created_at`, `updated_at`) V
 (2, 'HP', 'Hewlett Packard', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
 (3, 'Apple', 'Apple Inc.', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
 (4, 'Logitech', 'Logitech peripherals', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(5, 'Asus', 'Asus Electronics', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(8, NULL, NULL, NULL, NULL),
-(9, NULL, NULL, NULL, NULL);
+(5, 'Asus', 'Asus Electronics', '2025-09-30 23:02:31', '2025-09-30 23:02:31');
 
 -- --------------------------------------------------------
 
@@ -69,12 +67,12 @@ INSERT INTO `brands` (`id`, `name`, `description`, `created_at`, `updated_at`) V
 --
 
 CREATE TABLE `categories` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `image_path` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -96,12 +94,12 @@ INSERT INTO `categories` (`id`, `name`, `description`, `image_path`, `created_at
 --
 
 CREATE TABLE `contact_messages` (
-  `id` int(11) NOT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  `subject` varchar(255) DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `customer_id` int DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `message` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -119,12 +117,12 @@ INSERT INTO `contact_messages` (`id`, `customer_id`, `subject`, `message`, `crea
 --
 
 CREATE TABLE `currencies` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) DEFAULT NULL,
-  `code` varchar(10) DEFAULT NULL,
-  `symbol` varchar(10) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `code` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `symbol` varchar(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -142,15 +140,15 @@ INSERT INTO `currencies` (`id`, `name`, `code`, `symbol`, `created_at`, `updated
 --
 
 CREATE TABLE `customers` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `photo` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `photo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -169,12 +167,12 @@ INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `photo`, `address`, `st
 --
 
 CREATE TABLE `customer_addresses` (
-  `id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `shipping_address` varchar(255) NOT NULL,
-  `billing_address` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `customer_id` int NOT NULL,
+  `shipping_address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `billing_address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -184,8 +182,8 @@ CREATE TABLE `customer_addresses` (
 --
 
 CREATE TABLE `discount_types` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -203,12 +201,12 @@ INSERT INTO `discount_types` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `expenses` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `category` varchar(255) DEFAULT NULL,
-  `expense_date` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `category` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `expense_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -228,12 +226,12 @@ INSERT INTO `expenses` (`id`, `amount`, `category`, `expense_date`, `created_at`
 --
 
 CREATE TABLE `incomes` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `source` varchar(255) DEFAULT NULL,
-  `received_date` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `source` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `received_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -253,15 +251,15 @@ INSERT INTO `incomes` (`id`, `amount`, `source`, `received_date`, `created_at`, 
 --
 
 CREATE TABLE `inventory` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `warehouse_id` int(11) DEFAULT NULL,
-  `supplier_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
-  `transaction_type_id` int(11) DEFAULT NULL,
-  `remarks` text DEFAULT NULL
+  `id` int NOT NULL,
+  `product_id` int DEFAULT NULL,
+  `warehouse_id` int DEFAULT NULL,
+  `supplier_id` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `transaction_type_id` int DEFAULT NULL,
+  `remarks` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -290,16 +288,16 @@ INSERT INTO `inventory` (`id`, `product_id`, `warehouse_id`, `supplier_id`, `qua
 --
 
 CREATE TABLE `invoices` (
-  `id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `invoice_date` datetime DEFAULT current_timestamp(),
-  `due_date` datetime DEFAULT current_timestamp(),
+  `id` int NOT NULL,
+  `customer_id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
+  `invoice_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `due_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `total_amount` decimal(10,2) DEFAULT NULL,
-  `status` varchar(255) NOT NULL,
-  `payment_method` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -319,11 +317,11 @@ INSERT INTO `invoices` (`id`, `customer_id`, `order_id`, `invoice_date`, `due_da
 --
 
 CREATE TABLE `invoice_templates` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `template_html` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `template_html` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -333,11 +331,11 @@ CREATE TABLE `invoice_templates` (
 --
 
 CREATE TABLE `media` (
-  `id` int(11) NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `file_path` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `file_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -355,12 +353,12 @@ INSERT INTO `media` (`id`, `type`, `file_path`, `created_at`, `updated_at`) VALU
 --
 
 CREATE TABLE `news` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `content` text DEFAULT NULL,
-  `published_at` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_general_ci,
+  `published_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -378,19 +376,19 @@ INSERT INTO `news` (`id`, `title`, `content`, `published_at`, `created_at`, `upd
 --
 
 CREATE TABLE `orders` (
-  `id` int(11) NOT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT NULL,
+  `id` int NOT NULL,
+  `customer_id` int DEFAULT NULL,
+  `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `delivery_date` date DEFAULT NULL,
-  `shipping_address` varchar(255) DEFAULT NULL,
-  `billing_address` varchar(255) NOT NULL,
+  `shipping_address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `billing_address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `paid_amount` double DEFAULT NULL,
   `discount` float DEFAULT NULL,
-  `tracking_id` int(11) NOT NULL
+  `tracking_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -409,14 +407,14 @@ INSERT INTO `orders` (`id`, `customer_id`, `order_date`, `status`, `total_amount
 --
 
 CREATE TABLE `order_details` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `variation_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `variation_id` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `discount` float DEFAULT NULL,
   `vat` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -441,11 +439,11 @@ INSERT INTO `order_details` (`id`, `order_id`, `product_id`, `variation_id`, `qu
 --
 
 CREATE TABLE `pages` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `content` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -463,13 +461,13 @@ INSERT INTO `pages` (`id`, `title`, `content`, `created_at`, `updated_at`) VALUE
 --
 
 CREATE TABLE `payments_refunds` (
-  `id` int(11) NOT NULL,
-  `order_id` int(11) DEFAULT NULL,
-  `type` varchar(50) DEFAULT NULL,
+  `id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
+  `type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `payment_date` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `payment_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -489,11 +487,11 @@ INSERT INTO `payments_refunds` (`id`, `order_id`, `type`, `amount`, `payment_dat
 --
 
 CREATE TABLE `payment_methods` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `details` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `details` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -511,11 +509,11 @@ INSERT INTO `payment_methods` (`id`, `name`, `details`, `created_at`, `updated_a
 --
 
 CREATE TABLE `permissions` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -534,21 +532,21 @@ INSERT INTO `permissions` (`id`, `name`, `description`, `created_at`, `updated_a
 --
 
 CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `category_id` int(11) DEFAULT NULL,
-  `brand_id` int(11) DEFAULT NULL,
-  `unit_id` int(11) DEFAULT NULL,
-  `sku` varchar(100) DEFAULT NULL,
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `category_id` int DEFAULT NULL,
+  `brand_id` int DEFAULT NULL,
+  `unit_id` int DEFAULT NULL,
+  `sku` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `selling_price` decimal(10,2) DEFAULT NULL,
   `purchase_price` decimal(10,2) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
-  `barcode` varchar(50) DEFAULT NULL,
-  `alert_quantity` int(11) DEFAULT NULL,
-  `discount` varchar(100) DEFAULT NULL,
-  `tax_id` int(11) DEFAULT NULL
+  `description` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `barcode` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `alert_quantity` int DEFAULT NULL,
+  `discount` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tax_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -561,7 +559,8 @@ INSERT INTO `products` (`id`, `name`, `category_id`, `brand_id`, `unit_id`, `sku
 (3, 'iPhone 14', 3, 3, 1, 'AP-IPH-14-01', 1200.00, 1000.00, 'Apple iPhone 14 128GB', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4599', 15, '%', 1),
 (4, 'Logitech Wireless Mouse', 4, 4, 1, 'LOG-MSE-01', 30.00, 20.00, 'Wireless mouse', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4600', 5, '%', 2),
 (5, 'Asus Motherboard', 5, 5, 1, 'AS-MB-01', 200.00, 150.00, 'Gaming motherboard', '2025-09-30 23:02:31', '2025-09-30 23:02:31', '0129-4601', 3, '%', 2),
-(6, 'HP Spectre Laptop', 1, 2, 1, 'HP-SPE-LAP-01', 950.00, 850.00, '13-inch HP Spectre with Intel i7', '2025-09-30 23:03:15', '2025-09-30 23:03:15', '0129-4602', 2, '%', 2);
+(6, 'HP Spectre Laptop', 1, 2, 1, 'HP-SPE-LAP-01', 950.00, 850.00, '13-inch HP Spectre with Intel i7', '2025-09-30 23:03:15', '2025-09-30 23:03:15', '0129-4602', 2, '%', 2),
+(21, 'Test Product', 1, 2, 1, 'PRO_CK_12', 2300.00, 2100.00, 'Test Product', '2025-10-11 22:27:38', '2025-10-11 22:27:38', '134234', 100, '40', 1);
 
 -- --------------------------------------------------------
 
@@ -570,12 +569,12 @@ INSERT INTO `products` (`id`, `name`, `category_id`, `brand_id`, `unit_id`, `sku
 --
 
 CREATE TABLE `product_images` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `image_path` varchar(255) DEFAULT NULL,
+  `id` int NOT NULL,
+  `product_id` int DEFAULT NULL,
+  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -608,15 +607,15 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `is_main`, `crea
 --
 
 CREATE TABLE `product_variations` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `variation_name` varchar(100) DEFAULT NULL,
-  `variation_value` varchar(100) DEFAULT NULL,
+  `id` int NOT NULL,
+  `product_id` int DEFAULT NULL,
+  `variation_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `variation_value` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `selling_price` decimal(10,2) DEFAULT NULL,
   `purchase_price` decimal(10,2) DEFAULT NULL,
-  `sku` varchar(100) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `sku` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -644,13 +643,13 @@ INSERT INTO `product_variations` (`id`, `product_id`, `variation_name`, `variati
 --
 
 CREATE TABLE `purchase_orders` (
-  `id` int(11) NOT NULL,
-  `supplier_id` int(11) DEFAULT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT NULL,
+  `id` int NOT NULL,
+  `supplier_id` int DEFAULT NULL,
+  `order_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -660,13 +659,13 @@ CREATE TABLE `purchase_orders` (
 --
 
 CREATE TABLE `purchase_order_items` (
-  `id` int(11) NOT NULL,
-  `purchase_order_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `purchase_order_id` int DEFAULT NULL,
+  `product_id` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -676,11 +675,11 @@ CREATE TABLE `purchase_order_items` (
 --
 
 CREATE TABLE `roles` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -699,11 +698,11 @@ INSERT INTO `roles` (`id`, `name`, `description`, `created_at`, `updated_at`) VA
 --
 
 CREATE TABLE `role_permissions` (
-  `id` int(11) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `permission_id` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `role_id` int DEFAULT NULL,
+  `permission_id` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -723,11 +722,11 @@ INSERT INTO `role_permissions` (`id`, `role_id`, `permission_id`, `created_at`, 
 --
 
 CREATE TABLE `settings` (
-  `id` int(11) NOT NULL,
-  `key_name` varchar(255) DEFAULT NULL,
-  `value` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `key_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `value` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -745,9 +744,9 @@ INSERT INTO `settings` (`id`, `key_name`, `value`, `created_at`, `updated_at`) V
 --
 
 CREATE TABLE `status` (
-  `id` int(11) NOT NULL,
-  `person_status` varchar(255) NOT NULL,
-  `item_status` varchar(255) NOT NULL
+  `id` int NOT NULL,
+  `person_status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `item_status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -768,13 +767,13 @@ INSERT INTO `status` (`id`, `person_status`, `item_status`) VALUES
 --
 
 CREATE TABLE `suppliers` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `contact_person` varchar(255) DEFAULT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `contact_person` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -792,14 +791,14 @@ INSERT INTO `suppliers` (`id`, `name`, `contact_person`, `phone`, `email`, `crea
 --
 
 CREATE TABLE `support_tickets` (
-  `id` int(11) NOT NULL,
-  `customer_id` int(11) DEFAULT NULL,
-  `subject` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `priority` varchar(50) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `customer_id` int DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci,
+  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `priority` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -817,8 +816,8 @@ INSERT INTO `support_tickets` (`id`, `customer_id`, `subject`, `description`, `s
 --
 
 CREATE TABLE `taxes` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -836,11 +835,11 @@ INSERT INTO `taxes` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `tax_rates` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `rate` decimal(5,2) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -857,8 +856,8 @@ INSERT INTO `tax_rates` (`id`, `name`, `rate`, `created_at`, `updated_at`) VALUE
 --
 
 CREATE TABLE `trackings` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -878,13 +877,13 @@ INSERT INTO `trackings` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `transactions` (
-  `id` int(11) NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `reference_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `reference_id` int DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `transaction_date` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `transaction_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -906,11 +905,11 @@ INSERT INTO `transactions` (`id`, `type`, `reference_id`, `amount`, `transaction
 --
 
 CREATE TABLE `transaction_type` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `factor` int(11) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `factor` int NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -918,9 +917,9 @@ CREATE TABLE `transaction_type` (
 --
 
 INSERT INTO `transaction_type` (`id`, `name`, `factor`, `created_at`, `updated_at`) VALUES
-(1, 'Transfer', -2, '2025-10-06', '2025-10-06'),
-(2, 'Sale', 15, '2025-10-06', '2025-10-06'),
-(3, 'damage', -5, '2025-10-06', '2025-10-06');
+(1, 'Transfer', -2, '2025-10-06 00:00:00', '2025-10-06 00:00:00'),
+(2, 'Sale', 15, '2025-10-06 00:00:00', '2025-10-06 00:00:00'),
+(3, 'damage', -5, '2025-10-06 00:00:00', '2025-10-06 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -929,11 +928,11 @@ INSERT INTO `transaction_type` (`id`, `name`, `factor`, `created_at`, `updated_a
 --
 
 CREATE TABLE `units` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
-  `short_name` varchar(20) DEFAULT NULL,
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `short_name` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `status` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -960,25 +959,25 @@ INSERT INTO `units` (`id`, `name`, `created_at`, `updated_at`, `short_name`, `st
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `role_id` int(11) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `username` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `photo` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `role_id` int DEFAULT NULL,
+  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `username`, `email`, `password`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John Doe', 'johndoe', 'john@example.com', 'password123', 1, 'active', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(2, 'Alice Smith', 'alice', 'alice@example.com', 'password123', 2, 'active', '2025-09-30 23:02:31', '2025-09-30 23:02:31'),
-(3, 'Vendor Mike', 'vendor1', 'vendor@example.com', 'password123', 3, 'active', '2025-09-30 23:02:31', '2025-09-30 23:02:31');
+INSERT INTO `users` (`id`, `name`, `username`, `email`, `phone`, `password`, `photo`, `role_id`, `status`, `created_at`, `updated_at`) VALUES
+(6, 'MOZAMMEL HOQ', 'mozammel29', 'hmojammel29@gmail.com', '01799007398', '$2y$10$w/PljnglFedfA2jGxJYJIuT4ysXXKB4jysvyDl.BJy23yCZLQp686', 'avatar-06.jpg', 1, 'Active', '2025-10-12 20:21:39', '2025-10-12 20:21:39');
 
 -- --------------------------------------------------------
 
@@ -987,13 +986,13 @@ INSERT INTO `users` (`id`, `name`, `username`, `email`, `password`, `role_id`, `
 --
 
 CREATE TABLE `vendors` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `status` varchar(50) DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1011,12 +1010,12 @@ INSERT INTO `vendors` (`id`, `name`, `email`, `phone`, `status`, `created_at`, `
 --
 
 CREATE TABLE `vendor_payments` (
-  `id` int(11) NOT NULL,
-  `vendor_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL,
+  `vendor_id` int DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `payment_date` datetime DEFAULT current_timestamp(),
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp()
+  `payment_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1034,14 +1033,14 @@ INSERT INTO `vendor_payments` (`id`, `vendor_id`, `amount`, `payment_date`, `cre
 --
 
 CREATE TABLE `warehouses` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `location` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `updated_at` datetime DEFAULT current_timestamp(),
-  `manager` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `location` text COLLATE utf8mb4_general_ci,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `manager` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1319,253 +1318,253 @@ ALTER TABLE `warehouses`
 -- AUTO_INCREMENT for table `bank_accounts`
 --
 ALTER TABLE `bank_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `currencies`
 --
 ALTER TABLE `currencies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `customer_addresses`
 --
 ALTER TABLE `customer_addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `discount_types`
 --
 ALTER TABLE `discount_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `incomes`
 --
 ALTER TABLE `incomes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `invoice_templates`
 --
 ALTER TABLE `invoice_templates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `payments_refunds`
 --
 ALTER TABLE `payments_refunds`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `product_variations`
 --
 ALTER TABLE `product_variations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `purchase_orders`
 --
 ALTER TABLE `purchase_orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `purchase_order_items`
 --
 ALTER TABLE `purchase_order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `role_permissions`
 --
 ALTER TABLE `role_permissions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `taxes`
 --
 ALTER TABLE `taxes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tax_rates`
 --
 ALTER TABLE `tax_rates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `trackings`
 --
 ALTER TABLE `trackings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `transaction_type`
 --
 ALTER TABLE `transaction_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `units`
 --
 ALTER TABLE `units`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `vendor_payments`
 --
 ALTER TABLE `vendor_payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `warehouses`
 --
 ALTER TABLE `warehouses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
