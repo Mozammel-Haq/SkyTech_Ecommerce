@@ -170,23 +170,44 @@
                                 </span>
                             </td>
                             <td class="action-item">
-                                <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="">
+                                <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="isax isax-more"></i>
                                 </a>
-                                <ul class="dropdown-menu" style="">
+                                <ul class="dropdown-menu">
                                     <li>
-                                        <a href="<?= $base_url ?>/user/edit/<?= $row->id ?>" class="dropdown-item d-flex align-items-center editUserBtn"><i class="isax isax-edit me-2"></i>Edit</a>
+                                        <a href="<?= $base_url ?>/user/edit/<?= $row->id ?>" class="dropdown-item d-flex align-items-center">
+                                            <i class="isax isax-edit me-2"></i>Edit
+                                        </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="isax isax-trash me-2"></i>Delete</a>
+                                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"
+                                            data-bs-toggle="modal" data-bs-target="#delete_modal_<?= $row->id ?>">
+                                            <i class="isax isax-trash me-2"></i>Delete
+                                        </a>
                                     </li>
                                 </ul>
                             </td>
                         </tr>
 
-                    <?php
-                    endforeach;
-                    ?>
+                        <!-- Individual Delete Modal  -->
+                        <div class="modal fade" id="delete_modal_<?= $row->id ?>">
+                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
+                                    <div class="modal-body text-center">
+                                        <div class="mb-3">
+                                            <img src="<?= $base_url ?>/assets/img/icons/delete.svg" alt="img">
+                                        </div>
+                                        <h6 class="mb-1">Delete User</h6>
+                                        <p class="mb-3">Are you sure you want to delete <b><?= $row->name ?></b>?</p>
+                                        <div class="d-flex justify-content-center">
+                                            <a href="<?= $base_url ?>/user" class="btn btn-outline-white me-3" data-bs-dismiss="modal">Cancel</a>
+                                            <a href="<?= $base_url ?>/user/delete/<?= $row->id ?>" class="btn btn-primary">Yes, Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
 
                 </tbody>
             </table>
@@ -198,22 +219,4 @@
     </div>
 
 </div>
-<!-- Delete Moda -->
-
-<div class="modal fade" id="delete_modal">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <div class="mb-3">
-                    <img src="assets/img/icons/delete.svg" alt="img">
-                </div>
-                <h6 class="mb-1">Delete Inventory</h6>
-                <p class="mb-3">Are you sure, you want to delete Inventory?</p>
-                <div class="d-flex justify-content-center">
-                    <a href="<?= $base_url ?>/user" class="btn btn-outline-white me-3" data-bs-dismiss="modal">Cancel</a>
-                    <a href="<?= $base_url ?>/user/delete/<?= $row->id ?>" class="btn btn-primary">Yes, Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Delete Modal -->

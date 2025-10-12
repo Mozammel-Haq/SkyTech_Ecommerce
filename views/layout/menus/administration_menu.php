@@ -7,7 +7,7 @@
                                         <span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="users.html">Users</a></li>
+                                        <li><a href="<?= $base_url ?>/user">Users</a></li>
                                         <li><a href="roles-permissions.html">Roles & Permissions</a></li>
                                         <li><a href="delete-account-request.html">Delete Account Request</a></li>
                                     </ul>

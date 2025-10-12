@@ -178,6 +178,7 @@ document.addEventListener("click", function (e) {
 
 // ==== GET product Description from Quill Editor
 
+const BASE_URL = "<?= $base_url ?>";
 const form = document.getElementById("add_product");
 if (form) {
   form.addEventListener("submit", function (e) {

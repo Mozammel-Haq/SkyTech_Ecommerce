@@ -1,7 +1,3 @@
-<?php
-print_r($user);
-?>
-
 <div class="content">
 
 	<!-- start row -->
@@ -110,11 +106,11 @@ print_r($user);
 								<div class="col-lg-6 col-md-6">
 									<div class="mb-3">
 										<label class="form-label">Status</label>
-											<select class="select" name="status">
-												<option>Select</option>
-												<option>Active</option>
-												<option>offline</option>
-											</select>
+										<select class="select" name="status">
+											<option>Select</option>
+											<option>Active</option>
+											<option>offline</option>
+										</select>
 									</div>
 								</div>
 							</div>

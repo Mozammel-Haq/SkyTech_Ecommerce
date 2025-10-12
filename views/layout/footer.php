@@ -55,14 +55,75 @@
 
 <script script src="<?= $base_url ?>/assets/js/script.js"
     type="text/javascript"></script>
-<!-- Custom JS -->
-<script>
-    const BASE_URL = "<?= $base_url ?>";
 
-    // JQUERY
+
+<!-- Custom JS -->
+
+
+<!-- ++// Add Order (cart) to Local Storage+++ -->
+
+<script>
+    class Cart {
+        constructor(key) {
+            //Key
+            this.key = key;
+            //Data
+            try {
+                this.data = JSON.parse(localStorage.getItem(this.key)) || [];
+            } catch {
+                this.data = [];
+            }
+        }
+
+        save() {
+            localStorage.setItem(this.key, JSON.stringify(this.data));
+        }
+
+        getData() {
+            return this.data;
+        }
+
+        addItem(item) {
+            let existingItem = this.data.find((p) => item.id == p.id);
+
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                this.data.push({
+                    ...item
+                });
+            }
+            this.save();
+        }
+
+        decreaseItem(item) {
+            let existingItem = this.data.find((p) => p.id == item);
+
+            if (existingItem) {
+                existingItem.qty -= 1;
+            }
+            this.save();
+        }
+
+        deleteItem(product) {
+            this.data = this.data.filter((p) => p.id != product);
+            this.save();
+        }
+
+        clearCart() {
+            this.data = [];
+            this.save();
+        }
+    }
+</script>
+<!-- ======Jquery=========== -->
+<script>
     $(function() {
+
         $("select").select2();
 
+        const cart = new Cart("order");
+        printCart()
         $("#customer").on("change", function() {
 
             let customer_id = $(this).val();
@@ -113,24 +174,48 @@
 
         $(".add_btn").on("click", function(e) {
             e.preventDefault();
+            let product_id = $("#product").val();
             let product = $("#product").find("option:selected").text();
             let qty = $("#qty").val()
             let price = $("#selling_price").val();
             let discount = $("#discount").val();
             let line_total = $("#line_total").val();
 
-            let html = `<tr>
-            <td>${product}</td>
-            <td>${qty}</td>
-            <td>${price}</td>
-            <td>${discount}</td>
-            <td>${line_total}</td>
+            let data = {
+                id: parseInt(product_id),
+                product: product,
+                qty: parseFloat(qty),
+                price: parseFloat(price),
+                discount: parseFloat(discount),
+                line_total: parseFloat(line_total)
+            }
+
+            cart.addItem(data)
+            printCart()
+        })
+
+        function printCart() {
+            let data = cart.getData();
+            let html = '';
+            let discount = 0;
+            let total = 0;
+            data.forEach((order, i) => {
+
+                discount += order.discount;
+                total += order.line_total;
+                html += `<tr>
+            <td>${order.product}</td>
+            <td>${order.qty}</td>
+            <td>${order.price}</td>
+            <td>${order.discount}</td>
+            <td>${order.line_total}</td>
             <td><div><a href="javascript:void(0);" class="text-danger remove-table"><i class="isax isax-close-circle"></i></a></div>
 			</td>
             </tr>
             `
-            $("#add_row").append(html);
-        })
+            });
+            $("#add_row").html(html);
+        }
 
 
 
