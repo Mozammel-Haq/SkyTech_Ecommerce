@@ -149,6 +149,7 @@
 														<th>Product</th>
 														<th class="text-center">Quantity</th>
 														<th class="text-end">Rate</th>
+														<th class="text-end">Vat</th>
 														<th class="text-end">Discount</th>
 														<th class="text-end">Amount</th>
 														<th class="text-center">Action</th>
@@ -162,6 +163,9 @@
 														</td>
 														<td>
 															<input id="selling_price" type="number" min="0" class="form-control text-end" value="" readonly>
+														</td>
+														<td>
+															<input id="vat" type="number" min="0" class="form-control text-end" value="">
 														</td>
 														<td>
 															<input id="discount" type="number" min="0" class="form-control text-end" value="" readonly>
@@ -226,66 +230,39 @@
 												</div>
 											</div><!-- end col -->
 											<div class="col-lg-5">
-												<div class="mb-3">
+												<div class="mb-3 p-4 border">
+													<!-- Total Amount -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
 														<h6 class="fs-14 fw-semibold">Amount</h6>
-														<h6 class="fs-14 fw-semibold">$565</h6>
+														<h6 class="fs-14 fw-semibold" id="summary_amount">$0.00</h6>
 													</div>
+
+													<!-- VAT / Tax -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
-														<h6 class="fs-14 fw-semibold">CGST (9%)</h6>
-														<h6 class="fs-14 fw-semibold">$18</h6>
+														<h6 class="fs-14 fw-semibold">Tax / VAT</h6>
+														<h6 class="fs-14 fw-semibold" id="summary_vat">$0.00</h6>
 													</div>
-													<div class="d-flex align-items-center justify-content-between mb-3">
-														<h6 class="fs-14 fw-semibold">SGST (9%)</h6>
-														<h6 class="fs-14 fw-semibold">$18</h6>
-													</div>
-													<div class="mb-3">
-														<a href="#" class="d-inline-flex align-items-center">
-															<i class="isax isax-add-circle5 text-primary me-1"></i>Add Additional Charges
-														</a>
-													</div>
+
+													<!-- Discount -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
 														<h6 class="fs-14 fw-semibold">Discount</h6>
-														<input type="text" class="form-control" value="0%" style="width: 106px;">
+														<h6 class="fs-14 fw-semibold text-danger" id="summary_discount">$0.00</h6>
 													</div>
+
+													<!-- Grand Total -->
 													<div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-														<div class="form-check form-switch me-4">
-															<input class="form-check-input" type="checkbox" role="switch" id="require_check_2" checked="">
-															<label class="form-check-label" for="require_check_2">Round Off Total</label>
-														</div>
-														<h6 class="fs-14 fw-semibold">$596</h6>
+														<h6 class="fs-14 fw-semibold">Grand Total (USD)</h6>
+														<h6 class="fs-14 fw-semibold" id="summary_grand_total">$0.00</h6>
 													</div>
-													<div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-														<h6>Total (USD)</h6>
-														<h6>$596</h6>
-													</div>
-													<div class="border-bottom mb-3 pb-3">
+
+													<!-- Total in Words -->
+													<div>
 														<h6 class="fs-14 fw-semibold mb-1">Total In Words</h6>
-														<p>Five Hundred &amp; Ninety Six Dollars</p>
-													</div>
-													<div class="mb-3">
-														<div class="mb-3">
-															<select class="select select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-																<option>Select Signature</option>
-																<option>Adrian</option>
-																<option>Emily Clark</option>
-																<option>John Carter</option>
-																<option>Michael Johnson</option>
-																<option>Olivia Harris</option>
-															</select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-lwv9-container" aria-controls="select2-lwv9-container"><span class="select2-selection__rendered" id="select2-lwv9-container" role="textbox" aria-readonly="true" title="Select Signature">Select Signature</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-														</div>
-														<p class="mb-0 text-center">OR</p>
-													</div>
-													<div class="mb-2">
-														<label class="form-label">Signature Name</label>
-														<input type="text" class="form-control" value="Adrian">
-													</div>
-													<div class="file-upload drag-file w-100 h-auto py-3 d-flex align-items-center justify-content-center flex-column">
-														<span class="upload-img d-block"><i class="isax isax-image text-primary me-1"></i>Upload Signature</span>
-														<input type="file" accept="video/image">
+														<p id="summary_total_words">Zero Dollars</p>
 													</div>
 												</div>
-											</div><!-- end col -->
+											</div>
+											<!-- end col -->
 										</div>
 										<!-- end row -->
 

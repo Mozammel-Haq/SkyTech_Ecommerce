@@ -60,167 +60,201 @@
 <!-- Custom JS -->
 
 
-<!-- ++// Add Order (cart) to Local Storage+++ -->
-
+<!-- Cart Script -->
 <script>
     class Cart {
-        constructor(key) {
-            //Key
-            this.key = key;
-            //Data
-            try {
-                this.data = JSON.parse(localStorage.getItem(this.key)) || [];
-            } catch {
-                this.data = [];
+        constructor(name) {
+            this.name = name;
+            if (!localStorage.getItem(this.name)) {
+                localStorage.setItem(this.name, JSON.stringify([]));
             }
-        }
-
-        save() {
-            localStorage.setItem(this.key, JSON.stringify(this.data));
         }
 
         getData() {
-            return this.data;
+            try {
+                return JSON.parse(localStorage.getItem(this.name)) || [];
+            } catch {
+                return [];
+            }
         }
 
-        addItem(item) {
-            let existingItem = this.data.find((p) => item.id == p.id);
+        saveData(data) {
+            localStorage.setItem(this.name, JSON.stringify(data));
+        }
 
-            if (existingItem) {
-                existingItem.qty += 1;
+        AddItem(item) {
+            let cartItems = this.getData();
+            let existing = cartItems.find(i => i.id === item.id);
+
+            if (existing) {
+                existing.qty += item.qty;
+                existing.vat = item.vat;
+                existing.line_total = (existing.qty * existing.price) - existing.discount + existing.vat;
             } else {
-                this.data.push({
-                    ...item
-                });
+                item.line_total = (item.qty * item.price) - item.discount + item.vat;
+                cartItems.push(item);
             }
-            this.save();
+
+            this.saveData(cartItems);
         }
 
-        decreaseItem(item) {
-            let existingItem = this.data.find((p) => p.id == item);
+        delItem(id) {
+            let updated = this.getData().filter(item => item.id !== id);
+            this.saveData(updated);
+        }
 
-            if (existingItem) {
-                existingItem.qty -= 1;
+        decrementItem(id) {
+            let cartItems = this.getData();
+            let item = cartItems.find(i => i.id === id);
+
+            if (item && item.qty > 1) {
+                item.qty -= 1;
+                item.line_total = (item.qty * item.price) - item.discount + item.vat;
             }
-            this.save();
+
+            this.saveData(cartItems);
         }
 
-        deleteItem(product) {
-            this.data = this.data.filter((p) => p.id != product);
-            this.save();
-        }
-
-        clearCart() {
-            this.data = [];
-            this.save();
+        clearAll() {
+            localStorage.removeItem(this.name);
         }
     }
-</script>
-<!-- ======Jquery=========== -->
-<script>
+
+    // Number to words (basic version)
+    function numberToWords(num) {
+        const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+        const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+        if (num === 0) return 'Zero';
+        if (num < 20) return a[num];
+        if (num < 100) return b[Math.floor(num / 10)] + (num % 10 ? ' ' + a[num % 10] : '');
+        if (num < 1000) return a[Math.floor(num / 100)] + ' Hundred' + (num % 100 ? ' ' + numberToWords(num % 100) : '');
+        if (num < 1000000) return numberToWords(Math.floor(num / 1000)) + ' Thousand' + (num % 1000 ? ' ' + numberToWords(num % 1000) : '');
+        return num;
+    }
+
     $(function() {
-
         $("select").select2();
-
         const cart = new Cart("order");
-        printCart()
-        $("#customer").on("change", function() {
 
-            let customer_id = $(this).val();
-
-            $.ajax({
-                url: "http://localhost/elctro_Ecom_project/Admin/api/customer/find",
-                type: "GET",
-                data: {
-                    id: customer_id
-                },
-                success: function(res) {
-                    let data = JSON.parse(res);
-                    $(".address").val(data.address);
-                },
-                error: function(err) {
-                    console.log(error)
-                }
-            })
-
-        })
-        $("#product").on("change", function() {
-            let product_id = $(this).val();
-
-            $.ajax({
-                url: 'http://localhost/elctro_Ecom_project/admin/api/product/find',
-                total: 'GET',
-                data: {
-                    id: product_id
-                },
-                success: function(res) {
-                    let data = JSON.parse(res).product;
-                    console.log(data)
-                    $("#selling_price").val(data.selling_price);
-                    $("#discount").val(data.discount);
-                    $('#line_total').val(data.selling_price)
-                },
-                error: function(err) {
-                    console.log(err)
-                }
-            })
-        })
-
-        $("#qty").on("change", function() {
-            let val = $(this).val();
-            let price = $("#selling_price").val();
-            let line_total = $('#line_total').val(val * price);
-        })
-
-        $(".add_btn").on("click", function(e) {
-            e.preventDefault();
-            let product_id = $("#product").val();
-            let product = $("#product").find("option:selected").text();
-            let qty = $("#qty").val()
-            let price = $("#selling_price").val();
-            let discount = $("#discount").val();
-            let line_total = $("#line_total").val();
-
-            let data = {
-                id: parseInt(product_id),
-                product: product,
-                qty: parseFloat(qty),
-                price: parseFloat(price),
-                discount: parseFloat(discount),
-                line_total: parseFloat(line_total)
-            }
-
-            cart.addItem(data)
-            printCart()
-        })
-
-        function printCart() {
-            let data = cart.getData();
-            let html = '';
-            let discount = 0;
-            let total = 0;
-            data.forEach((order, i) => {
-
-                discount += order.discount;
-                total += order.line_total;
-                html += `<tr>
-            <td>${order.product}</td>
-            <td>${order.qty}</td>
-            <td>${order.price}</td>
-            <td>${order.discount}</td>
-            <td>${order.line_total}</td>
-            <td><div><a href="javascript:void(0);" class="text-danger remove-table"><i class="isax isax-close-circle"></i></a></div>
-			</td>
-            </tr>
-            `
-            });
-            $("#add_row").html(html);
+        // Calculate line total dynamically
+        function calculateLineTotal() {
+            let qty = parseFloat($("#qty").val()) || 0;
+            let price = parseFloat($("#selling_price").val()) || 0;
+            let discount = parseFloat($("#discount").val()) || 0;
+            let vat = parseFloat($("#vat").val()) || 0;
+            let total = (qty * price) - discount + vat;
+            $("#line_total").val(total.toFixed(2));
         }
 
+        // Render cart table and summary
+        function renderCart() {
+            let data = cart.getData();
+            let html = '';
+            let totalAmount = 0;
+            let totalDiscount = 0;
+            let totalVat = 0;
 
+            if (data.length === 0) {
+                $("#add_row").html('<tr><td colspan="7" class="text-center text-muted">No items added</td></tr>');
+                $("#summary_amount").text("$0.00");
+                $("#summary_vat").text("$0.00");
+                $("#summary_discount").text("$0.00");
+                $("#summary_grand_total").text("$0.00");
+                $("#summary_total_words").text("Zero Dollars");
+                return;
+            }
 
-    })
+            data.forEach(item => {
+                html += `<tr>
+                        <td>${item.product}</td>
+                        <td>${item.qty}</td>
+                        <td>${item.price.toFixed(2)}</td>
+                        <td>${item.discount.toFixed(2)}</td>
+                        <td>${item.vat.toFixed(2)}</td>
+                        <td>${item.line_total.toFixed(2)}</td>
+                        <td>
+                            <a href="javascript:void(0);" data-id="${item.id}" class="text-danger remove-table">
+                                <i class="isax isax-close-circle"></i>
+                            </a>
+                        </td>
+                    </tr>`;
+                totalAmount += item.qty * item.price;
+                totalDiscount += item.discount;
+                totalVat += item.vat;
+            });
+
+            $("#add_row").html(html);
+
+            let grandTotal = (totalAmount + totalVat) - totalDiscount;
+
+            // Update summary section
+            $("#summary_amount").text(`$${totalAmount.toFixed(2)}`);
+            $("#summary_vat").text(`$${totalVat.toFixed(2)}`);
+            $("#summary_discount").text(`$${totalDiscount.toFixed(2)}`);
+            $("#summary_grand_total").text(`$${grandTotal.toFixed(2)}`);
+            $("#summary_total_words").text(numberToWords(Math.round(grandTotal)) + " Dollars");
+        }
+
+        // Fetch customer info
+        $("#customer").on("change", function() {
+            let id = $(this).val();
+            $.get("http://localhost/elctro_Ecom_project/Admin/api/customer/find", {
+                id
+            }, function(res) {
+                let data = JSON.parse(res);
+                $(".address").val(data.address || "");
+            });
+        });
+
+        // Fetch product info
+        $("#product").on("change", function() {
+            let id = $(this).val();
+            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+                id
+            }, function(res) {
+                let data = JSON.parse(res).product;
+                $("#selling_price").val(data.selling_price || 0);
+                $("#discount").val(data.discount || 0);
+                $("#vat").val(data.vat || 0);
+                $("#qty").val(1);
+                calculateLineTotal();
+            });
+        });
+
+        // Auto-calc line total
+        $("#qty, #selling_price, #discount, #vat").on("input", calculateLineTotal);
+
+        // Add item
+        $(".add_btn").on("click", function(e) {
+            e.preventDefault();
+            let product_id = parseInt($("#product").val());
+            if (!product_id) return alert("Select a product!");
+            let item = {
+                id: product_id,
+                product: $("#product option:selected").text(),
+                qty: parseFloat($("#qty").val()) || 1,
+                price: parseFloat($("#selling_price").val()) || 0,
+                discount: parseFloat($("#discount").val()) || 0,
+                vat: parseFloat($("#vat").val()) || 0,
+                line_total: parseFloat($("#line_total").val()) || 0
+            };
+            cart.AddItem(item);
+            renderCart();
+        });
+
+        // Remove item
+        $(document).on("click", ".remove-table", function() {
+            cart.delItem($(this).data("id"));
+            renderCart();
+        });
+
+        renderCart();
+    });
 </script>
+
+
+
+
 <script script src="<?= $base_url ?>/assets/js/custom.js">
 </script>
 

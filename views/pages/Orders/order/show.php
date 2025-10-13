@@ -101,6 +101,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             <th>Product</th>
                                             <th class="text-center">Quantity</th>
                                             <th class="text-end">Rate</th>
+                                            <th class="text-end">Tax</th>
                                             <th class="text-end">Discount</th>
                                             <th class="text-end">Amount</th>
                                         </tr>
@@ -112,13 +113,14 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         $line_total = 0;
                                         foreach ($order_details as $row) :
                                             $product = Product::findProductRow($row['order_id']);
-                                            $total_amount = ($row['price'] * $row['quantity']) - $product['discount'];
+                                            $total_amount = ($row['price'] * $row['quantity']) - $product['discount'] + $row['vat'];
                                         ?>
                                             <tr>
                                                 <td class="text-center"><?= $count ?></td>
                                                 <td><?= $product['name'] ?></td>
                                                 <td class="text-center"><?= $row['quantity'] ?></td>
                                                 <td class="text-end"><?= $row['price'] ?></td>
+                                                <td class="text-end"><?= $row['vat'] ?></td>
                                                 <td class="text-end"><?= $product['discount'] ?></td>
                                                 <td class="text-end"><?= $total_amount ?></td>
                                             </tr>
