@@ -284,7 +284,7 @@
             };
 
             $.ajax({
-                url: "<?= $base_url ?>/api/order/order_save",
+                url: "<?= $base_url ?>/api/order/save_order",
                 type: "POST",
                 data: {
                     data
