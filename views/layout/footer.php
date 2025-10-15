@@ -165,22 +165,29 @@
             }
 
             data.forEach(item => {
-                html += `<tr>
-                        <td>${item.product}</td>
-                        <td>${item.qty}</td>
-                        <td>${item.price.toFixed(2)}</td>
-                        <td>${item.discount.toFixed(2)}</td>
-                        <td>${item.vat.toFixed(2)}</td>
-                        <td>${item.line_total.toFixed(2)}</td>
-                        <td>
-                            <a href="javascript:void(0);" data-id="${item.id}" class="text-danger remove-table">
-                                <i class="isax isax-close-circle"></i>
-                            </a>
-                        </td>
-                    </tr>`;
-                totalAmount += item.qty * item.price;
-                totalDiscount += item.discount;
-                totalVat += item.vat;
+                const price = parseFloat(item.price || 0);
+                const discount = parseFloat(item.discount || 0);
+                const vat = parseFloat(item.vat || 0);
+                const qty = parseFloat(item.qty || 0);
+                const line_total = parseFloat(item.line_total || 0);
+
+                html += `
+                <tr>
+                    <td>${item.product}</td>
+                    <td>${qty}</td>
+                    <td>${price.toFixed(2)}</td>
+                    <td>${discount.toFixed(2)}</td>
+                    <td>${vat.toFixed(2)}</td>
+                    <td>${line_total.toFixed(2)}</td>
+                    <td>
+                        <a href="javascript:void(0);" data-id="${item.id}" class="text-danger remove-table">
+                            <i class="isax isax-close-circle"></i>
+                        </a>
+                    </td>
+                </tr>`;
+                totalAmount += qty * price;
+                totalDiscount += discount;
+                totalVat += vat;
             });
 
             $("#add_row").html(html);
@@ -248,7 +255,51 @@
             renderCart();
         });
 
+        // Render on load
         renderCart();
+
+
+        $('#save_btn').on("click", function() {
+            let customer_id = $("#customer").val();
+            let order_date = $("#order_date").val();
+            let status = $("#status").val();
+            let delivery_date = $("#due_date").val();
+            let shipping_address = $("#shipAddress").val();
+            let total_amount = $("#summary_grand_total").text();
+            let discount = $("#summary_discount").text();
+            let vat = $('#summary_vat').text();
+
+            let products = cart.getData();
+
+            let data = {
+                customer_id,
+                order_date,
+                status,
+                delivery_date,
+                shipping_address,
+                total_amount,
+                discount,
+                vat,
+                products
+            };
+
+            $.ajax({
+                url: "<?= $base_url ?>/api/order/order_save",
+                type: "POST",
+                data: {
+                    data
+                },
+                success: function(res) {
+                    // let data = JSON.parse(res);
+                    console.log(data);
+                    cart.clearAll();
+                    renderCart();
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
     });
 </script>
 

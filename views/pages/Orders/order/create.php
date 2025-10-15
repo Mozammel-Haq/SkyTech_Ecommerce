@@ -27,7 +27,7 @@
 											<div class="col-lg-12">
 												<label class="form-label">Issue Date:</label><br>
 												<div class="input-group position-relative mb-3">
-													<input type="text" class="form-control datetimepicker rounded-end" placeholder="25 Mar 2025">
+													<input id="order_date" type="text" class="form-control datetimepicker rounded-end" placeholder="25 Mar 2025">
 													<span class="input-icon-addon fs-16 text-gray-9">
 														<i class="isax isax-calendar-2"></i>
 													</span>
@@ -36,7 +36,7 @@
 											<div class="col-lg-12">
 												<label class="form-label">Due Date:</label><br>
 												<div class="input-group position-relative mb-3">
-													<input type="text" class="form-control datetimepicker rounded-end" placeholder="25 Mar 2025">
+													<input id="due_date" type="text" class="form-control datetimepicker rounded-end" placeholder="25 Mar 2025">
 													<span class="input-icon-addon fs-16 text-gray-9">
 														<i class="isax isax-calendar-2"></i>
 													</span>
@@ -58,14 +58,9 @@
 												<div class="row gx-3">
 													<div class="col-md-6">
 														<div class="mb-3">
-															<select class="select select2-hidden-accessible" tabindex="-1" aria-hidden="true">
-																<option> Select Status</option>
-																<option>Paid</option>
-																<option>Unpaid</option>
-																<option>Cancelled</option>
-																<option>Partially Paid</option>
-																<option>Uncollectable</option>
-															</select>
+															<?php
+															echo Statu::html_select_Product_status("status")
+															?>
 														</div>
 													</div>
 													<div class="col-md-6">
@@ -223,7 +218,7 @@
 																	<option>Sophia Martinez - 7890123456789012 (Global Finance)</option>
 																	<option>David Chen - 2345678901234567 (National Bank)</option>
 																	<option>Emily Johnson - 3456789012345678 (Community Credit Union)</option>
-																</select><span class="select2 select2-container select2-container--default" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-7y88-container" aria-controls="select2-7y88-container"><span class="select2-selection__rendered" id="select2-7y88-container" role="textbox" aria-readonly="true" title="Select">Select</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+																</select>
 															</div>
 														</div>
 													</div>
@@ -251,8 +246,8 @@
 
 													<!-- Grand Total -->
 													<div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-														<h6 class="fs-14 fw-semibold">Grand Total (USD)</h6>
-														<h6 class="fs-14 fw-semibold" id="summary_grand_total">$0.00</h6>
+														<h6 class="fs-14 fw-bold">Grand Total (USD)</h6>
+														<h6 class="fs-14 fw-bold" id="summary_grand_total">$0.00</h6>
 													</div>
 
 													<!-- Total in Words -->
@@ -270,7 +265,7 @@
 
 									<div class="d-flex align-items-center justify-content-between">
 										<button type="button" class="btn btn-outline-white">Cancel</button>
-										<button type="submit" class="btn btn-primary">Save</button>
+										<button id="save_btn" type="button" class="btn btn-primary">Save</button>
 									</div>
 
 						</form>
