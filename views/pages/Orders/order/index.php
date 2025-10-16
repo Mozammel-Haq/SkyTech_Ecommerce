@@ -1,5 +1,5 @@
 <?php
-// print_r($data);
+print_r($data);
 ?>
 
 <div class="content content-two">
@@ -170,7 +170,7 @@
                                 </div>
                             </td>
                             <td>
-                                #<?= $row->order_id ?>
+                                #<?= $row->id ?>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -207,13 +207,19 @@
                                 </a>
                                 <ul class="dropdown-menu" style="">
                                     <li>
-                                        <a href="<?= $base_url ?>/order/show/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
+                                        <a href="<?= $base_url ?>/order/show/<?= $row->id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
                                     </li>
                                     <li>
-                                        <a href="<?= $base_url ?>/order/confirm/<?= $row->order_id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-trash me-2"></i>Delete</a>
+                                        <a href='#'
+                                            class='dropdown-item d-flex align-items-center deleteBtn'
+                                            data-id='{$row[' id']}'
+                                            data-bs-toggle='modal'
+                                            data-bs-target='#delete_order_modal'>
+                                            <i class='isax isax-trash me-2'></i>Delete
+                                        </a>
                                     </li>
                                 </ul>
                             </td>
@@ -231,4 +237,26 @@
 
 
 
+
+
+</div>
+
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete_Order_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Delete Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to delete this Product?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDelete" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
 </div>

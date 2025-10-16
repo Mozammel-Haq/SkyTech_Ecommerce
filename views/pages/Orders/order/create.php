@@ -229,25 +229,25 @@
 													<!-- Total Amount -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
 														<h6 class="fs-14 fw-semibold">Amount</h6>
-														<h6 class="fs-14 fw-semibold" id="summary_amount">$0.00</h6>
+														<h6 class="fs-14 fw-semibold" id="summary_amount"><span>$</span>0.00</h6>
 													</div>
 
 													<!-- VAT / Tax -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
 														<h6 class="fs-14 fw-semibold">Tax / VAT</h6>
-														<h6 class="fs-14 fw-semibold" id="summary_vat">$0.00</h6>
+														<h6 class="fs-14 fw-semibold" id="summary_vat"><span>$</span>0.00</h6>
 													</div>
 
 													<!-- Discount -->
 													<div class="d-flex align-items-center justify-content-between mb-3">
 														<h6 class="fs-14 fw-semibold">Discount</h6>
-														<h6 class="fs-14 fw-semibold text-danger" id="summary_discount">$0.00</h6>
+														<h6 class="fs-14 fw-semibold text-danger" id="summary_discount"><span>$</span>0.00</h6>
 													</div>
 
 													<!-- Grand Total -->
 													<div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
 														<h6 class="fs-14 fw-bold">Grand Total (USD)</h6>
-														<h6 class="fs-14 fw-bold" id="summary_grand_total">$0.00</h6>
+														<h6 class="fs-14 fw-bold" id="summary_grand_total"><span>$</span>0.00</h6>
 													</div>
 
 													<!-- Total in Words -->

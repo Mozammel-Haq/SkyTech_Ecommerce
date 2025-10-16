@@ -34,7 +34,7 @@ class Order extends Model implements JsonSerializable
 	public function save()
 	{
 		global $db;
-		$db->query("insert into orders(id,order_date,status,tracking_id,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount) values(null,'$this->quantity','$this->order_date','$this->status','$this->tracking_id','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->paid_amount','$this->discount')");
+		$db->query("insert into orders(customer_id,order_date,status,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount) values('$this->customer_id','$this->order_date','$this->status','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->paid_amount','$this->discount')");
 		return $db->insert_id;
 	}
 	public function update()
@@ -54,32 +54,35 @@ class Order extends Model implements JsonSerializable
 	public static function all()
 	{
 		global $db, $tx;
-		$result = $db->query("SELECT 
-    o.id AS order_id,
-    p.name AS product_name,
-    od.quantity,
-    pi.image_path,
-    o.total_amount,
-    o.status,
-    t.name AS tracking,
-    o.order_date
-FROM orders AS o
-JOIN order_details AS od ON o.id = od.order_id
-JOIN products AS p ON od.product_id = p.id
-LEFT JOIN trackings AS t ON t.id = o.tracking_id
-LEFT JOIN (
-    SELECT product_id, image_path
-    FROM product_images
-    WHERE is_main = 1
-) AS pi ON p.id = pi.product_id
-ORDER BY o.id, od.id;
-");
+		$result = $db->query("
+        SELECT 
+            o.id,
+            GROUP_CONCAT(p.name SEPARATOR ', ') AS product_name,
+            SUM(od.quantity) AS quantity,
+            o.total_amount,
+            o.status,
+            t.name AS tracking,
+            o.order_date,
+            MAX(pi.image_path) AS image_path
+        FROM orders AS o
+        JOIN order_details AS od ON o.id = od.order_id
+        JOIN products AS p ON od.product_id = p.id
+        LEFT JOIN trackings AS t ON t.id = o.tracking_id
+        LEFT JOIN (
+            SELECT product_id, image_path
+            FROM product_images
+            WHERE is_main = 1
+        ) AS pi ON p.id = pi.product_id
+        GROUP BY o.id
+        ORDER BY o.id DESC;
+    ");
 		$data = [];
 		while ($order = $result->fetch_object()) {
 			$data[] = $order;
 		}
 		return $data;
 	}
+
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{
 		global $db, $tx;

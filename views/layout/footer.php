@@ -290,9 +290,9 @@
                     data
                 },
                 success: function(res) {
-                    // let data = JSON.parse(res);
-                    console.log(data);
-                    cart.clearAll();
+                    //  let data = JSON.parse(res);
+                    console.log(res);
+                   cart.clearAll();
                     renderCart();
                 },
                 error: function(err) {

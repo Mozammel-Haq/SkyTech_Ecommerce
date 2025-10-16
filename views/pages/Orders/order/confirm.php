@@ -4,7 +4,7 @@ $data1 = $data['data1'] ?? null;
 $data2 = $data['data2']?? null;
 
 // print_r($data1);
-// print_r($data2);
+print_r($data2);
 
 while ($row = $data2->fetch_object()): ?>
     <div class="content content-two d-flex align-items-center justify-content-center" style="min-height: 100vh;">
