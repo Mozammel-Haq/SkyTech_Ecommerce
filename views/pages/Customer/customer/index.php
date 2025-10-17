@@ -219,8 +219,8 @@
 				<div class="mb-3">
 					<img src="<?= $base_url ?>/assets/img/icons/delete.svg" alt="img">
 				</div>
-				<h6 class="mb-1">Delete Product</h6>
-				<p class="mb-3">Are you sure, you want to delete product?</p>
+				<h6 class="mb-1">Delete Customer</h6>
+				<p class="mb-3">Are you sure, you want to delete Customer?</p>
 				<div class="d-flex justify-content-center">
 					<a href="javascript:void(0);" class="btn btn-outline-white me-3" data-bs-dismiss="modal">Cancel</a>
 					<a href="<?= $base_url ?>/customer/delete/<?= $row->id ?>" class="btn btn-primary">Yes, Delete</a>

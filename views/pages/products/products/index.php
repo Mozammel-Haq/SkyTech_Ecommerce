@@ -194,13 +194,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href='#' 
-                       class='dropdown-item d-flex align-items-center deleteBtn'
-                       data-id='{$row['id']}'
-                       data-bs-toggle='modal'
-                       data-bs-target='#delete_modal'>
-                        <i class='isax isax-trash me-2'></i>Delete
-                    </a>
+                    <a href='#'
+   class='dropdown-item d-flex align-items-center deleteProductBtn'
+   data-id= '{$row['id']}'
+   data-bs-toggle='modal'
+   data-bs-target='#delete_Product_modal'>
+   <i class='isax isax-trash me-2'></i> Delete
+</a>
                 </li>
             </ul>
         </td>
@@ -218,20 +218,21 @@
 </div>
 <!-- container  -->
 
-<!-- Delete Modal -->
-<div class="modal fade" id="delete_modal" tabindex="-1" aria-hidden="true">
+
+<!-- Product Delete Modal -->
+<div class="modal fade" id="delete_Product_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-danger">Delete Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0">Are you sure you want to delete this Product?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="#" id="confirmDelete" class="btn btn-danger">Delete</a>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                    <img src="<?= $base_url ?>/assets/img/icons/delete.svg" alt="Delete Icon">
+                </div>
+                <h6 class="mb-1">Delete Product</h6>
+                <p class="mb-3">Are you sure you want to delete this product?</p>
+                <div class="d-flex justify-content-center">
+                    <a href="javascript:void(0);" class="btn btn-outline-white me-3" data-bs-dismiss="modal">Cancel</a>
+                    <a href="#" id="confirmProductDelete" class="btn btn-primary">Yes, Delete</a>
+                </div>
             </div>
         </div>
     </div>

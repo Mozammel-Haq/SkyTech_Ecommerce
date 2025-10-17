@@ -12,29 +12,31 @@ class Order extends Model implements JsonSerializable
 	public $updated_at;
 	public $delivery_date;
 	public $shipping_address;
+	public $billing_address;
 	public $paid_amount;
 	public $discount;
 
 	public function __construct() {}
-	public function set($id, $customer_id, $order_date, $status, $tracking_id, $total_amount, $created_at, $updated_at, $delivery_date, $shipping_address, $paid_amount, $discount)
+	public function set($id, $customer_id, $order_date, $status, $total_amount, $created_at, $updated_at, $delivery_date, $shipping_address, $billing_address, $paid_amount, $discount, $tracking_id)
 	{
 		$this->id = $id;
 		$this->customer_id = $customer_id;
 		$this->order_date = $order_date;
 		$this->status = $status;
-		$this->tracking_id = $tracking_id;
 		$this->total_amount = $total_amount;
 		$this->created_at = $created_at;
 		$this->updated_at = $updated_at;
 		$this->delivery_date = $delivery_date;
 		$this->shipping_address = $shipping_address;
+		$this->billing_address = $billing_address;
 		$this->paid_amount = $paid_amount;
 		$this->discount = $discount;
+		$this->tracking_id = $tracking_id;
 	}
 	public function save()
 	{
 		global $db;
-		$db->query("insert into orders(customer_id,order_date,status,total_amount,created_at,updated_at,delivery_date,shipping_address,paid_amount,discount) values('$this->customer_id','$this->order_date','$this->status','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->paid_amount','$this->discount')");
+		$db->query("insert into orders(customer_id,order_date,status,total_amount,created_at,updated_at,delivery_date,shipping_address,billing_address,paid_amount,discount,tracking_id) values('$this->customer_id','$this->order_date','$this->status','$this->total_amount','$this->created_at','$this->updated_at','$this->delivery_date','$this->shipping_address','$this->billing_address','$this->paid_amount','$this->discount','$this->tracking_id')");
 		return $db->insert_id;
 	}
 	public function update()
@@ -54,34 +56,28 @@ class Order extends Model implements JsonSerializable
 	public static function all()
 	{
 		global $db, $tx;
+
 		$result = $db->query("
         SELECT 
             o.id,
-            GROUP_CONCAT(p.name SEPARATOR ', ') AS product_name,
-            SUM(od.quantity) AS quantity,
+            c.name AS customer_name,
             o.total_amount,
             o.status,
             t.name AS tracking,
-            o.order_date,
-            MAX(pi.image_path) AS image_path
+            o.order_date
         FROM orders AS o
-        JOIN order_details AS od ON o.id = od.order_id
-        JOIN products AS p ON od.product_id = p.id
+        JOIN customers AS c ON o.customer_id = c.id
         LEFT JOIN trackings AS t ON t.id = o.tracking_id
-        LEFT JOIN (
-            SELECT product_id, image_path
-            FROM product_images
-            WHERE is_main = 1
-        ) AS pi ON p.id = pi.product_id
-        GROUP BY o.id
         ORDER BY o.id DESC;
     ");
+
 		$data = [];
 		while ($order = $result->fetch_object()) {
 			$data[] = $order;
 		}
 		return $data;
 	}
+
 
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{

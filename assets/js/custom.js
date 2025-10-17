@@ -178,7 +178,6 @@ document.addEventListener("click", function (e) {
 
 // ==== GET product Description from Quill Editor
 
-const BASE_URL = "<?= $base_url ?>";
 const form = document.getElementById("add_product");
 if (form) {
   form.addEventListener("submit", function (e) {
@@ -195,10 +194,9 @@ if (addForm) {
 }
 
 // Delete Product Modal
-
 document.addEventListener("DOMContentLoaded", function () {
-  const deleteButtons = document.querySelectorAll(".deleteBtn");
-  const confirmDelete = document.getElementById("confirmDelete");
+  const deleteButtons = document.querySelectorAll(".deleteProductBtn");
+  const confirmDelete = document.getElementById("confirmProductDelete");
 
   deleteButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
@@ -207,6 +205,20 @@ document.addEventListener("DOMContentLoaded", function () {
         "href",
         BASE_URL + "/products/deleteProduct/" + productId
       );
+    });
+  });
+});
+
+// Delete Order Modal
+
+document.addEventListener("DOMContentLoaded", function () {
+  const deleteButtons = document.querySelectorAll(".deleteOrderBtn");
+  const confirmDelete = document.getElementById("confirmOrderDelete");
+
+  deleteButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const orderId = this.getAttribute("data-id");
+      confirmDelete.setAttribute("href", BASE_URL + "/order/delete/" + orderId);
     });
   });
 });

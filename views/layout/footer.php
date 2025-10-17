@@ -292,7 +292,7 @@
                 success: function(res) {
                     //  let data = JSON.parse(res);
                     console.log(res);
-                   cart.clearAll();
+                    cart.clearAll();
                     renderCart();
                 },
                 error: function(err) {
@@ -305,7 +305,9 @@
 
 
 
-
+<script>
+    const BASE_URL = "<?= $base_url ?>";
+</script>
 <script script src="<?= $base_url ?>/assets/js/custom.js">
 </script>
 

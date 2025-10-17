@@ -87,12 +87,6 @@
                                 </div>
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                                        <input name="quantity" type="text" class="form-control" value="">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="mb-3">
                                         <label class="form-label">Units <span class="text-danger">*</span></label>
                                         <?php
                                         echo Unit::html_select("unit");

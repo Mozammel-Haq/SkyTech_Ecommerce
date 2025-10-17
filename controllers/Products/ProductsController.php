@@ -123,25 +123,27 @@ class ProductsController
         global $db;
 
         if (isset($_POST['update_btn'])) {
-            $name = $_POST['name'];
-            $code = $_POST['code'];
-            $category = $_POST['category'];
-            $selling_price = $_POST['selling_price'];
-            $purchase_price = $_POST['purchase_price'];
-            $unit = $_POST['unit'];
-            $discount = $_POST['discount'];
-            $barcode = $_POST['barcode'];
-            $alert_quantity = $_POST['alert_quantity'];
-            $tax = $_POST['tax'];
-            $description = $_POST['description'];
 
-            // Handle image upload
+            // Keep variable names exactly as DB columns
+            $name           = $_POST['name'];
+            $sku            = $_POST['code'];
+            $category_id    = (int)$_POST['category'];
+            $brand_id       = (int)($_POST['brand'] ?? 0);
+            $unit_id        = (int)$_POST['unit'];
+            $selling_price  = (float)$_POST['selling_price'];
+            $purchase_price = (float)$_POST['purchase_price'];
+            $discount       = (float)($_POST['discount'] ?? 0);
+            $barcode        = $_POST['barcode'];
+            $alert_quantity = (int)$_POST['alert_quantity'];
+            $tax_id         = (int)$_POST['tax'];
+            $description    = $_POST['description'];
+
+            // --- HANDLE MAIN IMAGE UPLOAD ---
             $image_name = $_POST['old_image'] ?? '';
             if (!empty($_FILES['image']['name'])) {
                 $uploadDir = __DIR__ . "/../../assets/img/products/";
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0777, true);
-                }
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
                 $image_name = basename($_FILES['image']['name']);
                 $targetPath = $uploadDir . $image_name;
 
@@ -150,25 +152,69 @@ class ProductsController
                     return;
                 }
             }
-            // Update main product info
-            $sql = $db->prepare("UPDATE products 
-            SET name=?, sku=?, category_id=?, selling_price=?, purchase_price=?, unit_id=?, discount=?, barcode=?, alert_quantity=?, tax_id=?, description=? 
+
+            // --- UPDATE products TABLE ---
+            $stmt = $db->prepare("UPDATE products 
+            SET name=?, sku=?, category_id=?, brand_id=?, unit_id=?, selling_price=?, purchase_price=?, discount=?, barcode=?, alert_quantity=?, tax_id=?, description=? 
             WHERE id=?");
-            $sql->execute([$name, $code, $category, $selling_price, $purchase_price, $unit, $discount, $barcode, $alert_quantity, $tax, $description, $id]);
 
-            // Check if a product_images row exists
-            $check = $db->prepare("SELECT id FROM product_images WHERE product_id=?");
-            $check->execute([$id]);
-            $existing = $check->fetch();
+            $stmt->bind_param(
+                "ssiiidddsisii",
+                $name,
+                $sku,
+                $category_id,
+                $brand_id,
+                $unit_id,
+                $selling_price,
+                $purchase_price,
+                $discount,
+                $barcode,
+                $alert_quantity,
+                $tax_id,
+                $description,
+                $id
+            );
 
-            if ($existing) {
-                // Update existing image row
-                $stmt = $db->prepare("UPDATE product_images SET image_path=?, is_main=1 WHERE product_id=?");
-                $stmt->execute([$image_name, $id]);
-            } else if (!empty($image_name)) {
-                // Insert new row if image uploaded
+            $stmt->execute();
+            $stmt->close();
+
+            // --- UPDATE OR INSERT MAIN IMAGE ---
+            $stmt = $db->prepare("SELECT id FROM product_images WHERE product_id=? AND is_main=1");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $existingMain = $result->fetch_assoc();
+            $result->free();
+            $stmt->close();
+
+            if ($existingMain) {
+                $stmt = $db->prepare("UPDATE product_images SET image_path=?, is_main=1 WHERE product_id=? AND is_main=1");
+                $stmt->bind_param("si", $image_name, $id);
+                $stmt->execute();
+                $stmt->close();
+            } elseif (!empty($image_name)) {
                 $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path, is_main) VALUES (?, ?, 1)");
-                $stmt->execute([$id, $image_name]);
+                $stmt->bind_param("is", $id, $image_name);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            // --- HANDLE GALLERY IMAGES ---
+            if (!empty($_FILES['gallery']['name'][0])) {
+                $uploadDir = __DIR__ . "/../../assets/img/products/";
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+                foreach ($_FILES['gallery']['tmp_name'] as $key => $tmp_name) {
+                    $gallery_name = basename($_FILES['gallery']['name'][$key]);
+                    $targetPath = $uploadDir . $gallery_name;
+
+                    if (move_uploaded_file($tmp_name, $targetPath)) {
+                        $stmt = $db->prepare("INSERT INTO product_images (product_id, image_path, is_main) VALUES (?, ?, 0)");
+                        $stmt->bind_param("is", $id, $gallery_name);
+                        $stmt->execute();
+                        $stmt->close();
+                    }
+                }
             }
 
             redirect("");

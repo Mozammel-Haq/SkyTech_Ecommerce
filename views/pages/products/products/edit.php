@@ -2,6 +2,7 @@
 $product = $data['product'] ?? null;
 $mainImage = $data['mainImage'] ?? null;
 $gallery = $data['gallery'] ?? [];
+
 ?>
 
 <?php foreach ($product as $row) : ?>
@@ -88,13 +89,6 @@ $gallery = $data['gallery'] ?? [];
 
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Quantity</label>
-                                        <input name="quantity" type="text" class="form-control" value="">
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="mb-3">
                                         <label class="form-label">Unit</label>
                                         <select class="select" name="unit">
                                             <option value="1" <?= $row['unit_id'] == 1 ? 'selected' : '' ?>>Pack (pk)</option>
@@ -105,11 +99,9 @@ $gallery = $data['gallery'] ?? [];
 
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Discount Type</label>
-                                        <select class="select" name="discount_type">
-                                            <option value="1" <?= $row['discount_type'] == 1 ? 'selected' : '' ?>>%</option>
-                                            <option value="2" <?= $row['discount_type'] == 2 ? 'selected' : '' ?>>Fixed</option>
-                                        </select>
+                                        <label class="form-label">Discount <span class="text-danger">*</span></label>
+                                        <input name="discount" type="text" class="form-control" value="<?= $row['discount'] ?>">
+
                                     </div>
                                 </div>
 

@@ -143,8 +143,7 @@ print_r($data);
                             </div>
                         </th>
                         <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="OrderNumber: activate to sort column ascending">Order ID</th>
-                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending">Product</th>
-                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Quantity: activate to sort column ascending">Quantity</th>
+                        <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Product: activate to sort column ascending">Customer</th>
 
                         <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Total Amount: activate to sort column ascending">Total Amount</th>
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
@@ -173,18 +172,7 @@ print_r($data);
                                 #<?= $row->id ?>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <a href="javascript:void(0);" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                        <img src="<?= $base_url ?>/assets/img/products/<?= $row->image_path ?>" class="rounded-circle" alt="img">
-                                    </a>
-                                    <div>
-                                        <h6 class="fs-14 fw-medium mb-0"><a href="javascript:void(0);"><?= $row->product_name ?></a></h6>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td>
-                                <?= $row->quantity ?>
+                                <h6 class="fs-14 fw-medium mb-0"><?= htmlspecialchars($row->customer_name) ?></h6>
                             </td>
 
                             <td>$ <?= $row->total_amount ?></td>
@@ -213,13 +201,14 @@ print_r($data);
                                         <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
                                     </li>
                                     <li>
-                                        <a href='#'
-                                            class='dropdown-item d-flex align-items-center deleteBtn'
-                                            data-id='{$row[' id']}'
-                                            data-bs-toggle='modal'
-                                            data-bs-target='#delete_order_modal'>
-                                            <i class='isax isax-trash me-2'></i>Delete
+                                        <a href="#"
+                                            class="dropdown-item d-flex align-items-center deleteOrderBtn"
+                                            data-id="<?= $row->id ?>"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#delete_Order_modal">
+                                            <i class="isax isax-trash me-2"></i> Delete
                                         </a>
+
                                     </li>
                                 </ul>
                             </td>
@@ -241,21 +230,20 @@ print_r($data);
 
 </div>
 
-
-<!-- Delete Modal -->
-<div class="modal fade" id="delete_Order_modal" tabindex="-1" aria-hidden="true">
+<!-- Order Delete Modal -->
+<div class="modal fade" id="delete_Order_modal" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-danger">Delete Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p class="mb-0">Are you sure you want to delete this Product?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="#" id="confirmDelete" class="btn btn-danger">Delete</a>
+            <div class="modal-body text-center">
+                <div class="mb-3">
+                    <img src="<?= $base_url ?>/assets/img/icons/delete.svg" alt="Delete Icon">
+                </div>
+                <h6 class="mb-1">Delete Order</h6>
+                <p class="mb-3">Are you sure you want to delete this order?</p>
+                <div class="d-flex justify-content-center">
+                    <a href="javascript:void(0);" class="btn btn-outline-white me-3" data-bs-dismiss="modal">Cancel</a>
+                    <a href="#" id="confirmOrderDelete" class="btn btn-primary">Yes, Delete</a>
+                </div>
             </div>
         </div>
     </div>

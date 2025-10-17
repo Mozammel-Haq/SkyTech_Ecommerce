@@ -27,7 +27,7 @@ class Customer extends Model implements JsonSerializable
 	public function save()
 	{
 		global $db, $tx;
-		$db->query("insert into {$tx}customers(id,name,email,phone,photo,address,status,created_at,updated_at)values('$this->id' ,'$this->name','$this->email','$this->phone','$this->photo','$this->address','$this->status','$this->created_at','$this->updated_at')");
+		$db->query("insert into {$tx}customers(name,email,phone,photo,address,status,created_at,updated_at)values('$this->name','$this->email','$this->phone','$this->photo','$this->address','$this->status','$this->created_at','$this->updated_at')");
 		return $db->insert_id;
 	}
 	public function update()
