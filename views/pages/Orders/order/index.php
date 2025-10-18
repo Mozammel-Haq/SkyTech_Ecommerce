@@ -1,7 +1,3 @@
-<?php
-print_r($data);
-?>
-
 <div class="content content-two">
 
     <!-- Page Header -->

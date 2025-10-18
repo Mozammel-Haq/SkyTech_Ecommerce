@@ -1,7 +1,7 @@
 <?php
-
 $customer = Customer::find($order->customer_id);
 $order_details = OrderDetail::find_by_order_id($order->id);
+
 ?>
 
 <div class="content">
@@ -111,10 +111,8 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         $count = 1;
                                         $discount = 0.0;
                                         $line_total = 0.0;
-
                                         foreach ($order_details as $row) :
-                                            $product = Product::findProductRow($row['order_id']);
-
+                                            $product = Product::findProductRow($row['product_id']);
                                             // Convert to float to prevent TypeError
                                             $price = (float)$row['price'];
                                             $quantity = (float)$row['quantity'];
@@ -125,7 +123,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         ?>
                                             <tr>
                                                 <td class="text-center"><?= $count ?></td>
-                                                <td><?= htmlspecialchars($product['name']) ?></td>
+                                                <td><?= $product['name'] ?></td>
                                                 <td class="text-center"><?= number_format($quantity, 2) ?></td>
                                                 <td class="text-end"><?= number_format($price, 2) ?></td>
                                                 <td class="text-end"><?= number_format($vat, 2) ?></td>
