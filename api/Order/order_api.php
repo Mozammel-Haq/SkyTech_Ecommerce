@@ -23,6 +23,7 @@ class OrderApi
 	}
 	function save($data, $file = [])
 	{
+		global $now;
 		$order = new Order();
 		$order->customer_id = $data["customer_id"];
 		$order->order_date = $data["order_date"];
