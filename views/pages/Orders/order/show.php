@@ -109,28 +109,36 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                     <tbody>
                                         <?php
                                         $count = 1;
-                                        $discount = 0;
-                                        $line_total = 0;
+                                        $discount = 0.0;
+                                        $line_total = 0.0;
+
                                         foreach ($order_details as $row) :
                                             $product = Product::findProductRow($row['order_id']);
-                                            $total_amount = ($row['price'] * $row['quantity']) - $product['discount'] + $row['vat'];
+
+                                            // Convert to float to prevent TypeError
+                                            $price = (float)$row['price'];
+                                            $quantity = (float)$row['quantity'];
+                                            $product_discount = (float)$product['discount'];
+                                            $vat = (float)$row['vat'];
+
+                                            $total_amount = ($price * $quantity) - $product_discount + $vat;
                                         ?>
                                             <tr>
                                                 <td class="text-center"><?= $count ?></td>
-                                                <td><?= $product['name'] ?></td>
-                                                <td class="text-center"><?= $row['quantity'] ?></td>
-                                                <td class="text-end"><?= $row['price'] ?></td>
-                                                <td class="text-end"><?= $row['vat'] ?></td>
-                                                <td class="text-end"><?= $product['discount'] ?></td>
-                                                <td class="text-end"><?= $total_amount ?></td>
+                                                <td><?= htmlspecialchars($product['name']) ?></td>
+                                                <td class="text-center"><?= number_format($quantity, 2) ?></td>
+                                                <td class="text-end"><?= number_format($price, 2) ?></td>
+                                                <td class="text-end"><?= number_format($vat, 2) ?></td>
+                                                <td class="text-end"><?= number_format($product_discount, 2) ?></td>
+                                                <td class="text-end"><?= number_format($total_amount, 2) ?></td>
                                             </tr>
                                         <?php
                                             $count++;
-                                            $discount += $product['discount'];
+                                            $discount += $product_discount;
                                             $line_total += $total_amount;
-                                            $vat = $row['vat'];
                                         endforeach;
                                         ?>
+
                                     </tbody>
                                 </table>
                             </div>
