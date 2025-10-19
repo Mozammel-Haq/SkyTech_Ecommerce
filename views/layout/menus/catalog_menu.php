@@ -22,7 +22,6 @@
                 <li><a href="<?= $base_url ?>/inventory">Inventory</a></li>
                 <li><a href="<?= $base_url ?>/warehouse">Warehouses</a></li>
                 <li><a href="<?= $base_url ?>/supplier">Suppliers</a></li>
-                <li><a href="<?= $base_url ?>/purchase_order">Purchase Orders</a></li>
             </ul>
         </li>
     </ul>

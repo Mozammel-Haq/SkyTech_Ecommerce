@@ -97,6 +97,20 @@
 
             this.saveData(cartItems);
         }
+        AddPurchaseItem(item) {
+            let cartItems = this.getData();
+            let existing = cartItems.find(i => i.id === item.id);
+
+            if (existing) {
+                existing.qty += item.qty;
+                existing.line_total = (existing.qty * existing.price);
+            } else {
+                item.line_total = (item.qty * item.price);
+                cartItems.push(item);
+            }
+
+            this.saveData(cartItems);
+        }
 
         delItem(id) {
             let updated = this.getData().filter(item => item.id !== id);
@@ -134,8 +148,8 @@
 
     $(function() {
         $("select").select2();
-        const cart = new Cart("order");
-
+        const orderCart = new Cart("order");
+        const purchaseCart = new Cart("purchase")
         // Calculate line total dynamically
         function calculateLineTotal() {
             let qty = parseFloat($("#qty").val()) || 0;
@@ -147,8 +161,8 @@
         }
 
         // Render cart table and summary
-        function renderCart() {
-            let data = cart.getData();
+        function renderOrderCart() {
+            let data = orderCart.getData();
             let html = '';
             let totalAmount = 0;
             let totalDiscount = 0;
@@ -228,6 +242,15 @@
             });
         });
 
+        $("#quantity").on("input change", function() {
+            let quantity = parseFloat($("#quantity").val()) || 0;
+            let unit_price = parseFloat($("#unit_price").val()) || 0;
+            let amount = quantity * unit_price;
+
+            $("#line_total").val(amount.toFixed(2));
+        });
+
+
         // Auto-calc line total
         $("#qty, #selling_price, #discount, #vat").on("input", calculateLineTotal);
 
@@ -245,18 +268,18 @@
                 vat: parseFloat($("#vat").val()) || 0,
                 line_total: parseFloat($("#line_total").val()) || 0
             };
-            cart.AddItem(item);
-            renderCart();
+            orderCart.AddItem(item);
+            renderOrderCart();
         });
 
         // Remove item
         $(document).on("click", ".remove-table", function() {
-            cart.delItem($(this).data("id"));
-            renderCart();
+            orderCart.delItem($(this).data("id"));
+            renderOrderCart();
         });
 
         // Render on load
-        renderCart();
+        renderOrderCart();
 
 
         $('#save_btn').on("click", function() {
@@ -269,7 +292,7 @@
             let discount = $("#summary_discount").text();
             let vat = $('#summary_vat').text();
 
-            let products = cart.getData();
+            let products = orderCart.getData();
 
             let data = {
                 customer_id,
@@ -293,13 +316,132 @@
                     //  let data = JSON.parse(res);
                     console.log(res);
                     cart.clearAll();
-                    renderCart();
+                    renderOrderCart();
                 },
                 error: function(err) {
                     console.log(err);
                 }
             });
         });
+
+
+        // Purchase Logic===========
+
+        function renderPurchaseCart() {
+            let data = purchaseCart.getData();
+            let html = '';
+            let totalAmount = 0;
+            if (data.length === 0) {
+                $("#add_row").html('<tr><td colspan="7" class="text-center text-muted">No items added</td></tr>');
+                $("#summary_amount").text("$0.00");
+                $("#summary_grand_total").text("$0.00");
+                $("#summary_total_words").text("Zero Dollars");
+                return;
+            }
+
+            data.forEach(item => {
+                const price = parseFloat(item.unit_price || 0);
+                const qty = parseFloat(item.qty || 0);
+                const line_total = parseFloat(item.amount || 0) * qty;
+
+                html += `
+                <tr>
+                    <td>${item.product}</td>
+                    <td>${qty}</td>
+                    <td>${price.toFixed(2)}</td>
+                    <td>${line_total.toFixed(2)}</td>
+                    <td>
+                        <a href="javascript:void(0);" data-id="${item.id}" class="text-danger remove-table">
+                            <i class="isax isax-close-circle"></i>
+                        </a>
+                    </td>
+                </tr>`;
+                totalAmount += qty * price;
+            });
+
+            $("#product_rows").html(html);
+
+            // Update summary section
+            $("#summary_total").text(`$${totalAmount.toFixed(2)}`);
+            $("#summary_total_words").text(numberToWords(Math.round(totalAmount)) + " Dollars");
+        }
+        renderPurchaseCart();
+        $("#productForPurchase").on("change", function() {
+            let id = $(this).val();
+
+            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+                id
+            }, function(res) {
+                let data = JSON.parse(res).product;
+                $("#unit_price").val(data.purchase_price || 0);
+                $("#quantity").val(1);
+                // Calculate total
+                let unit_price = parseFloat(data.purchase_price || 0);
+                let quantity = 1;
+                let amount = quantity * unit_price;
+
+                $("#line_total").val(amount.toFixed(2));
+            });
+        });
+
+        $("#add_purchase").on("click", function(e) {
+            e.preventDefault();
+            let product_id = parseInt($("#productForPurchase").val());
+            if (!product_id) return alert("Select a product!");
+            let item = {
+                id: product_id,
+                product: $("#productForPurchase option:selected").text(),
+                qty: parseFloat($("#quantity").val()) || 1,
+                unit_price: parseFloat($("#unit_price").val()) || 0,
+                amount: parseFloat($("#line_total").val()) || 0
+            };
+            purchaseCart.AddPurchaseItem(item);
+            renderPurchaseCart();
+        })
+
+        $(document).on("click", ".remove-table", function() {
+            purchaseCart.delItem($(this).data("id"));
+            renderPurchaseCart();
+        });
+
+
+
+        $('#save_purchase_btn').on("click", function() {
+            let supplier_id = $("#supplier").val();
+            let purchase_date = $("#purchase_date").val();
+            let status = $("#status").val();
+            let total_amount = $("#summary_total").text();
+
+            let products = purchaseCart.getData();
+
+            let data = {
+                supplier_id,
+                purchase_date,
+                status,
+                total_amount,
+                products
+            };
+
+            $.ajax({
+                url: "<?= $base_url ?>/api/purchase/save_purchase",
+                type: "POST",
+                data: {
+                    data
+                },
+                success: function(res) {
+                    //  let data = JSON.parse(res);
+                    console.log(res);
+                    purchaseCart.clearAll();
+                    renderPurchaseCart();
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        });
+
+
+
     });
 </script>
 

@@ -49,17 +49,17 @@
 								<th>Product</th>
 								<th class="text-center">Qty</th>
 								<th class="text-end">Unit Price</th>
-								<th class="text-end">Subtotal</th>
+								<th class="text-end">Amount</th>
 								<th class="text-center">Action</th>
 							</tr>
 							<tr>
 								<td>
 									<?php
-									echo Product::html_select("product")
+									echo Product::html_select("productForPurchase")
 									?>
 								</td>
 								<td>
-									<input type="number" id="qty" class="form-control form-control-sm text-center" value="1" min="1">
+									<input type="number" id="quantity" class="form-control form-control-sm text-center" value="1" min="1">
 								</td>
 								<td>
 									<input type="number" id="unit_price" class="form-control form-control-sm text-end" readonly>
@@ -68,7 +68,7 @@
 									<input type="number" id="line_total" class="form-control form-control-sm text-end" readonly>
 								</td>
 								<td class="text-center">
-									<button type="button" class="btn btn-success btn-sm" id="add_row_btn">Add</button>
+									<button type="button" class="btn btn-success btn-sm" id="add_purchase">Add</button>
 								</td>
 							</tr>
 						</thead>
@@ -84,13 +84,14 @@
 					<div class="col-lg-7"></div>
 					<div class="col-lg-5">
 						<div class="p-3 border rounded">
-							<div class="d-flex justify-content-between mb-2">
-								<h6 class="fs-14 fw-semibold">Subtotal</h6>
-								<h6 class="fs-14 fw-semibold" id="summary_subtotal">0.00</h6>
-							</div>
 							<div class="d-flex justify-content-between border-bottom pb-2 mb-2">
 								<h6 class="fs-14 fw-bold">Grand Total</h6>
 								<h6 class="fs-14 fw-bold" id="summary_total">0.00</h6>
+							</div>
+							<!-- Total in Words -->
+							<div>
+								<h6 class="fs-14 fw-semibold mb-1">Total In Words</h6>
+								<p id="summary_total_words">Zero Dollars</p>
 							</div>
 						</div>
 					</div>

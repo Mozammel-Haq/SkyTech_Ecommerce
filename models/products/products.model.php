@@ -128,7 +128,7 @@ ORDER BY p.id DESC;
     {
         global $db, $tx;
         $html = "<select id='$name' name='$name' class = 'w-50'> ";
-        $html .= "<option value=''>Select $name</option>";
+        $html .= "<option value=''>Select a Product</option>";
         $result = $db->query("select id,name from {$tx}products");
         while ($product = $result->fetch_object()) {
             $html .= "<option value ='$product->id'>$product->name</option>";

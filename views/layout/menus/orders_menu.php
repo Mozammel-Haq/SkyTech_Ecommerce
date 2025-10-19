@@ -7,6 +7,12 @@
                                     </a>
 
                                 </li>
+                                <li>
+                                    <a href="<?= $base_url ?>/purchase">
+                                        <i class="isax isax-box5"></i><span>Purchases</span>
+                                    </a>
+
+                                </li>
                                 <li class="submenu">
                                     <a href="javascript:void(0);">
                                         <i class="isax isax-receipt-item5"></i><span>Invoices</span>
