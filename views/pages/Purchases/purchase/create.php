@@ -33,7 +33,7 @@
 					</div>
 					<div class="col-md-4">
 						<label class="form-label">Status</label>
-						<select name="status" class="form-select">
+						<select name="status" class="form-select" id="status">
 							<option value="pending">Pending</option>
 							<option value="received">Received</option>
 							<option value="cancelled">Cancelled</option>
@@ -62,7 +62,7 @@
 									<input type="number" id="quantity" class="form-control form-control-sm text-center" value="1" min="1">
 								</td>
 								<td>
-									<input type="number" id="unit_price" class="form-control form-control-sm text-end" readonly>
+									<input type="number" id="unit_price" class="form-control form-control-sm text-end">
 								</td>
 								<td>
 									<input type="number" id="line_total" class="form-control form-control-sm text-end" readonly>
@@ -86,7 +86,7 @@
 						<div class="p-3 border rounded">
 							<div class="d-flex justify-content-between border-bottom pb-2 mb-2">
 								<h6 class="fs-14 fw-bold">Grand Total</h6>
-								<h6 class="fs-14 fw-bold" id="summary_total">0.00</h6>
+								<h6 class="fs-14 fw-bold" id="summary_total"><span>$</span>0.00</h6>
 							</div>
 							<!-- Total in Words -->
 							<div>

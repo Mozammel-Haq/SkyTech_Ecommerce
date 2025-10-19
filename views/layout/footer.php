@@ -342,7 +342,7 @@
             data.forEach(item => {
                 const price = parseFloat(item.unit_price || 0);
                 const qty = parseFloat(item.qty || 0);
-                const line_total = parseFloat(item.amount || 0) * qty;
+                const line_total = parseFloat(item.unit_price || 0) * qty;
 
                 html += `
                 <tr>
@@ -362,7 +362,7 @@
             $("#product_rows").html(html);
 
             // Update summary section
-            $("#summary_total").text(`$${totalAmount.toFixed(2)}`);
+            $("#summary_total").text(`${totalAmount.toFixed(2)}`);
             $("#summary_total_words").text(numberToWords(Math.round(totalAmount)) + " Dollars");
         }
         renderPurchaseCart();
@@ -383,6 +383,13 @@
                 $("#line_total").val(amount.toFixed(2));
             });
         });
+        $("#unit_price").on("change", function() {
+            let quantity = $("#quantity").val();
+            let unit_price = parseFloat($("#unit_price").val());
+            let amount = quantity * unit_price;
+            $("#line_total").val(amount.toFixed(2));
+
+        })
 
         $("#add_purchase").on("click", function(e) {
             e.preventDefault();
@@ -395,7 +402,7 @@
                 unit_price: parseFloat($("#unit_price").val()) || 0,
                 amount: parseFloat($("#line_total").val()) || 0
             };
-            purchaseCart.AddPurchaseItem(item);
+            purchaseCart.AddItem(item);
             renderPurchaseCart();
         })
 

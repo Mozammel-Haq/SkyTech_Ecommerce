@@ -1,31 +1,163 @@
 <?php
 $customer = Customer::find($order->customer_id);
 $order_details = OrderDetail::find_by_order_id($order->id);
-
 ?>
 
+<style>
+    /* =======================
+   PRINT OPTIMIZATION
+   ======================= */
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 10mm;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        #invoiceArea,
+        #invoiceArea * {
+            visibility: visible !important;
+        }
+
+        #invoiceArea {
+            position: absolute !important;
+            left: 0;
+            top: 0;
+            width: 100%;
+            background: #fff !important;
+            color: #000 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* Force Invoice Details / Bill From / Bill To horizontally */
+        .row.gy-3.position-relative.z-1 {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: flex-start !important;
+            flex-wrap: nowrap !important;
+            gap: 10px !important;
+        }
+
+        .row.gy-3.position-relative.z-1>.col-lg-4 {
+            flex: 1 1 33% !important;
+            max-width: 33% !important;
+            padding: 0 8px !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fix image scaling */
+        #invoiceArea img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Table formatting for print */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            font-size: 10.5pt !important;
+        }
+
+        th,
+        td {
+            border: 1px solid #000 !important;
+            padding: 6px 8px !important;
+            vertical-align: middle !important;
+        }
+
+        thead th {
+            background: #f2f2f2 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* Hide buttons/navigation */
+        .btn,
+        nav,
+        header,
+        footer,
+        a[href^="#"] {
+            display: none !important;
+        }
+
+        /* Prevent breaking inside major sections */
+        .row.gy-3.position-relative.z-1,
+        .row.gy-3.position-relative.z-1>* {
+            page-break-inside: avoid !important;
+        }
+
+        /* Ensure total section stays on first page */
+        .border-bottom.mb-3 {
+            margin-bottom: 30px !important;
+
+        }
+
+        .col-lg-6:last-child {
+            page-break-inside: avoid !important;
+        }
+
+        .p-4 {
+            padding: 1rem !important;
+        }
+
+        .bg-light.p-4.rounded.position-relative.mb-3 {
+            margin-bottom: 10px !important;
+        }
+
+        .print_align_right {
+            text-align: end;
+        }
+
+        .print_align_right_sign {
+            text-align: end;
+            padding-right: 1rem;
+        }
+
+        /* Slight font adjustment */
+        #invoiceArea {
+            font-size: 11pt !important;
+            line-height: 1.4 !important;
+        }
+    }
+</style>
+
 <div class="content">
-    <!-- start row -->
     <div class="row">
         <div class="col-md-10 mx-auto">
             <div>
                 <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3 mb-3">
-                    <h6><a href="<?= $base_url ?>/order"><i class="isax isax-arrow-left me-2"></i>Invoice (Admin)</a></h6>
+                    <h6>
+                        <a href="<?= $base_url ?>/order">
+                            <i class="isax isax-arrow-left me-2"></i>Invoice (Admin)
+                        </a>
+                    </h6>
                     <div class="d-flex align-items-center flex-wrap row-gap-3">
-                        <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3"><i class="isax isax-document-like me-1"></i>Download PDF</a>
-                        <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3"><i class="isax isax-message-notif me-1"></i>Send Email</a>
-                        <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3"><i class="isax isax-printer me-1"></i>Print</a>
-                        <a href="#" class="btn btn-primary d-inline-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#customcanvas">
-                            <i class="isax isax-eye me-1"></i>View Details
+                        <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3">
+                            <i class="isax isax-document-like me-1"></i>Download PDF
+                        </a>
+                        <a href="#" class="btn btn-outline-white d-inline-flex align-items-center me-3">
+                            <i class="isax isax-message-notif me-1"></i>Send Email
+                        </a>
+                        <a href="#" id="print_invoice" class="btn btn-primary d-inline-flex align-items-center me-3">
+                            <i class="isax isax-printer me-1"></i>Print
                         </a>
                     </div>
                 </div>
-                <div class="card">
+
+                <!-- ===================== -->
+                <!-- INVOICE SECTION START -->
+                <!-- ===================== -->
+                <div class="card" id="invoiceArea">
                     <div class="card-body">
+
                         <div class="bg-light p-4 rounded position-relative mb-3">
                             <div class="position-absolute top-0 end-0 z-0">
-                                <img alt="img" data-cfsrc="<?= $base_url ?>/assets/img/bg/card-bg.png" src="<?= $base_url ?>/assets/img/bg/card-bg.png">
+                                <img alt="img" src="<?= $base_url ?>/assets/img/bg/card-bg.png">
                             </div>
+
                             <div class="d-flex align-items-center justify-content-between border-bottom flex-wrap mb-3 pb-2 position-relative z-1">
                                 <div class="mb-3">
                                     <h4 class="mb-1">Invoice</h4>
@@ -34,7 +166,9 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             <h6 class="fs-14 fw-semibold mb-1">Dreams Technologies Pvt Ltd.,</h6>
                                             <p>15 Hodges Mews, High Wycombe HP12 3JL, United Kingdom</p>
                                         </div>
-                                        <span><img alt="img" width="48" height="48" data-cfsrc="<?= $base_url ?>/assets/img/icons/not-paid.png" src="<?= $base_url ?>/assets/img/icons/not-paid.png"></span>
+                                        <span>
+                                            <img alt="img" width="48" height="48" src="<?= $base_url ?>/assets/img/icons/not-paid.png">
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -43,54 +177,44 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                 </div>
                             </div>
 
-                            <!-- start row -->
+                            <!-- Invoice Info Row (3 columns) -->
                             <div class="row gy-3 position-relative z-1">
                                 <div class="col-lg-4">
-                                    <div>
-                                        <h6 class="mb-2 fs-16 fw-semibold">Invoice Details</h6>
-                                        <div>
-                                            <p class="mb-1">Invoice ID : <span class="text-dark"><?= $order->id ?></span></p>
-                                            <p class="mb-1">Issued On : <span class="text-dark"><?= $order->created_at ?></span></p>
-                                            <p class="mb-1">Due Date : <span class="text-dark">Date87</span></p>
-                                            <span class="badge bg-danger badge-sm">Due in 8 days</span>
-                                        </div>
-                                    </div>
-                                </div><!-- end col -->
-
+                                    <h6 class="mb-2 fs-16 fw-semibold">Invoice Details</h6>
+                                    <p class="mb-1">Invoice ID : <span class="text-dark"><?= $order->id ?></span></p>
+                                    <p class="mb-1">Issued On : <span class="text-dark"><?= $order->created_at ?></span></p>
+                                    <p class="mb-1">Due Date : <span class="text-dark">Date87</span></p>
+                                    <span class="badge bg-danger badge-sm">Due in 8 days</span>
+                                </div>
 
                                 <div class="col-lg-4">
-                                    <div>
-                                        <h6 class="mb-2 fs-16 fw-semibold">Bill From</h6>
-                                        <div>
-                                            <h6 class="fs-14 fw-semibold mb-1">SkyTech</h6>
-                                            <p class="mb-1">23 Distilary Road, Dhaka-1204</p>
-                                            <p class="mb-1">+09666666</p>
-                                            <p class="mb-1">skytech@infy.uk</p>
-                                            <p class="mb-0">GST : 243E45767889</p>
-                                        </div>
-                                    </div>
-                                </div><!-- end col -->
+                                    <h6 class="mb-2 fs-16 fw-semibold">Bill From</h6>
+                                    <h6 class="fs-14 fw-semibold mb-1">SkyTech</h6>
+                                    <p class="mb-1">23 Distilary Road, Dhaka-1204</p>
+                                    <p class="mb-1">+09666666</p>
+                                    <p class="mb-1">skytech@infy.uk</p>
+                                    <p class="mb-0">GST : 243E45767889</p>
+                                </div>
+
                                 <div class="col-lg-4">
-                                    <div>
-                                        <h6 class="mb-2 fs-16 fw-semibold">Bill To</h6>
-                                        <div class="bg-white rounded p-3">
-                                            <div class="d-flex align-items-center mb-1">
-                                                <img src="<?= $base_url ?>/assets/img/icons/billing-to-image.svg" alt="img" class="avatar avatar-lg me-2">
-                                                <div>
-                                                    <h6 class="fs-14 fw-semibold"><?= $customer->name ?></h6>
-                                                </div>
+                                    <h6 class="mb-2 fs-16 fw-semibold">Bill To</h6>
+                                    <div class="bg-white rounded p-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <img src="<?= $base_url ?>/assets/img/icons/billing-to-image.svg" alt="img" class="avatar avatar-lg me-2">
+                                            <div>
+                                                <h6 class="fs-14 fw-semibold"><?= $customer->name ?></h6>
                                             </div>
-                                            <p class="mb-1"><?= $customer->address ?></p>
-                                            <p class="mb-1"><?= $customer->phone ?></p>
-                                            <p class="mb-1"><?= $customer->email ?></p>
-                                            <p class="mb-0">GST : 243E45767889</p>
                                         </div>
+                                        <p class="mb-1"><?= $customer->address ?></p>
+                                        <p class="mb-1"><?= $customer->phone ?></p>
+                                        <p class="mb-1"><?= $customer->email ?></p>
+                                        <p class="mb-0">GST : 243E45767889</p>
                                     </div>
-                                </div><!-- end col -->
+                                </div>
                             </div>
-                            <!-- end row -->
-
                         </div>
+
+                        <!-- Table Section -->
                         <div class="mb-3">
                             <h6 class="mb-3">Product / Service Items</h6>
                             <div class="table-responsive rounded border mb-3">
@@ -113,12 +237,10 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         $line_total = 0.0;
                                         foreach ($order_details as $row) :
                                             $product = Product::findProductRow($row['product_id']);
-                                            // Convert to float to prevent TypeError
                                             $price = (float)$row['price'];
                                             $quantity = (float)$row['quantity'];
                                             $product_discount = (float)$product['discount'];
                                             $vat = (float)$row['vat'];
-
                                             $total_amount = ($price * $quantity) - $product_discount + $vat;
                                         ?>
                                             <tr>
@@ -136,33 +258,30 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             $line_total += $total_amount;
                                         endforeach;
                                         ?>
-
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
-                        <div class="border-bottom mb-3">
 
-                            <!-- start row -->
+                        <!-- Totals -->
+                        <div class="border-bottom mb-3">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="d-flex align-items-center p-4 mb-3">
                                         <div class="me-3">
-                                            <p class="mb-2">Scan to the pay</p>
-                                            <span><img alt="QR" data-cfsrc="<?= $base_url ?>/assets/img/icons/qr.png" src="<?= $base_url ?>/assets/img/icons/qr.png"></span>
+                                            <p class="mb-2">Scan to Pay</p>
+                                            <img alt="QR" src="<?= $base_url ?>/assets/img/icons/qr.png">
                                         </div>
                                         <div>
                                             <h6 class="mb-2">Bank Details</h6>
-                                            <div>
-                                                <p class="mb-1">Bank Name : <span class="text-dark">ABC Bank</span></p>
-                                                <p class="mb-1">Account Number : <span class="text-dark">782459739212</span></p>
-                                                <p class="mb-1">IFSC Code : <span class="text-dark">ABC0001345</span></p>
-                                                <p class="mb-0">Payment Reference : <span class="text-dark">INV-20250220-001</span></p>
-                                            </div>
+                                            <p class="mb-1">Bank Name : <span class="text-dark">ABC Bank</span></p>
+                                            <p class="mb-1">Account Number : <span class="text-dark">782459739212</span></p>
+                                            <p class="mb-1">IFSC Code : <span class="text-dark">ABC0001345</span></p>
+                                            <p class="mb-0">Payment Ref : <span class="text-dark">INV-20250220-001</span></p>
                                         </div>
                                     </div>
-                                </div><!-- end col -->
+                                </div>
+
                                 <div class="col-lg-6">
                                     <div class="mb-3 p-4">
                                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -181,40 +300,31 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             <h6>Grand Total (USD)</h6>
                                             <h6>$<?= ($line_total + $vat) - $discount ?></h6>
                                         </div>
-                                        <div>
+                                        <div class="print_align_right">
                                             <h6 class="fs-14 fw-semibold mb-1">Total In Words</h6>
                                             <p>Five Hundred &amp; Ninety Six Dollars</p>
                                         </div>
                                     </div>
-                                </div><!-- end col -->
+                                </div>
                             </div>
-                            <!-- end row -->
-
                         </div>
 
-                        <!-- start row -->
+                        <!-- Footer -->
                         <div class="row">
                             <div class="col-lg-7">
                                 <div class="mb-3">
-                                    <div class="mb-3">
-                                        <h6 class="fs-14 fw-semibold mb-1">Terms and Conditions</h6>
-                                        <p>The Payment must be returned in the same condition.</p>
-                                    </div>
-                                    <div>
-                                        <h6 class="fs-14 fw-semibold mb-1">Notes</h6>
-                                        <p>All charges are final and include applicable taxes, fees, and additional costs</p>
-                                    </div>
+                                    <h6 class="fs-14 fw-semibold mb-1">Terms and Conditions</h6>
+                                    <p>The Payment must be returned in the same condition.</p>
+                                    <h6 class="fs-14 fw-semibold mb-1">Notes</h6>
+                                    <p>All charges are final and include applicable taxes, fees, and additional costs.</p>
                                 </div>
-                            </div><!-- end col -->
-                            <div class="col-lg-5">
-                                <div class="text-lg-end mb-3">
-                                    <span><img class="sign-dark" alt="img" data-cfsrc="<?= $base_url ?>/assets/img/icons/sign.png" src="<?= $base_url ?>/assets/img/icons/sign.png"></span>
-                                    <h6 class="fs-14 fw-semibold mb-1">Ted M. Davis</h6>
-                                    <p>Manager</p>
-                                </div>
-                            </div><!-- end col -->
+                            </div>
+                            <div class="col-lg-5 text-lg-end mb-3 print_align_right_sign">
+                                <img class="sign-dark" alt="img" src="<?= $base_url ?>/assets/img/icons/sign.png">
+                                <h6 class="fs-14 fw-semibold mb-1">Ted M. Davis</h6>
+                                <p>Manager</p>
+                            </div>
                         </div>
-                        <!-- end row -->
 
                         <div class="bg-light d-flex align-items-center justify-content-between p-4 rounded card-bg">
                             <div>
@@ -226,11 +336,21 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                 <img src="<?= $base_url ?>/assets/img/invoice-logo-white-2.svg" class="invoice-logo-white" alt="img">
                             </div>
                         </div>
-                    </div><!-- end card body -->
+
+                    </div><!-- end card-body -->
                 </div><!-- end card -->
             </div>
-        </div><!-- end col -->
+        </div>
     </div>
-    <!-- end row -->
-
 </div>
+
+<script>
+    let isPrinting = false;
+    document.getElementById('print_invoice').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isPrinting) return;
+        isPrinting = true;
+        window.print();
+        setTimeout(() => isPrinting = false, 1000);
+    });
+</script>

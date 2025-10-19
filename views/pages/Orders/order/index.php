@@ -1,3 +1,7 @@
+<?php
+print_r($data)
+?>
+
 <div class="content content-two">
 
     <!-- Page Header -->
@@ -173,7 +177,25 @@
 
                             <td>$ <?= $row->total_amount ?></td>
                             <td>
-                                <span class="badge badge-soft-success d-inline-flex align-items-center"> <?= $row->status ?> <i class="isax isax-tick-circle ms-1"></i></span>
+                                <?php if ($row->status == 'available'): ?>
+                                    <span class="badge bg-success-subtle text-success">Available</span>
+
+                                <?php elseif ($row->status == 'coming soon'): ?>
+                                    <span class="badge bg-info-subtle text-info">Coming Soon</span>
+
+                                <?php elseif ($row->status == 'pre-order'): ?>
+                                    <span class="badge bg-primary-subtle text-primary">Pre-order</span>
+
+                                <?php elseif ($row->status == 'out of stock'): ?>
+                                    <span class="badge bg-danger-subtle text-warning">Out of Stock</span>
+
+                                <?php elseif ($row->status == 'discontinued'): ?>
+                                    <span class="badge bg-danger-subtle text-warning">Discontinued</span>
+
+                                <?php else: ?>
+                                    <span class="badge bg-warning-subtle text-danger"><?= ucfirst($row->status) ?></span>
+                                <?php endif; ?>
+
                             </td>
                             <td>
                                 <span class="badge badge-soft-success d-inline-flex align-items-center"> <?= $row->tracking ?> <i class="isax isax-tick-circle ms-1"></i></span>

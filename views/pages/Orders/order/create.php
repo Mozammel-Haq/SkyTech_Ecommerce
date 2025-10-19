@@ -58,9 +58,13 @@
 												<div class="row gx-3">
 													<div class="col-md-6">
 														<div class="mb-3">
-															<?php
-															echo Statu::html_select_Product_status("status")
-															?>
+															<select name="status" class="form-select" id="status">
+																<option value="available">Available</option>
+																<option value="out of stock">Out of Stock</option>
+																<option value="discontinued">Discontinued</option>
+																<option value="coming soon">Coming soon</option>
+																<option value="pre-order">Pre-order</option>
+															</select>
 														</div>
 													</div>
 													<div class="col-md-6">

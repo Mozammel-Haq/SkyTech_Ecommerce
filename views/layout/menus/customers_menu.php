@@ -7,8 +7,8 @@
                                         <span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="<?= $base_url ?>/customers">All Customers</a></li>
-                                        <li><a href="<?= $base_url ?>/customers/details">Customer Details</a></li>
+                                        <li><a href="<?= $base_url ?>/customer">All Customers</a></li>
+                                        <li><a href="<?= $base_url ?>/customer/details">Customer Details</a></li>
                                     </ul>
                                 </li>
                                 <li>
