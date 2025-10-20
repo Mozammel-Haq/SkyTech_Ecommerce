@@ -117,9 +117,7 @@
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tax <span class="text-danger">*</span></label>
-                                        <?php
-                                        echo Tax::html_select("tax");
-                                        ?>
+                                        <input name="tax" id="tax" type="text" class="form-control" value="">
                                     </div>
                                 </div>
 

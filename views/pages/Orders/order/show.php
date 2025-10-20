@@ -10,7 +10,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
     @media print {
         @page {
             size: A4 portrait;
-            margin: 10mm;
+            margin: 12mm;
         }
 
         body * {
@@ -30,32 +30,32 @@ $order_details = OrderDetail::find_by_order_id($order->id);
             background: #fff !important;
             color: #000 !important;
             -webkit-print-color-adjust: exact;
+            font-size: 11pt !important;
+            line-height: 1.4 !important;
         }
 
-        /* Force Invoice Details / Bill From / Bill To horizontally */
+        .invoice_info {
+            padding: 20px;
+        }
+
+        /* Header layout: Invoice / Bill From / Bill To */
         .row.gy-3.position-relative.z-1 {
             display: flex !important;
-            flex-direction: row !important;
+            flex-wrap: nowrap !important;
             justify-content: space-between !important;
             align-items: flex-start !important;
-            flex-wrap: nowrap !important;
             gap: 10px !important;
         }
 
         .row.gy-3.position-relative.z-1>.col-lg-4 {
-            flex: 1 1 33% !important;
-            max-width: 33% !important;
-            padding: 0 8px !important;
+            flex: 1 1 32% !important;
+            max-width: 32% !important;
+            padding: 0 6px !important;
             box-sizing: border-box !important;
+            page-break-inside: avoid !important;
         }
 
-        /* Fix image scaling */
-        #invoiceArea img {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-
-        /* Table formatting for print */
+        /* Tables */
         table {
             width: 100% !important;
             border-collapse: collapse !important;
@@ -74,39 +74,38 @@ $order_details = OrderDetail::find_by_order_id($order->id);
             -webkit-print-color-adjust: exact;
         }
 
-        /* Hide buttons/navigation */
-        .btn,
-        nav,
-        header,
-        footer,
-        a[href^="#"] {
-            display: none !important;
-        }
-
-        /* Prevent breaking inside major sections */
-        .row.gy-3.position-relative.z-1,
-        .row.gy-3.position-relative.z-1>* {
-            page-break-inside: avoid !important;
-        }
-
-        /* Ensure total section stays on first page */
-        .border-bottom.mb-3 {
-            margin-bottom: 30px !important;
-
-        }
-
-        .col-lg-6:last-child {
-            page-break-inside: avoid !important;
-        }
-
+        /* Compact spacing */
         .p-4 {
             padding: 1rem !important;
+        }
+
+        .mb-3,
+        .mb-2,
+        .mb-1 {
+            margin-bottom: 4px !important;
         }
 
         .bg-light.p-4.rounded.position-relative.mb-3 {
             margin-bottom: 10px !important;
         }
 
+        /* Totals & Bank details row */
+        .border-bottom.mb-3>.row {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+        }
+
+        .border-bottom.mb-3 .col-lg-6 {
+            flex: 1 1 50% !important;
+            max-width: 50% !important;
+            padding: 0 6px !important;
+            box-sizing: border-box !important;
+            page-break-inside: avoid !important;
+        }
+
+        /* Alignments */
         .print_align_right {
             text-align: end;
         }
@@ -116,10 +115,26 @@ $order_details = OrderDetail::find_by_order_id($order->id);
             padding-right: 1rem;
         }
 
-        /* Slight font adjustment */
-        #invoiceArea {
-            font-size: 11pt !important;
-            line-height: 1.4 !important;
+        /* Hide buttons and navigation */
+        .btn,
+        nav,
+        header,
+        footer,
+        a[href^="#"] {
+            display: none !important;
+        }
+
+        /* Image scaling */
+        #invoiceArea img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Prevent breaking inside sections */
+        .row.gy-3.position-relative.z-1,
+        .row.gy-3.position-relative.z-1>*,
+        .col-lg-6:last-child {
+            page-break-inside: avoid !important;
         }
     }
 </style>
@@ -152,14 +167,14 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                 <!-- ===================== -->
                 <div class="card" id="invoiceArea">
                     <div class="card-body">
-
                         <div class="bg-light p-4 rounded position-relative mb-3">
                             <div class="position-absolute top-0 end-0 z-0">
                                 <img alt="img" src="<?= $base_url ?>/assets/img/bg/card-bg.png">
                             </div>
 
-                            <div class="d-flex align-items-center justify-content-between border-bottom flex-wrap mb-3 pb-2 position-relative z-1">
-                                <div class="mb-3">
+                            <!-- Invoice Header -->
+                            <div class=" d-flex align-items-center justify-content-between border-bottom flex-wrap mb-3 pb-2 position-relative z-1">
+                                <div class="mb-3 ">
                                     <h4 class="mb-1">Invoice</h4>
                                     <div class="d-flex align-items-center flex-wrap row-gap-3">
                                         <div class="me-4">
@@ -177,8 +192,8 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                 </div>
                             </div>
 
-                            <!-- Invoice Info Row (3 columns) -->
-                            <div class="row gy-3 position-relative z-1">
+                            <!-- Invoice Info Row -->
+                            <div class="row gy-3 position-relative z-1 invoice_info">
                                 <div class="col-lg-4">
                                     <h6 class="mb-2 fs-16 fw-semibold">Invoice Details</h6>
                                     <p class="mb-1">Invoice ID : <span class="text-dark"><?= $order->id ?></span></p>
@@ -186,7 +201,6 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                     <p class="mb-1">Due Date : <span class="text-dark">Date87</span></p>
                                     <span class="badge bg-danger badge-sm">Due in 8 days</span>
                                 </div>
-
                                 <div class="col-lg-4">
                                     <h6 class="mb-2 fs-16 fw-semibold">Bill From</h6>
                                     <h6 class="fs-14 fw-semibold mb-1">SkyTech</h6>
@@ -195,7 +209,6 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                     <p class="mb-1">skytech@infy.uk</p>
                                     <p class="mb-0">GST : 243E45767889</p>
                                 </div>
-
                                 <div class="col-lg-4">
                                     <h6 class="mb-2 fs-16 fw-semibold">Bill To</h6>
                                     <div class="bg-white rounded p-3">
@@ -208,7 +221,6 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         <p class="mb-1"><?= $customer->address ?></p>
                                         <p class="mb-1"><?= $customer->phone ?></p>
                                         <p class="mb-1"><?= $customer->email ?></p>
-                                        <p class="mb-0">GST : 243E45767889</p>
                                     </div>
                                 </div>
                             </div>
@@ -263,7 +275,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                             </div>
                         </div>
 
-                        <!-- Totals -->
+                        <!-- Totals & Bank Details -->
                         <div class="border-bottom mb-3">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -281,7 +293,6 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6">
                                     <div class="mb-3 p-4">
                                         <div class="d-flex align-items-center justify-content-between mb-3">
@@ -326,6 +337,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                             </div>
                         </div>
 
+                        <!-- Footer Logo -->
                         <div class="bg-light d-flex align-items-center justify-content-between p-4 rounded card-bg">
                             <div>
                                 <h6 class="fs-14 fw-semibold mb-1">Dreams Technologies Pvt Ltd.,</h6>

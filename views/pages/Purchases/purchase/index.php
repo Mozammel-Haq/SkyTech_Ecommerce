@@ -72,10 +72,10 @@ print_r($data);
                         <td><?= htmlspecialchars($row->quantity) ?></td>
                         <td><?= number_format($row->price, 2) ?></td>
                         <td>
-                            <?php if ($row->status == 'received'): ?>
-                                <span class="badge bg-success-subtle text-success">Received</span>
-                            <?php elseif ($row->status == 'pending'): ?>
-                                <span class="badge bg-warning-subtle text-warning">Pending</span>
+                            <?php if ($row->status == 'paid'): ?>
+                                <span class="badge bg-success-subtle text-success">Paid</span>
+                            <?php elseif ($row->status == 'unpaid'): ?>
+                                <span class="badge bg-danger-subtle text-warning">unpaid</span>
                             <?php else: ?>
                                 <span class="badge bg-danger-subtle text-danger"><?= ucfirst($row->status) ?></span>
                             <?php endif; ?>

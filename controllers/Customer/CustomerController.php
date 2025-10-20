@@ -45,11 +45,7 @@ class CustomerController extends Controller
 			$customer->name = $data["name"];
 			$customer->email = $data["email"];
 			$customer->phone = $data["phone"];
-			if ($file["photo"]["name"] != "") {
-				$customer->photo = File::upload($file["photo"], "img", $data["id"]);
-			} else {
-				$customer->photo = Customer::find($data["id"])->photo;
-			}
+			$customer->photo = File::upload($file["photo"], "assets/img/profiles");
 			$customer->address = $data["address"];
 			$customer->status = $data["status"];
 			$customer->created_at = $now;

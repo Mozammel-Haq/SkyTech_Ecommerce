@@ -150,6 +150,7 @@
         $("select").select2();
         const orderCart = new Cart("order");
         const purchaseCart = new Cart("purchase")
+
         // Calculate line total dynamically
         function calculateLineTotal() {
             let qty = parseFloat($("#qty").val()) || 0;
@@ -190,8 +191,8 @@
                     <td>${item.product}</td>
                     <td>${qty}</td>
                     <td>${price.toFixed(2)}</td>
-                    <td>${discount.toFixed(2)}</td>
                     <td>${vat.toFixed(2)}</td>
+                    <td>${discount.toFixed(2)}</td>
                     <td>${line_total.toFixed(2)}</td>
                     <td>
                         <a href="javascript:void(0);" data-id="${item.id}" class="text-danger remove-table">
@@ -215,7 +216,8 @@
             $("#summary_grand_total").text(`$${grandTotal.toFixed(2)}`);
             $("#summary_total_words").text(numberToWords(Math.round(grandTotal)) + " Dollars");
         }
-
+        // Render on load
+        renderOrderCart();
         // Fetch customer info
         $("#customer").on("change", function() {
             let id = $(this).val();
@@ -278,8 +280,7 @@
             renderOrderCart();
         });
 
-        // Render on load
-        renderOrderCart();
+
 
 
         $('#save_btn').on("click", function() {
@@ -315,8 +316,9 @@
                 success: function(res) {
                     //  let data = JSON.parse(res);
                     console.log(res);
-                    cart.clearAll();
+                    orderCart.clearAll();
                     renderOrderCart();
+                    window.location.href = "<?= $base_url ?>/order";
                 },
                 error: function(err) {
                     console.log(err);
@@ -332,7 +334,7 @@
             let html = '';
             let totalAmount = 0;
             if (data.length === 0) {
-                $("#add_row").html('<tr><td colspan="7" class="text-center text-muted">No items added</td></tr>');
+                $("#product_rows").html('<tr><td colspan="7" class="text-center text-muted">No items added</td></tr>');
                 $("#summary_amount").text("$0.00");
                 $("#summary_grand_total").text("$0.00");
                 $("#summary_total_words").text("Zero Dollars");

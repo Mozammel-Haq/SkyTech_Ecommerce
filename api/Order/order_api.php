@@ -114,5 +114,6 @@ class OrderApi
 		}
 
 		echo json_encode(["success" => $data]);
+		
 	}
 }

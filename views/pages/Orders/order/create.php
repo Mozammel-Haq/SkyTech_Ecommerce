@@ -59,11 +59,9 @@
 													<div class="col-md-6">
 														<div class="mb-3">
 															<select name="status" class="form-select" id="status">
-																<option value="available">Available</option>
-																<option value="out of stock">Out of Stock</option>
-																<option value="discontinued">Discontinued</option>
-																<option value="coming soon">Coming soon</option>
-																<option value="pre-order">Pre-order</option>
+																<option value="paid">Paid</option>
+																<option value="unpaid">unpaid</option>
+
 															</select>
 														</div>
 													</div>

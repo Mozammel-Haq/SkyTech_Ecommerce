@@ -34,9 +34,8 @@
 					<div class="col-md-4">
 						<label class="form-label">Status</label>
 						<select name="status" class="form-select" id="status">
-							<option value="pending">Pending</option>
-							<option value="received">Received</option>
-							<option value="cancelled">Cancelled</option>
+							<option value="paid">paid</option>
+							<option value="unpaid">unpaid</option>
 						</select>
 					</div>
 				</div>

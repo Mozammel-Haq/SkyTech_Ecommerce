@@ -147,7 +147,7 @@ print_r($data)
 
                         <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Total Amount: activate to sort column ascending">Total Amount</th>
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Tracking: activate to sort column ascending">Tracking</th>
+                
 
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Created On: activate to sort column ascending">Order_date</th>
 
@@ -177,32 +177,21 @@ print_r($data)
 
                             <td>$ <?= $row->total_amount ?></td>
                             <td>
-                                <?php if ($row->status == 'available'): ?>
-                                    <span class="badge bg-success-subtle text-success">Available</span>
+                                <?php if ($row->status == 'paid'): ?>
+                                    <span class="badge bg-success-subtle text-success">Paid</span>
 
-                                <?php elseif ($row->status == 'coming soon'): ?>
-                                    <span class="badge bg-info-subtle text-info">Coming Soon</span>
-
-                                <?php elseif ($row->status == 'pre-order'): ?>
-                                    <span class="badge bg-primary-subtle text-primary">Pre-order</span>
-
-                                <?php elseif ($row->status == 'out of stock'): ?>
-                                    <span class="badge bg-danger-subtle text-warning">Out of Stock</span>
-
-                                <?php elseif ($row->status == 'discontinued'): ?>
-                                    <span class="badge bg-danger-subtle text-warning">Discontinued</span>
+                                <?php elseif ($row->status == 'unpaid'): ?>
+                                    <span class="badge bg-danger-subtle text-info">unpaid</span>
 
                                 <?php else: ?>
-                                    <span class="badge bg-warning-subtle text-danger"><?= ucfirst($row->status) ?></span>
+                                    <span class="badge bg-danger-subtle text-danger"><?= ucfirst($row->status) ?></span>
                                 <?php endif; ?>
 
                             </td>
-                            <td>
-                                <span class="badge badge-soft-success d-inline-flex align-items-center"> <?= $row->tracking ?> <i class="isax isax-tick-circle ms-1"></i></span>
-                            </td>
+
                             <td> <?= $row->order_date ?></td>
                             <td>
-                                <a href="<?= $base_url ?>/order/create/<?= $row->order_id ?>" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                <a href="<?= $base_url ?>/order/show/<?= $row->id ?>" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                     <i class="isax isax-add-circle me-1"></i> Invoice
                                 </a>
                             </td>
