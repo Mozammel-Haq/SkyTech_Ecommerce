@@ -452,6 +452,47 @@
             });
         });
 
+        // Product Inventory History
+
+        $('.view-history-btn').on('click', function() {
+            var productId = $(this).data('product-id');
+            var productName = $(this).closest('tr').find('td:nth-child(2) h6').text();
+            var productCode = $(this).closest('tr').find('td:nth-child(3) a').text();
+
+            $('#view_history .modal-title').text('Inventory History - ' + productName + ' (' + productCode + ')');
+
+            $('#view_history tbody').empty(); // clear previous rows
+
+            $.ajax({
+                url: '<?= $base_url ?>/inventory/getHistory', // new controller method
+                method: 'GET',
+                data: {
+                    product_id: productId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.length === 0) {
+                        $('#view_history tbody').append('<tr><td colspan="5">No history found</td></tr>');
+                        return;
+                    }
+
+                    $.each(data, function(index, row) {
+                        var tr = '<tr>' +
+                            '<td>' + row.date + '</td>' +
+                            '<td>' + row.unit + '</td>' +
+                            '<td>' + row.adjustments + '</td>' +
+                            '<td>' + row.stock + '</td>' +
+                            '<td>' + row.reason + '</td>' +
+                            '</tr>';
+                        $('#view_history tbody').append(tr);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+
 
 
     });

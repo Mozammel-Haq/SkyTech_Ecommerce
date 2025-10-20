@@ -4,9 +4,17 @@ class InventoryController extends Controller
 	public function __construct() {}
 	public function index()
 	{
-		$data = Inventory::getAllInventoy();
+		$data = Inventory::getAllInventory();
 		view("Inventory", $data);
 	}
+	public function history($id)
+	{
+		$data = Inventory::getInventoryHistory($id);
+		view("Inventory", $data);
+	}
+
+
+
 	public function create()
 	{
 		view("Inventory");

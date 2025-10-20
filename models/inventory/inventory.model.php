@@ -55,29 +55,77 @@ class Inventory extends Model implements JsonSerializable
 		return $data;
 	}
 
-	public static function getAllInventoy()
+	public static function getAllInventory()
 	{
 		global $db, $tx;
-		$result = $db->query("SELECT 
+
+		$sql = "
+        SELECT 
             MIN(i.id) AS id,
             p.name AS product_name,
             pi.image_path,
             p.sku,
-			p.purchase_price,
-            w.name AS warehouse_name,
+            p.purchase_price,
             SUM(i.quantity) AS total_quantity
         FROM {$tx}inventory i
         JOIN products p ON i.product_id = p.id
-        JOIN product_images pi ON i.product_id = pi.product_id AND pi.is_main = 1
-        JOIN warehouses w ON i.warehouse_id = w.id
-        GROUP BY i.product_id, i.warehouse_id, p.name, pi.image_path, p.sku, w.name
-		");
+        LEFT JOIN product_images pi ON i.product_id = pi.product_id AND pi.is_main = 1
+        GROUP BY i.product_id, p.name, pi.image_path, p.sku
+    ";
+
+		$result = $db->query($sql);
+
 		$data = [];
 		while ($inventory = $result->fetch_object()) {
 			$data[] = $inventory;
 		}
+
 		return $data;
 	}
+	public static function getInventoryHistory($product_id)
+	{
+		global $db, $tx;
+
+		$product_id = (int)$product_id;
+		if ($product_id <= 0) return [];
+
+		$sql = "
+        SELECT 
+            i.created_at AS date,
+            u.name AS unit,
+            i.quantity,
+			i.product_id,
+            tt.name AS reason
+        FROM {$tx}inventory i
+        JOIN products p ON i.product_id = p.id
+        LEFT JOIN units u ON p.unit_id = u.id
+        LEFT JOIN transaction_type tt ON i.transaction_type_id = tt.id
+        WHERE i.product_id = {$product_id}
+        ORDER BY i.created_at ASC, i.id ASC
+    ";
+
+		$result = $db->query($sql);
+		$data = [];
+		$cumulative_stock = 0;
+
+		while ($row = $result->fetch_object()) {
+			$cumulative_stock += $row->quantity; // add/subtract quantity
+			$data[] = (object)[
+				'date' => $row->date,
+				'unit' => $row->unit,
+				'adjustments' => ($row->quantity >= 0 ? '+' : '-') . abs($row->quantity),
+				'stock' => $cumulative_stock,
+				'reason' => $row->reason
+			];
+		}
+
+		return $data;
+	}
+
+
+
+
+
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{
 		global $db, $tx;

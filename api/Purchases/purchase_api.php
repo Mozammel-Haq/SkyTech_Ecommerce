@@ -89,7 +89,7 @@ class PurchaseApi
 			$inventory->quantity = $data["qty"];
 			$inventory->created_at = $now;
 			$inventory->updated_at = $now;
-			$inventory->transaction_type_id = $data["transaction_type_id"] ?? 0;
+			$inventory->transaction_type_id = $data["transaction_type_id"] ?? 1;
 			$inventory->remarks = $data["remarks"] ?? "";
 
 			$inventory->save();

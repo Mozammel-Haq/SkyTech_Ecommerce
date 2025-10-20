@@ -107,13 +107,12 @@ class OrderApi
 			$inventory->quantity = $data["qty"] * -1;
 			$inventory->created_at = $now;
 			$inventory->updated_at = $now;
-			$inventory->transaction_type_id = $data["transaction_type_id"] ?? 0;
+			$inventory->transaction_type_id = $data["transaction_type_id"] ?? 2;
 			$inventory->remarks = $data["remarks"] ?? "";
 
 			$inventory->save();
 		}
 
 		echo json_encode(["success" => $data]);
-		
 	}
 }
