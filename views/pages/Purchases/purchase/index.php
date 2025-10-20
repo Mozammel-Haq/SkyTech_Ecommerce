@@ -47,6 +47,7 @@ print_r($data);
                     <th>Date</th>
                     <th>Product</th>
                     <th>Supplier</th>
+                    <th>Warehouse</th>
                     <th>Quantity</th>
                     <th>Amount</th>
                     <th>Status</th>
@@ -69,6 +70,7 @@ print_r($data);
                             </h6>
                         </td>
                         <td><?= htmlspecialchars($row->supplier_name) ?></td>
+                        <td><?= htmlspecialchars($row->warehouse_name) ?></td>
                         <td><?= htmlspecialchars($row->quantity) ?></td>
                         <td><?= number_format($row->price, 2) ?></td>
                         <td>

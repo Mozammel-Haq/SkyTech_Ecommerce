@@ -417,6 +417,8 @@
 
         $('#save_purchase_btn').on("click", function() {
             let supplier_id = $("#supplier").val();
+            let warehouse_id = $("#warehouse").val();
+
             let purchase_date = $("#purchase_date").val();
             let status = $("#status").val();
             let total_amount = $("#summary_total").text();
@@ -425,6 +427,7 @@
 
             let data = {
                 supplier_id,
+                warehouse_id,
                 purchase_date,
                 status,
                 total_amount,

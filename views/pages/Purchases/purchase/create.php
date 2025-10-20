@@ -23,6 +23,12 @@
 						?>
 					</div>
 					<div class="col-md-4">
+						<label class="form-label">Warehouse to Store</label>
+						<?php
+						echo Warehouse::html_select("warehouse")
+						?>
+					</div>
+					<div class="col-md-4">
 						<label class="form-label">Order Date</label>
 						<div class="input-group position-relative mb-3">
 							<input id="purchase_date" type="text" class="form-control datetimepicker rounded-end" placeholder="25 Mar 2025">

@@ -53,6 +53,7 @@ class PurchaseApi
 		global $now;
 		$purchase = new Purchase();
 		$purchase->supplier_id = $data["supplier_id"] ?? 0;
+		$purchase->warehouse_id = $data["warehouse_id"] ?? 0;
 		$purchase->order_date = date("Y-m-d H:i:s", strtotime($data["purchase_date"]));
 		$purchase->total_amount = $data["total_amount"] ?? 0;
 		$purchase->status = $data["status"];
@@ -62,6 +63,7 @@ class PurchaseApi
 		$last_purchase_id = $purchase->save();
 		$products = $data['products'];
 		$supplier_id = $data["supplier_id"];
+		$warehouse_id = $data["warehouse_id"];
 
 
 
@@ -82,7 +84,7 @@ class PurchaseApi
 
 			$inventory = new Inventory();
 			$inventory->product_id = $data["id"];
-			$inventory->warehouse_id = $data["warehouse_id"] ?? 0;
+			$inventory->warehouse_id = $warehouse_id ?? 0;
 			$inventory->supplier_id = $supplier_id;
 			$inventory->quantity = $data["qty"];
 			$inventory->created_at = $now;

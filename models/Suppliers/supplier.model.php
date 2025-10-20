@@ -104,6 +104,7 @@ class Supplier extends Model implements JsonSerializable
 	{
 		global $db, $tx;
 		$html = "<select id='$name' name='$name'> ";
+		$html .= "<option value ='0'>Select a $name</option>";
 		$result = $db->query("select id,name from {$tx}suppliers");
 		while ($supplier = $result->fetch_object()) {
 			$html .= "<option value ='$supplier->id'>$supplier->name</option>";

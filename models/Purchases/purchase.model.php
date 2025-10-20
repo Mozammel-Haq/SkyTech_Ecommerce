@@ -3,6 +3,7 @@ class Purchase extends Model implements JsonSerializable
 {
 	public $id;
 	public $supplier_id;
+	public $warehouse_id;
 	public $order_date;
 	public $status;
 	public $total_amount;
@@ -10,10 +11,11 @@ class Purchase extends Model implements JsonSerializable
 	public $updated_at;
 
 	public function __construct() {}
-	public function set($id, $supplier_id, $order_date, $status, $total_amount, $created_at, $updated_at)
+	public function set($id, $supplier_id, $warehouse_id, $order_date, $status, $total_amount, $created_at, $updated_at)
 	{
 		$this->id = $id;
 		$this->supplier_id = $supplier_id;
+		$this->warehouse_id = $warehouse_id;
 		$this->order_date = $order_date;
 		$this->status = $status;
 		$this->total_amount = $total_amount;
@@ -23,13 +25,13 @@ class Purchase extends Model implements JsonSerializable
 	public function save()
 	{
 		global $db, $tx;
-		$db->query("insert into {$tx}purchases(supplier_id,order_date,status,total_amount,created_at,updated_at)values('$this->supplier_id','$this->order_date','$this->status','$this->total_amount','$this->created_at','$this->updated_at')");
+		$db->query("insert into {$tx}purchases(supplier_id,warehouse_id,order_date,status,total_amount,created_at,updated_at)values('$this->supplier_id','$this->warehouse_id','$this->order_date','$this->status','$this->total_amount','$this->created_at','$this->updated_at')");
 		return $db->insert_id;
 	}
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}purchases set supplier_id='$this->supplier_id',order_date='$this->order_date',status='$this->status',total_amount='$this->total_amount',created_at='$this->created_at',updated_at='$this->updated_at' where id='$this->id'");
+		$db->query("update {$tx}purchases set supplier_id='$this->supplier_id',warehouse_id= '$this->warehouse_id',order_date='$this->order_date',status='$this->status',total_amount='$this->total_amount',created_at='$this->created_at',updated_at='$this->updated_at' where id='$this->id'");
 	}
 	public static function delete($id)
 	{
@@ -43,7 +45,7 @@ class Purchase extends Model implements JsonSerializable
 	public static function all()
 	{
 		global $db, $tx;
-		$result = $db->query("select id,supplier_id,order_date,status,total_amount,created_at,updated_at from {$tx}purchases");
+		$result = $db->query("select id,supplier_id,warehouse_id,order_date,status,total_amount,created_at,updated_at from {$tx}purchases");
 		$data = [];
 		while ($purchase = $result->fetch_object()) {
 			$data[] = $purchase;
@@ -53,38 +55,41 @@ class Purchase extends Model implements JsonSerializable
 	public static function detailedPurchases()
 	{
 		global $db, $tx;
-		$result = $db->query("SELECT 
-    p.id AS purchase_id,
-    p.order_date,
-    s.name AS supplier_name,
-    pr.name AS product_name,
-    pd.quantity,
-    pd.price,
-    p.status
-FROM purchases p
-JOIN suppliers s ON p.supplier_id = s.id
-JOIN purchase_details pd ON pd.purchase_id = p.id
-JOIN products pr ON pd.product_id = pr.id
-ORDER BY p.order_date DESC, p.id DESC
-");
+
+		$sql = "
+	SELECT 
+		p.id AS purchase_id,
+		p.order_date,
+		s.name AS supplier_name,
+		w.name AS warehouse_name,
+		pr.name AS product_name,
+		pd.quantity,
+		pd.price,
+		p.status
+	FROM purchases p
+	JOIN suppliers s ON p.supplier_id = s.id
+	JOIN warehouses w ON p.warehouse_id = w.id
+	JOIN purchase_details pd ON pd.purchase_id = p.id
+	JOIN products pr ON pd.product_id = pr.id
+	ORDER BY p.order_date DESC, p.id DESC
+	";
+
+		$result = $db->query($sql);
+
+		if (!$result) {
+			die("SQL Error: " . $db->error);
+		}
+
 		$data = [];
 		while ($purchase = $result->fetch_object()) {
 			$data[] = $purchase;
 		}
+
 		return $data;
 	}
 
-	public static function pagination($page = 1, $perpage = 10, $criteria = "")
-	{
-		global $db, $tx;
-		$top = ($page - 1) * $perpage;
-		$result = $db->query("select id,supplier_id,order_date,status,total_amount,created_at,updated_at from {$tx}purchases $criteria limit $top,$perpage");
-		$data = [];
-		while ($purchase = $result->fetch_object()) {
-			$data[] = $purchase;
-		}
-		return $data;
-	}
+
+
 	public static function count($criteria = "")
 	{
 		global $db, $tx;
@@ -95,7 +100,7 @@ ORDER BY p.order_date DESC, p.id DESC
 	public static function find($id)
 	{
 		global $db, $tx;
-		$result = $db->query("select id,supplier_id,order_date,status,total_amount,created_at,updated_at from {$tx}purchases where id='$id'");
+		$result = $db->query("select id,supplier_id,warehouse_id,order_date,status,total_amount,created_at,updated_at from {$tx}purchases where id='$id'");
 		$purchase = $result->fetch_object();
 		return $purchase;
 	}
