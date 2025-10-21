@@ -153,11 +153,14 @@
                         <td>
                             <a href="javascript:void(0);" class="link-default"><?= $row->sku ?></a>
                         </td>
-                        <td><?= $row->total_quantity ?></td>
+                        <td class="text-center fw-semibold 
+                <?= ($row->total_quantity > 5) ? 'text-success' : (($row->total_quantity < 5) ? 'text-danger' : 'text-muted') ?>">
+                            <?= htmlspecialchars($row->total_quantity) ?>
+                        </td>
                         <td class="text-dark">$<?= $row->purchase_price ?></td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <a href="<?= $base_url ?>/inventory/history/<?= $row->id ?>" class="view-history-btn btn btn-sm btn-soft-primary border-0 d-inline-flex align-items-center me-1 fs-12 fw-regular" data-product-id="<?= $row->id ?>">
+                                <a href="<?= $base_url ?>/inventory/history/<?= $row->product_id ?>" class="view-history-btn btn btn-sm btn-soft-primary border-0 d-inline-flex align-items-center me-1 fs-12 fw-regular" data-product-id="<?= $row->product_id ?>">
                                     <i class="isax isax-document-sketch5 me-1"></i> History
                                 </a>
                                 <a href="#" class="btn btn-sm btn-soft-success border-0  d-inline-flex align-items-center me-1 fs-12 fw-regular" data-bs-toggle="modal" data-bs-target="#add_stockin">

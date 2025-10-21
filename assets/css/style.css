@@ -31872,7 +31872,6 @@ input[type="password"]::-ms-clear {
 #total_sales {
   overflow: hidden;
   min-height: 175px !important;
-  max-height: 175px;
 }
 
 @media (min-width: 1200px) {
@@ -36584,4 +36583,10 @@ input[type=number].form-control::-webkit-outer-spin-button {
 input[type=number].form-control {
     -moz-appearance: textfield; 
     appearance: auto;
+}
+
+.apexcharts-tooltip {
+    max-width: 250px !important;   /* increase width */
+    white-space: normal !important; /* allow long names to wrap */
+    word-wrap: break-word;
 }

@@ -54,6 +54,13 @@ class Customer extends Model implements JsonSerializable
 		}
 		return $data;
 	}
+	public static function countTotalCustomer()
+	{
+		global $db, $tx;
+		$result = $db->query("select count(id) as customers from {$tx}customers");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{
 		global $db, $tx;

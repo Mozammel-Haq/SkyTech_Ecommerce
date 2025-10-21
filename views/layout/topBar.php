@@ -332,13 +332,13 @@
                         <div class="dropdown profile-dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                                 <span class="avatar online">
-                                    <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="Img" class="img-fluid rounded-circle"></noscript>
+                                    <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" alt="Img" class="img-fluid rounded-circle"></noscript>
                                 </span>
                             </a>
                             <div class="dropdown-menu p-2">
                                 <div class="d-flex align-items-center bg-light rounded-1 p-2 mb-2">
                                     <span class="avatar avatar-lg me-2">
-                                        <img alt="img" class="rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="img" class="rounded-circle"></noscript>
+                                        <img alt="img" class="rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" alt="img" class="rounded-circle"></noscript>
                                     </span>
                                     <div>
                                         <h6 class="fs-14 fw-medium mb-1"><?= $user_name ?></h6>
@@ -379,7 +379,7 @@
             <div class="dropdown mobile-user-menu profile-dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <span class="avatar avatar-md online">
-                        <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="Img" class="img-fluid rounded-circle"></noscript>
+                        <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" alt="Img" class="img-fluid rounded-circle"></noscript>
                     </span>
                 </a>
                 <div class="dropdown-menu p-2 mt-0">

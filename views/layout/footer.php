@@ -497,11 +497,169 @@
 
     });
 </script>
+<!-- ApexCharts JS -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+    $(document).ready(function() {
+        if ($('#total_sales').length > 0) {
+
+            // Initialize empty chart first
+            var options = {
+                series: [],
+                chart: {
+                    type: 'donut',
+                    height: 300,
+                },
+                labels: [],
+                colors: ['#F38BBB', '#5297FE', '#7DCEA0', '#FFB84C'],
+                plotOptions: {
+                    pie: {
+                        startAngle: -110,
+                        endAngle: 110,
+                        donut: {
+                            size: '60%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total Sold',
+                                    formatter: function() {
+                                        return 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                legend: {
+                    show: true,
+                    position: 'bottom'
+                },
+            };
+
+            var chart = new ApexCharts(document.querySelector("#total_sales"), options);
+            chart.render();
+
+            // Load data dynamically using jQuery
+            $.ajax({
+                url: 'top_selling_data.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data.labels.length > 0 && data.series.length > 0) {
+                        // Update chart dynamically
+                        chart.updateOptions({
+                            labels: data.labels,
+                        });
+
+                        chart.updateSeries(data.series);
+
+                        // Optional: Update the total count label dynamically
+                        var total = data.series.reduce((a, b) => a + b, 0);
+                        chart.updateOptions({
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        labels: {
+                                            total: {
+                                                show: true,
+                                                label: 'Total Sold',
+                                                formatter: function() {
+                                                    return total;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        console.warn("No data available for chart.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading chart data:", error);
+                }
+            });
+        }
+    });
+</script>
+
 
 
 
 <script>
     const BASE_URL = "<?= $base_url ?>";
+</script>
+<script>
+    $(function() {
+        var radialOptions = {
+            series: [], // will be percentages
+            chart: {
+                height: 350,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        show: true,
+                        name: {
+                            fontSize: '14px'
+                        },
+                        value: {
+                            fontSize: '12px',
+                            formatter: function(val) {
+                                return val + "%"; // keep bar as percentage
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Total Sold',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            formatter: function(w) {
+                                // sum of the actual units, not percentages
+                                return radialOptions.actualSeries.reduce((a, b) => a + b, 0);
+                            }
+                        }
+                    }
+                }
+            },
+            labels: [], // product names
+            colors: ["#0d6efd", "#e2b93b", "#198754"],
+            legend: {
+                show: true,
+                position: 'bottom'
+            }
+        };
+
+        var radialChart = new ApexCharts(document.querySelector("#radial-chart"), radialOptions);
+        radialChart.render();
+
+        // Load data dynamically
+        $.getJSON(BASE_URL + "/views/pages/dashboard/home/top_selling_data.php", function(data) {
+            if (data && data.labels && data.series) {
+                var total = data.series.reduce((a, b) => a + b, 0);
+                var percentages = data.series.map(v => parseFloat(((v / total) * 100).toFixed(1)));
+
+                // Store actual series to use in total formatter
+                radialOptions.actualSeries = data.series;
+
+                radialChart.updateOptions({
+                    labels: data.labels
+                });
+                radialChart.updateSeries(percentages);
+            } else {
+                console.error("Invalid chart data:", data);
+            }
+        }).fail(function(xhr, status, error) {
+            console.error("Failed to load chart data:", error);
+        });
+    });
 </script>
 <script script src="<?= $base_url ?>/assets/js/custom.js">
 </script>

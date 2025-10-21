@@ -22,6 +22,13 @@ class Category
         $data = $stmt->fetch_all(MYSQLI_ASSOC);
         return $data;
     }
+    public static function countTotalCategory()
+    {
+        global $db, $tx;
+        $result = $db->query("select count(id) as categories from {$tx}categories");
+        $supplier = $result->fetch_object();
+        return $supplier;
+    }
     public function saveCategory()
     {
         global $db;

@@ -75,6 +75,13 @@ class Supplier extends Model implements JsonSerializable
 		$supplier = $result->fetch_object();
 		return $supplier;
 	}
+	public static function countSuppliers()
+	{
+		global $db, $tx;
+		$result = $db->query("select count(id) as suppliers from {$tx}suppliers");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 	static function get_last_id()
 	{
 		global $db, $tx;

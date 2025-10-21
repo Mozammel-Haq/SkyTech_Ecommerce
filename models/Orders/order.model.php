@@ -77,7 +77,44 @@ class Order extends Model implements JsonSerializable
 		}
 		return $data;
 	}
+	public static function findTopSales()
+	{
+		global $db, $tx;
 
+		$result = $db->query("
+        SELECT 
+            o.id,
+            c.name AS customer_name,
+            o.total_amount,
+            o.status,
+            t.name AS tracking,
+            o.order_date
+        FROM orders AS o
+        JOIN customers AS c ON o.customer_id = c.id
+        LEFT JOIN trackings AS t ON t.id = o.tracking_id
+        ORDER BY o.id DESC;
+    ");
+
+		$data = [];
+		while ($order = $result->fetch_object()) {
+			$data[] = $order;
+		}
+		return $data;
+	}
+	public static function countTotalOrders()
+	{
+		global $db, $tx;
+		$result = $db->query("select count(id) as orders from {$tx}orders");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
+	public static function calculateOrderAmount()
+	{
+		global $db, $tx;
+		$result = $db->query("select sum(total_amount) as order_amount from {$tx}orders");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{

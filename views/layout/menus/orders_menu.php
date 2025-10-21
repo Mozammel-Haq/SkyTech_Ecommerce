@@ -3,13 +3,13 @@
                             <ul>
                                 <li>
                                     <a href="<?= $base_url ?>/order">
-                                        <i class="isax isax-box5"></i><span>Orders</span>
+                                        <i class="isax isax-document-forward5"></i><span>Orders</span>
                                     </a>
 
                                 </li>
                                 <li>
                                     <a href="<?= $base_url ?>/purchase">
-                                        <i class="isax isax-box5"></i><span>Purchases</span>
+                                        <i class="isax isax-bag-tick-25"></i><span>Purchases</span>
                                     </a>
 
                                 </li>
@@ -19,7 +19,7 @@
                                         <span class="menu-arrow"></span>
                                     </a>
                                     <ul>
-                                        <li><a href="invoices.html">Invoices</a></li>
+                                        <li><a href="<?= $base_url ?>/invoice">Invoices</a></li>
                                         <li><a href="add-invoice.html">Create Invoice</a></li>
                                         <li><a href="invoice-details.html">Invoice Details</a></li>
                                         <li><a href="invoice-templates.html">Invoice Templates</a></li>

@@ -84,6 +84,14 @@ ORDER BY p.id DESC;
         $data = $result->fetch_assoc();
         return $data;
     }
+    public static function countTotalProduct()
+    {
+        global $db, $tx;
+        $result = $db->query("select count(id) as total_products from {$tx}products");
+        $supplier = $result->fetch_object();
+        return $supplier;
+    }
+
     public static function findMainImage($product_id)
     {
         global $db;

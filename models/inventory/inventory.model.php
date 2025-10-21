@@ -54,6 +54,13 @@ class Inventory extends Model implements JsonSerializable
 		}
 		return $data;
 	}
+	public static function calculateTotalStock()
+	{
+		global $db, $tx;
+		$result = $db->query("select sum(quantity) as total_stock from {$tx}inventory");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 
 	public static function getAllInventory()
 	{
@@ -62,6 +69,7 @@ class Inventory extends Model implements JsonSerializable
 		$sql = "
         SELECT 
             MIN(i.id) AS id,
+			i.product_id,
             p.name AS product_name,
             pi.image_path,
             p.sku,
@@ -97,7 +105,7 @@ class Inventory extends Model implements JsonSerializable
 			i.product_id,
             tt.name AS reason
         FROM {$tx}inventory i
-        JOIN products p ON i.product_id = p.id
+        LEFT JOIN products p ON i.product_id = p.id
         LEFT JOIN units u ON p.unit_id = u.id
         LEFT JOIN transaction_type tt ON i.transaction_type_id = tt.id
         WHERE i.product_id = {$product_id}

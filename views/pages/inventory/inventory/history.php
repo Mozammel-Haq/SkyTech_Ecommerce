@@ -1,7 +1,8 @@
 <?php
 $product_id = $_GET['id'] ?? null;
+
 $product = $product_id ? Product::findProduct($product_id) : null;
-// print_r($data)
+// print_r($product);
 ?>
 
 <div class="container py-4" id="printContainer">

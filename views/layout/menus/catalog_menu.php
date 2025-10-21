@@ -15,7 +15,7 @@
         </li>
         <li class="submenu">
             <a href="<?= $base_url ?>/products">
-                <i class="isax isax-box5"></i><span>Inventory</span>
+                <i class="isax isax-chart-success5 text-default me-2"></i><span>Inventory</span>
                 <span class="menu-arrow"></span>
             </a>
             <ul>

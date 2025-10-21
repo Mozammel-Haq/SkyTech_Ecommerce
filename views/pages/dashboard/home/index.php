@@ -1,3 +1,21 @@
+<?php
+$hour = date('H'); // 24-hour format (00-23)
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good Morning";
+} elseif ($hour >= 12 && $hour < 17) {
+    $greeting = "Good Afternoon";
+} elseif ($hour >= 17 && $hour < 21) {
+    $greeting = "Good Evening";
+} else {
+    $greeting = "Good Night";
+}
+
+
+
+?>
+
+
 <div class="content">
 
     <!-- Start Breadcrumb -->
@@ -73,8 +91,8 @@
         <div class="row">
             <div class="col-lg-8 col-md-9 col-sm-7">
                 <div>
-                    <h5 class="text-white mb-1">Good Morning, <?= $_SESSION["uname"] ?></h5>
-                    <p class="text-white mb-3">You have 15+ invoices saved to draft that has to send to customers</p>
+                    <h5 class="text-white mb-1"><?= $greeting ?>, <?= $_SESSION["uname"] ?></h5>
+                    <p class="text-white mb-3">You have 15+ invoices saved to draft that have to send to customers</p>
                     <div class="d-flex align-items-center flex-wrap gap-3">
                         <p class="d-flex align-items-center fs-13 text-white mb-0">
                             <i class="isax isax-calendar5 me-1"></i>
@@ -85,8 +103,8 @@
                             <?= date('h:i A') ?>
                         </p>
                     </div>
-
                 </div>
+
             </div><!-- end col -->
         </div>
         <!-- end row -->
@@ -96,22 +114,25 @@
             <img src="assets/img/icons/dashboard.svg" alt="img">
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-4 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <h6 class="d-flex align-items-center mb-1"><i class="isax isax-category5 text-default me-2"></i>Overview</h6>
                     </div>
-                    <div class="row g-4">
+                    <div class="row g-4 mb-4">
                         <div class="col-xl-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-primary-subtle text-primary flex-shrink-0 me-2">
                                     <i class="isax isax-document-text-1 fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Invoices</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">1,041</h6>
+                                    <p class="mb-1 text-truncate">Products</p>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Product::countTotalProduct()->total_products ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +143,7 @@
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Customers</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">3,462</h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Customer::countTotalCustomer()->customers ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +153,8 @@
                                     <i class="isax isax-dcube fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Products</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">$1,642</h6>
+                                    <p class="mb-1 text-truncate">Categories</p>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Category::countTotalCategory()->categories ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -144,29 +165,23 @@
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Orders</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">2,150</h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Order::countTotalOrders()->orders ?></h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
-        <div class="col-md-4 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h6 class="d-flex align-items-center mb-1"><i class="isax isax-chart-215 text-default me-2"></i>Sales Analytics</h6>
+                    <div class="mb-4">
+                        <h6 class="d-flex align-items-center mb-1"><i class="isax isax-chart-success5 text-default me-2"></i>Inventory Statistics</h6>
                     </div>
-                    <div class="row g-4">
+                    <div class="row g-4 mb-4">
                         <div class="col-xl-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-primary-subtle text-primary flex-shrink-0 me-2">
-                                    <i class="isax isax-document-forward fs-20"></i>
+                                    <i class="isax isax-document fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Total Sales</p>
-                                    <h6 class="fs-16 fw-semibold mb-0">$40,569</h6>
+                                    <p class="mb-1 text-truncate">Total Stock</p>
+                                    <h6 class="fs-16 fw-semibold mb-0"><?= Inventory::calculateTotalStock()->total_stock ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -176,85 +191,30 @@
                                     <i class="isax isax-programming-arrow fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Total Purchases</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">$1,54,220</h6>
+                                    <p class="mb-1 text-truncate">Purchases</p>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-warning-subtle text-warning-emphasis flex-shrink-0 me-2">
-                                    <i class="isax isax-dollar-circle fs-20"></i>
-                                </span>
-                                <div>
-                                    <p class="mb-1 mb-0">Expenses</p>
-                                    <h6 class="fs-16 fw-semibold text-truncate">In Progress</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="d-flex align-items-center me-2">
-                                <span class="avatar avatar-44 avatar-rounded bg-info-subtle text-info-emphasis flex-shrink-0 me-2">
-                                    <i class="isax isax-flag fs-20"></i>
-                                </span>
-                                <div>
-                                    <p class="mb-1 text-truncate">Credits</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">$12,150</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
-        <div class="col-md-4 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <h6 class="d-flex align-items-center mb-1"><i class="isax isax-chart-success5 text-default me-2"></i>Inventory Statistics</h6>
-                    </div>
-                    <div class="row g-4">
-                        <div class="col-xl-6">
-                            <div class="d-flex align-items-center">
-                                <span class="avatar avatar-44 avatar-rounded bg-primary-subtle text-primary flex-shrink-0 me-2">
-                                    <i class="isax isax-document fs-20"></i>
-                                </span>
-                                <div>
-                                    <p class="mb-1 text-truncate">Total Stock</p>
-                                    <h6 class="fs-16 fw-semibold mb-0">21,132</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="d-flex align-items-center me-2">
-                                <span class="avatar avatar-44 avatar-rounded bg-success-subtle text-success-emphasis flex-shrink-0 me-2">
-                                    <i class="isax isax-document-forward fs-20"></i>
-                                </span>
-                                <div>
-                                    <p class="mb-1 text-truncate">Categories</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">10,763</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="d-flex align-items-center">
-                                <span class="avatar avatar-44 avatar-rounded bg-warning-subtle text-warning-emphasis flex-shrink-0 me-2">
-                                    <i class="isax isax-document-previous fs-20"></i>
+                                    <i class="isax isax-building fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Suppliers</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">8041</h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Supplier::countSuppliers()->suppliers ?></h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="d-flex align-items-center me-2">
                                 <span class="avatar avatar-44 avatar-rounded bg-info-subtle text-info-emphasis flex-shrink-0 me-2">
-                                    <i class="isax isax-dislike fs-20"></i>
+                                    <i class="isax isax-building-3 fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Warhouses</p>
-                                    <h6 class="fs-16 fw-semibold text-truncate mb-0">25</h6>
+                                    <h6 class="fs-16 fw-semibold text-truncate mb-0"><?= Warehouse::countWarehouses()->warehouses ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -262,9 +222,60 @@
                 </div> <!-- end card body -->
             </div> <!-- end card -->
         </div> <!-- end col -->
-    </div>
 
-    <!-- start row -->
+        <div class="col-xl-8 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body pb-0">
+                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                        <h6 class="mb-1">Sales Analytics</h6>
+                        <div class="select-sm mb-1">
+                            <select class="select">
+                                <option>Monthly</option>
+                                <option>Weekly</option>
+                                <option>Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div>
+                            <div class="d-flex align-items-center flex-wrap gap-3">
+                                <div>
+                                    <p class="fs-13 mb-1">Total Sales</p>
+                                    <h6 class="fs-16 fw-semibold text-primary">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
+                                </div>
+                                <div>
+                                    <p class="fs-13 mb-1">Receipts</p>
+                                    <h6 class="fs-16 fw-semibold text-success">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
+                                </div>
+                                <div>
+                                    <p class="fs-13 mb-1">Expenses</p>
+                                    <h6 class="fs-16 fw-semibold text-danger">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
+                                </div>
+                                <div>
+                                    <p class="fs-13 mb-1">Earnings</p>
+                                    <h6 class="fs-16 fw-semibold">$
+                                        <?php
+                                        $sales = Order::calculateOrderAmount()->order_amount;
+                                        $purchase = Purchase::calculateTotalPurchase()->total_purchase;
+                                        $income = $sales - $purchase;
+                                        echo $income;
+                                        ?>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-info fs-12 me-1"></i>Received </p>
+                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-warning fs-12 me-1"></i>Pending</p>
+                        </div>
+                    </div>
+                    <div id="sales_analytics"></div>
+                </div><!-- end card body -->
+            </div><!-- end card -->
+        </div>
+
+
+    </div>
     <div class="row">
 
         <!-- Start Amount -->
@@ -273,8 +284,8 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
                         <div>
-                            <p class="mb-1">Amount Due</p>
-                            <h6 class="fs-16 fw-semibold">$25,000</h6>
+                            <p class="mb-1">Sales</p>
+                            <h6 class="fs-16 fw-semibold">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
                         </div>
                         <span class="avatar avatar-lg bg-primary text-white avatar-rounded">
                             <i class="isax isax-receipt-item fs-16"></i>
@@ -296,7 +307,7 @@
                     <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
                         <div>
                             <p class="mb-1">Customers</p>
-                            <h6 class="fs-16 fw-semibold">18,500</h6>
+                            <h6 class="fs-16 fw-semibold"><?= Customer::countTotalCustomer()->customers ?></h6>
                         </div>
                         <span class="avatar avatar-lg bg-success text-white avatar-rounded">
                             <i class="isax isax-tick-circle fs-16"></i>
@@ -317,11 +328,11 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
                         <div>
-                            <p class="mb-1">Invoices</p>
-                            <h6 class="fs-16 fw-semibold">6,500</h6>
+                            <p class="mb-1">Purchases</p>
+                            <h6 class="fs-16 fw-semibold">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
                         </div>
                         <span class="avatar avatar-lg bg-warning text-white avatar-rounded">
-                            <i class="isax isax-timer fs-16"></i>
+                            <i class="isax isax-programming-arrow fs-20"></i>
                         </span>
                     </div>
                     <p class="fs-13"><span class="text-success d-inline-flex align-items-center"><i class="isax isax-send me-1"></i>8.52%</span> from last month</p>
@@ -356,102 +367,158 @@
         <!-- End Estimates -->
 
     </div>
+    <!-- start row -->
+
     <!-- end row -->
 
     <!-- start row -->
     <div class="row">
 
-        <!-- Start Sales Analytics -->
-        <div class="col-xl-8 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body pb-0">
-                    <div class="mb-3 d-flex align-items-center justify-content-between">
-                        <h6 class="mb-1">Sales Analytics</h6>
-                        <div class="select-sm mb-1">
-                            <select class="select">
-                                <option>Monthly</option>
-                                <option>Weekly</option>
-                                <option>Yearly</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div>
-                            <div class="d-flex align-items-center flex-wrap gap-3">
-                                <div>
-                                    <p class="fs-13 mb-1">Total Sales</p>
-                                    <h6 class="fs-16 fw-semibold text-primary">$1000</h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Receipts</p>
-                                    <h6 class="fs-16 fw-semibold text-success">$2100</h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Expenses</p>
-                                    <h6 class="fs-16 fw-semibold text-danger">$300</h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Earnings</p>
-                                    <h6 class="fs-16 fw-semibold">$700</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-info fs-12 me-1"></i>Received </p>
-                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-warning fs-12 me-1"></i>Pending</p>
-                        </div>
-                    </div>
-                    <div id="sales_analytics"></div>
+        <div class="col-md-4 col-xl-4 d-flex flex-column">
+            <div class="card w-100">
+
+                <div class="card-body">
+                    <h6 class="mb-1">Top Selling Products</h6>
+                    <div id="radial-chart" class="chart-set"></div>
                 </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+            </div><!-- end card --><!-- end card -->
+        </div>
+        <!-- Start Sales Analytics -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-3">
+                        <h6 class="mb-1">Recent Orders</h6>
+                        <a href="invoices.html" class="btn btn-sm btn-dark mb-1">View all orders</a>
+                    </div>
+                    <div class="table-responsive no-filter no-pagination">
+                        <table class="table table-nowrap border mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <a href="invoice-details.html" class="link-default">INV00025</a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
+                                            </a>
+                                            <div>
+                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark">$10,000</td>
+                                    <td class="text-dark">Paid</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                            <i class="isax isax-add-circle me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="invoice-details.html" class="link-default">INV00025</a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
+                                            </a>
+                                            <div>
+                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark">$10,000</td>
+                                    <td class="text-dark">Paid</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                            <i class="isax isax-add-circle me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="invoice-details.html" class="link-default">INV00025</a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
+                                            </a>
+                                            <div>
+                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark">$10,000</td>
+                                    <td class="text-dark">Paid</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                            <i class="isax isax-add-circle me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="invoice-details.html" class="link-default">INV00025</a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
+                                            </a>
+                                            <div>
+                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark">$10,000</td>
+                                    <td class="text-dark">Paid</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                            <i class="isax isax-add-circle me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="invoice-details.html" class="link-default">INV00025</a>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
+                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
+                                            </a>
+                                            <div>
+                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-dark">$10,000</td>
+                                    <td class="text-dark">Paid</td>
+                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                            <i class="isax isax-add-circle me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <!-- end card body -->
+            </div> <!-- end card -->
+        </div> <!-- end col -->
         <!-- End Sales Analytics -->
 
         <!-- Start Invoice Analytics -->
-        <div class="col-xl-4 d-flex">
-            <div class="card flex-fill">
-                <div class="card-body">
-                    <div class="mb-3 d-flex align-items-center justify-content-between">
-                        <h6 class="mb-1">Invoice Analytics</h6>
-                        <div class="select-sm mb-1">
-                            <select class="select">
-                                <option>Monthly</option>
-                                <option>Weekly</option>
-                                <option>Yearly</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="invoice_analytics"></div>
-                    <div class="d-flex align-items-center justify-content-around gap-3 mb-3">
-                        <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-square text-primary fs-12 me-1"></i>Invoiced </p>
-                        <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-square text-success fs-12 me-1"></i>Received</p>
-                        <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-square text-warning fs-12 me-1"></i>Pending</p>
-                    </div>
-                    <div class="border rounded p-2">
-                        <div class="row g-2">
-                            <div class="col d-flex border-end ">
-                                <div class="text-center flex-fill">
-                                    <p class="fs-13 mb-1">Invoiced</p>
-                                    <h6 class="fs-16 fw-semibold">$9965</h6>
-                                </div>
-                            </div>
-                            <div class="col d-flex border-end ">
-                                <div class="text-center flex-fill">
-                                    <p class="fs-13 mb-1">Received</p>
-                                    <h6 class="fs-16 fw-semibold">$996</h6>
-                                </div>
-                            </div>
-                            <div class="col d-flex">
-                                <div class="text-center flex-fill">
-                                    <p class="fs-13 mb-1">Pending</p>
-                                    <h6 class="fs-16 fw-semibold">$478</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
-        </div><!-- end col -->
+        <!-- end col -->
         <!-- End Invoice Analytics -->
 
     </div>

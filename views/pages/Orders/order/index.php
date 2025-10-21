@@ -1,7 +1,3 @@
-<?php
-print_r($data)
-?>
-
 <div class="content content-two">
 
     <!-- Page Header -->
@@ -147,7 +143,7 @@ print_r($data)
 
                         <th class="no-sort" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Total Amount: activate to sort column ascending">Total Amount</th>
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
-                
+
 
                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Created On: activate to sort column ascending">Order_date</th>
 

@@ -1,1 +1,0 @@
-manager folder index.php

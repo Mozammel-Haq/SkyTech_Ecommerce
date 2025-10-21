@@ -178,12 +178,12 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                     <h4 class="mb-1">Invoice</h4>
                                     <div class="d-flex align-items-center flex-wrap row-gap-3">
                                         <div class="me-4">
-                                            <h6 class="fs-14 fw-semibold mb-1">Dreams Technologies Pvt Ltd.,</h6>
-                                            <p>15 Hodges Mews, High Wycombe HP12 3JL, United Kingdom</p>
+                                            <h6 class="fs-14 fw-semibold mb-1">SkyTech Electronics & Gadgets Ltd.,</h6>
+                                            <p>House 11, Road 2, Block F, Mohammadpur, Dhaka-1207</p>
                                         </div>
-                                        <span>
+                                        <!-- <span>
                                             <img alt="img" width="48" height="48" src="<?= $base_url ?>/assets/img/icons/not-paid.png">
-                                        </span>
+                                        </span> -->
                                     </div>
                                 </div>
                                 <div class="mb-3">
@@ -203,7 +203,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                 </div>
                                 <div class="col-lg-4">
                                     <h6 class="mb-2 fs-16 fw-semibold">Bill From</h6>
-                                    <h6 class="fs-14 fw-semibold mb-1">SkyTech</h6>
+                                    <h6 class="fs-14 fw-semibold mb-1">SkyTech Sutrapur Branch</h6>
                                     <p class="mb-1">23 Distilary Road, Dhaka-1204</p>
                                     <p class="mb-1">+09666666</p>
                                     <p class="mb-1">skytech@infy.uk</p>
@@ -258,7 +258,7 @@ $order_details = OrderDetail::find_by_order_id($order->id);
                                             <tr>
                                                 <td class="text-center"><?= $count ?></td>
                                                 <td><?= $product['name'] ?></td>
-                                                <td class="text-center"><?= number_format($quantity, 2) ?></td>
+                                                <td class="text-center"><?= $quantity ?></td>
                                                 <td class="text-end"><?= number_format($price, 2) ?></td>
                                                 <td class="text-end"><?= number_format($vat, 2) ?></td>
                                                 <td class="text-end"><?= number_format($product_discount, 2) ?></td>

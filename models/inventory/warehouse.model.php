@@ -77,6 +77,13 @@ class Warehouse extends Model implements JsonSerializable
 		$warehouse = $result->fetch_object();
 		return $warehouse;
 	}
+	public static function countWarehouses()
+	{
+		global $db, $tx;
+		$result = $db->query("select count(id) as warehouses from {$tx}warehouses");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 	static function get_last_id()
 	{
 		global $db, $tx;
