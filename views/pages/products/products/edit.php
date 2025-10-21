@@ -62,14 +62,10 @@ $gallery = $data['gallery'] ?? [];
 
                                 <div class="col-lg-4 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Category</label>
-                                        <select class="select" name="category">
-                                            <option value="">Select</option>
-                                            <option value="1" <?= $row['category_id'] == 1 ? 'selected' : '' ?>>Smartphones</option>
-                                            <option value="2" <?= $row['category_id'] == 2 ? 'selected' : '' ?>>Laptops</option>
-                                            <option value="3" <?= $row['category_id'] == 3 ? 'selected' : '' ?>>Headphones</option>
-                                            <option value="4" <?= $row['category_id'] == 4 ? 'selected' : '' ?>>Computer Service</option>
-                                        </select>
+                                        <label class="form-label">Category <span class="text-danger">*</span></label>
+                                        <?php
+                                        echo Category::html_select("category");
+                                        ?>
                                     </div>
                                 </div>
 

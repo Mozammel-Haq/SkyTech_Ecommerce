@@ -1,6 +1,7 @@
 <?php
 $product_id = $_GET['id'] ?? null;
 $product = $product_id ? Product::findProduct($product_id) : null;
+// print_r($data)
 ?>
 
 <div class="container py-4" id="printContainer">
@@ -9,8 +10,8 @@ $product = $product_id ? Product::findProduct($product_id) : null;
         <div class=" ps-3 mb-3 mb-md-0 product-header" id="productInfo">
             <h4 class="fw-bold mb-1">Inventory History</h4>
             <p class="mb-0 text-muted">
-                <strong>Product:</strong> <?= htmlspecialchars($product[0]['name'] ?? 'N/A') ?><br>
-                <strong>SKU:</strong> <?= htmlspecialchars($product[0]['sku'] ?? 'N/A') ?>
+                <strong>Product:&nbsp;&nbsp;</strong> <?= htmlspecialchars($product[0]['name'] ?? 'N/A') ?><br>
+                <strong>SKU:&nbsp;&nbsp;</strong> <?= htmlspecialchars($product[0]['sku'] ?? 'N/A') ?>
             </p>
         </div>
 
@@ -47,9 +48,12 @@ $product = $product_id ? Product::findProduct($product_id) : null;
                                 <tr>
                                     <td class="text-center"><?= htmlspecialchars($row->date) ?></td>
                                     <td class="text-center"><?= htmlspecialchars($row->unit) ?></td>
-                                    <td class="text-center"><?= htmlspecialchars($row->adjustments) ?></td>
+                                    <td class="text-center fw-semibold 
+                <?= ($row->adjustments > 0) ? 'text-success' : (($row->adjustments < 0) ? 'text-danger' : 'text-muted') ?>">
+                                        <?= htmlspecialchars($row->adjustments) ?>
+                                    </td>
                                     <td class="text-center"><?= htmlspecialchars($row->stock) ?></td>
-                                    <td><?= $row->reason ?></td>
+                                    <td><?= htmlspecialchars($row->reason) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -58,6 +62,7 @@ $product = $product_id ? Product::findProduct($product_id) : null;
                             </tr>
                         <?php endif; ?>
                     </tbody>
+
                 </table>
             </div>
         </div>

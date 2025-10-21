@@ -157,7 +157,7 @@
                         <td class="text-dark">$<?= $row->purchase_price ?></td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <a href="#" class="view-history-btn btn btn-sm btn-soft-primary border-0 d-inline-flex align-items-center me-1 fs-12 fw-regular" data-bs-toggle="modal" data-bs-target="#view_history" data-product-id="<?= $row->id ?>">
+                                <a href="<?= $base_url ?>/inventory/history/<?= $row->id ?>" class="view-history-btn btn btn-sm btn-soft-primary border-0 d-inline-flex align-items-center me-1 fs-12 fw-regular" data-product-id="<?= $row->id ?>">
                                     <i class="isax isax-document-sketch5 me-1"></i> History
                                 </a>
                                 <a href="#" class="btn btn-sm btn-soft-success border-0  d-inline-flex align-items-center me-1 fs-12 fw-regular" data-bs-toggle="modal" data-bs-target="#add_stockin">
@@ -483,47 +483,7 @@
         </div>
     </div>
 </div>
-<!-- Stock History -->
-<div id="view_history" class="modal fade" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Inventory History</h4>
-                <button type="button" class="btn-close btn-close-modal custom-btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-x"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="bg-light d-flex align-items-center justify-content-between flex-wrap row-gap-3 p-3 rounded mb-3">
-                    <div>
-                        <h6 class="fs-14 fw-semibold mb-1">Apple iPhone 15</h6>
-                        <span class="text-primary">PR00014</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-outline-white me-3"><i class="isax isax-document-like me-1"></i>Download PDF</button>
-                        <button type="button" class="btn btn-outline-white"><i class="isax isax-printer me-1"></i>Print</button>
-                    </div>
-                </div>
-                <!-- Table List -->
-                <div class="table-responsive border border-bottom-0">
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Date</th>
-                                <th>Unit</th>
-                                <th>Adjustments</th>
-                                <th>Stock</th>
-                                <th class="no-sort">Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
 
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /Table List -->
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Delete Modal -->
 <div class="modal fade" id="delete_modal">
     <div class="modal-dialog modal-dialog-centered modal-sm">

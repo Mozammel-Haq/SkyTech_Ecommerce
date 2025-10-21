@@ -101,6 +101,6 @@ class PurchaseApi
 			global $db;
 			$stmt = $db->query("UPDATE products SET purchase_price=$purchase_price WHERE id=$id");
 		}
-		echo json_encode(["success" => $data]);
+		echo json_encode(["success" =>"success"]);
 	}
 }

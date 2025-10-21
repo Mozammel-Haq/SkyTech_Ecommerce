@@ -1,3 +1,10 @@
+    <?php
+    $user_name = $_SESSION["uname"];
+    $user_photo = $_SESSION["uphoto"];
+    $user_role = $_SESSION["urole"];
+    ?>
+
+
     <!-- Topbar Start -->
     <div class="header">
         <div class="main-header">
@@ -331,11 +338,11 @@
                             <div class="dropdown-menu p-2">
                                 <div class="d-flex align-items-center bg-light rounded-1 p-2 mb-2">
                                     <span class="avatar avatar-lg me-2">
-                                        <img alt="img" class="rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="img" class="rounded-circle"></noscript>
+                                        <img alt="img" class="rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="img" class="rounded-circle"></noscript>
                                     </span>
                                     <div>
-                                        <h6 class="fs-14 fw-medium mb-1">Jafna Cremson</h6>
-                                        <p class="fs-13">Administrator</p>
+                                        <h6 class="fs-14 fw-medium mb-1"><?= $user_name ?></h6>
+                                        <p class="fs-13"><?= $user_role ?></p>
                                     </div>
                                 </div>
 
@@ -358,7 +365,7 @@
                                 <hr class="dropdown-divider my-2">
 
                                 <!-- Item-->
-                                <a class="dropdown-item logout d-flex align-items-center" href="login.html">
+                                <a class="dropdown-item logout d-flex align-items-center" href="<?= $base_url ?>/logout.php">
                                     <i class="isax isax-logout me-2"></i>Sign Out
                                 </a>
                             </div>
@@ -372,7 +379,7 @@
             <div class="dropdown mobile-user-menu profile-dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <span class="avatar avatar-md online">
-                        <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="Img" class="img-fluid rounded-circle"></noscript>
+                        <img alt="Img" class="img-fluid rounded-circle" data-cfsrc="<?= $base_url ?>/assets/img/profiles/<?= $user_photo ?>" style="display:none;visibility:hidden;"><noscript><img src="<?= $base_url ?>/assets/img/profiles/avatar-01.jpg" alt="Img" class="img-fluid rounded-circle"></noscript>
                     </span>
                 </a>
                 <div class="dropdown-menu p-2 mt-0">
