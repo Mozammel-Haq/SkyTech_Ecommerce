@@ -192,7 +192,7 @@ if ($hour >= 5 && $hour < 12) {
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Purchases</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Purchase::countTotalPurchase()->total_purchase ?></h6>
                                 </div>
                             </div>
                         </div>
@@ -238,7 +238,7 @@ if ($hour >= 5 && $hour < 12) {
                     </div>
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                         <div>
-                            <div class="d-flex align-items-center flex-wrap gap-3">
+                            <div class="d-flex align-items-center flex-wrap gap-4">
                                 <div>
                                     <p class="fs-13 mb-1">Total Sales</p>
                                     <h6 class="fs-16 fw-semibold text-primary">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
@@ -403,6 +403,7 @@ if ($hour >= 5 && $hour < 12) {
                                 </tr>
                             </thead>
                             <tbody>
+     
                                 <tr>
                                     <td>
                                         <a href="invoice-details.html" class="link-default">INV00025</a>
@@ -418,7 +419,7 @@ if ($hour >= 5 && $hour < 12) {
                                         </div>
                                     </td>
                                     <td class="text-dark">$10,000</td>
-                                    <td class="text-dark">Paid</td>
+                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
                                     <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                             <i class="isax isax-add-circle me-1"></i> Invoice
                                         </a>
@@ -439,7 +440,7 @@ if ($hour >= 5 && $hour < 12) {
                                         </div>
                                     </td>
                                     <td class="text-dark">$10,000</td>
-                                    <td class="text-dark">Paid</td>
+                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
                                     <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                             <i class="isax isax-add-circle me-1"></i> Invoice
                                         </a>
@@ -460,7 +461,7 @@ if ($hour >= 5 && $hour < 12) {
                                         </div>
                                     </td>
                                     <td class="text-dark">$10,000</td>
-                                    <td class="text-dark">Paid</td>
+                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
                                     <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                             <i class="isax isax-add-circle me-1"></i> Invoice
                                         </a>
@@ -481,7 +482,7 @@ if ($hour >= 5 && $hour < 12) {
                                         </div>
                                     </td>
                                     <td class="text-dark">$10,000</td>
-                                    <td class="text-dark">Paid</td>
+                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
                                     <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                             <i class="isax isax-add-circle me-1"></i> Invoice
                                         </a>
@@ -502,12 +503,13 @@ if ($hour >= 5 && $hour < 12) {
                                         </div>
                                     </td>
                                     <td class="text-dark">$10,000</td>
-                                    <td class="text-dark">Paid</td>
+                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
                                     <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
                                             <i class="isax isax-add-circle me-1"></i> Invoice
                                         </a>
                                     </td>
                                 </tr>
+                                
 
                             </tbody>
                         </table>

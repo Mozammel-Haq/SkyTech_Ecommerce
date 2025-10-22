@@ -30,7 +30,7 @@
     <!-- end row -->
 
     <div class="table-responsive border border-bottom-0 rounded">
-        <table class="table table-nowrap datatable m-0">
+        <table class="table table-nowrap m-0">
             <thead class="table-light">
                 <tr>
                     <th class="no-sort">

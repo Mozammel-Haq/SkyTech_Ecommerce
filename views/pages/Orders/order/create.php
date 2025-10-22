@@ -5,7 +5,7 @@
 		<div class="col-md-11 mx-auto">
 			<div>
 				<div class="d-flex align-items-center justify-content-between mb-3">
-					<h6><a href="invoices.html"><i class="isax isax-arrow-left me-2"></i>Invoice</a></h6>
+					<h6><a href="<?=$base_url?>/order"><i class="isax isax-arrow-left me-2"></i>Invoice</a></h6>
 					<a href="invoice-details.html" class="btn btn-outline-white d-inline-flex align-items-center"><i class="isax isax-eye me-1"></i>Preview</a>
 				</div>
 				<div class="card">

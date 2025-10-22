@@ -445,6 +445,7 @@
                     console.log(res);
                     purchaseCart.clearAll();
                     renderPurchaseCart();
+                    window.location.href = "<?= $base_url ?>/purchase";
                 },
                 error: function(err) {
                     console.log(err);

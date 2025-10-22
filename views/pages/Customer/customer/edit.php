@@ -5,7 +5,7 @@
 		<div class="col-md-10 mx-auto">
 			<div>
 				<div class="d-flex align-items-center justify-content-between mb-3">
-					<h6><a href="customers.html"><i class="isax isax-arrow-left me-2"></i>Customer</a></h6>
+					<h6><a href="<?=$base_url?>/customer"><i class="isax isax-arrow-left me-2"></i>Customer</a></h6>
 				</div>
 				<div class="card">
 					<div class="card-body">

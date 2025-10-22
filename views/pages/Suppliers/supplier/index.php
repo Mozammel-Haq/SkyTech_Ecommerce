@@ -1,7 +1,3 @@
-<?php
-print_r($data);
-?>
-
 <!-- Start Content -->
 <div class="content content-two">
 

@@ -4,11 +4,12 @@ session_start();
 require_once("configs/db_config.php");
 if (isset($_SESSION["uid"])) header("location:home");
 //require_once("library/classes/system_log.class.php");
-
+$error = "";
 if (isset($_POST["btnSignIn"])) {
 
   $username = trim($_POST["txtUsername"]);
   $password = trim($_POST["txtPassword"]);
+
 
 
 
@@ -29,7 +30,7 @@ if (isset($_POST["btnSignIn"])) {
 
     header("location:home");
   } else {
-    echo "Incorrect username or password";
+    $error = "Incorrect username or password";
   }
 
 
@@ -99,6 +100,8 @@ if (isset($_POST["btnSignIn"])) {
                     <div class="text-center mb-3">
                       <h5 class="mb-2">Sign In</h5>
                       <p class="mb-0">Please enter below details to access the dashboard</p>
+                      <br>
+                      <p class="text-danger"><?= $error ?></p>
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Username</label>
@@ -118,6 +121,7 @@ if (isset($_POST["btnSignIn"])) {
                         <span class="isax toggle-password isax-eye-slash"></span>
                         <input type="password" class="pass-inputs form-control border-start-0 ps-0" name="txtPassword" placeholder="****************">
                       </div>
+
                     </div>
                     <div class="d-flex align-items-center justify-content-between mb-3">
                       <div class="d-flex align-items-center">

@@ -111,6 +111,13 @@ class Purchase extends Model implements JsonSerializable
 		$supplier = $result->fetch_object();
 		return $supplier;
 	}
+	public static function countTotalPurchase()
+	{
+		global $db, $tx;
+		$result = $db->query("select count(id) as total_purchase from {$tx}purchases");
+		$supplier = $result->fetch_object();
+		return $supplier;
+	}
 	static function get_last_id()
 	{
 		global $db, $tx;
