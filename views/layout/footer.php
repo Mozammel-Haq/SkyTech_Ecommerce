@@ -590,6 +590,151 @@
     });
 </script>
 
+<script>
+    $(document).ready(function() {
+        if ($('#sales_analytic').length > 0) {
+
+            var options = {
+                chart: {
+                    type: 'bar', // column style
+                    height: 350,
+                    stacked: false,
+                    toolbar: {
+                        show: true
+                    }
+                },
+                series: [],
+                xaxis: {
+                    categories: [],
+                    title: {
+                        text: 'Period'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Amount ($)',
+                        offsetX: 1.5
+                    }
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '50%',
+                        endingShape: 'rounded'
+                    }
+                },
+                colors: ['#06aed4', '#e2b93b'],
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                // Disable numbers on bars
+                dataLabels: {
+                    enabled: false
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#sales_analytic"), options);
+            chart.render();
+
+            function loadSalesAnalytics(period = 'monthly') {
+                $.ajax({
+                    url: '<?= $base_url ?>/api/sale_analytics.php',
+                    method: 'GET',
+                    data: {
+                        period: period
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (!res.success || !res.labels.length) {
+                            chart.updateOptions({
+                                xaxis: {
+                                    categories: []
+                                },
+                                series: []
+                            });
+                            return;
+                        }
+
+                        let categories = res.labels;
+                        let series = [];
+
+                        if (period.toLowerCase() === 'yearly') {
+                            // Align Paid/Pending by year
+                            let paidData = [],
+                                pendingData = [];
+                            res.labels.forEach((label, i) => {
+                                paidData.push(res.series[0].data[i] ?? 0);
+                                pendingData.push(res.series[1].data[i] ?? 0);
+                            });
+                            series = [{
+                                    name: 'Paid',
+                                    data: paidData
+                                },
+                                {
+                                    name: 'Pending',
+                                    data: pendingData
+                                }
+                            ];
+                        } else if (period.toLowerCase() === 'weekly') {
+                            // Only current week data, x-axis as day names
+                            series = [{
+                                    name: 'Paid',
+                                    data: res.series[0].data
+                                },
+                                {
+                                    name: 'Pending',
+                                    data: res.series[1].data
+                                }
+                            ];
+                        } else if (period.toLowerCase() === 'monthly') {
+                            // Month names on x-axis
+                            categories = categories.map(c => {
+                                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                                const parts = c.split('-'); // '2025-10'
+                                return parts.length > 1 ? monthNames[parseInt(parts[1]) - 1] : c;
+                            });
+                            series = [{
+                                    name: 'Paid',
+                                    data: res.series[0].data
+                                },
+                                {
+                                    name: 'Pending',
+                                    data: res.series[1].data
+                                }
+                            ];
+                        }
+
+                        chart.updateOptions({
+                            xaxis: {
+                                categories: categories
+                            },
+                            series: series
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                    }
+                });
+            }
+
+            // Initial load
+            loadSalesAnalytics();
+
+            // Change period
+            $('.select').on('change', function() {
+                loadSalesAnalytics($(this).val().toLowerCase());
+            });
+        }
+    });
+</script>
+
+
+
+
 
 
 

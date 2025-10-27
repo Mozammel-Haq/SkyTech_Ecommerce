@@ -229,7 +229,7 @@ if ($hour >= 5 && $hour < 12) {
                     <div class="mb-3 d-flex align-items-center justify-content-between">
                         <h6 class="mb-1">Sales Analytics</h6>
                         <div class="select-sm mb-1">
-                            <select class="select">
+                            <select class="select" id="period_selector">
                                 <option>Monthly</option>
                                 <option>Weekly</option>
                                 <option>Yearly</option>
@@ -269,7 +269,7 @@ if ($hour >= 5 && $hour < 12) {
                             <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-warning fs-12 me-1"></i>Pending</p>
                         </div>
                     </div>
-                    <div id="sales_analytics"></div>
+                    <div id="sales_analytic"></div>
                 </div><!-- end card body -->
             </div><!-- end card -->
         </div>
@@ -403,7 +403,7 @@ if ($hour >= 5 && $hour < 12) {
                                 </tr>
                             </thead>
                             <tbody>
-     
+
                                 <tr>
                                     <td>
                                         <a href="invoice-details.html" class="link-default">INV00025</a>
@@ -509,7 +509,7 @@ if ($hour >= 5 && $hour < 12) {
                                         </a>
                                     </td>
                                 </tr>
-                                
+
 
                             </tbody>
                         </table>

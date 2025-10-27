@@ -1,4 +1,5 @@
 <?php
+
 class Order extends Model implements JsonSerializable
 {
 	public $id;
@@ -115,6 +116,82 @@ class Order extends Model implements JsonSerializable
 		$supplier = $result->fetch_object();
 		return $supplier;
 	}
+	public static function getSalesAnalytics($period = 'monthly')
+	{
+		global $db;
+
+		$whereClause = "";
+
+		if ($period == 'yearly') {
+			$selectDate = "DATE_FORMAT(order_date, '%Y') AS period";
+			$groupBy = "DATE_FORMAT(order_date, '%Y')";
+		} elseif ($period == 'weekly') {
+			$currentYear = date('Y');
+			$currentWeek = date('W');
+			$whereClause = "WHERE YEAR(order_date) = '$currentYear' AND WEEK(order_date, 1) = '$currentWeek'";
+			$selectDate = "DATE_FORMAT(order_date, '%Y-%m-%d') AS period";
+			$groupBy = "DATE_FORMAT(order_date, '%Y-%m-%d')";
+		} else { // monthly
+			$selectDate = "DATE_FORMAT(order_date, '%Y-%m') AS period";
+			$groupBy = "DATE_FORMAT(order_date, '%Y-%m')";
+		}
+
+		$sql = "
+        SELECT 
+            $selectDate,
+            SUM(CASE WHEN status = 'paid' THEN total_amount ELSE 0 END) AS paid_total,
+            SUM(CASE WHEN status = 'unpaid' THEN total_amount ELSE 0 END) AS pending_total
+        FROM orders
+        $whereClause
+        GROUP BY $groupBy
+        ORDER BY period ASC
+    ";
+
+		$result = $db->query($sql);
+		$data = [];
+
+		while ($row = $result->fetch_assoc()) {
+			if ($period == 'monthly') {
+				$label = date("M Y", strtotime($row['period']));
+			} elseif ($period == 'yearly') {
+				$label = $row['period']; // already just the year
+			} elseif ($period == 'weekly') {
+				$label = date("D", strtotime($row['period'])); // Mon, Tue, etc
+			}
+
+			$data[] = [
+				'period' => $label,
+				'paid' => (float)$row['paid_total'],
+				'pending' => (float)$row['pending_total']
+			];
+		}
+
+		// Fill missing days for weekly
+		if ($period == 'weekly') {
+			$weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+			$filledData = [];
+			foreach ($weekDays as $day) {
+				$found = false;
+				foreach ($data as $d) {
+					if ($d['period'] == $day) {
+						$filledData[] = $d;
+						$found = true;
+						break;
+					}
+				}
+				if (!$found) {
+					$filledData[] = ['period' => $day, 'paid' => 0, 'pending' => 0];
+				}
+			}
+			$data = $filledData;
+		}
+
+		return $data;
+	}
+
+
+
+
 
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{
