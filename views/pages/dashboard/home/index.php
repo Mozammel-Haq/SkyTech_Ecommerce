@@ -241,22 +241,22 @@ if ($hour >= 5 && $hour < 12) {
                             <div class="d-flex align-items-center flex-wrap gap-4">
                                 <div>
                                     <p class="fs-13 mb-1">Total Sales</p>
-                                    <h6 class="fs-16 fw-semibold text-primary">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-primary">$<?= (int) Order::calculateOrderAmount()->order_amount ?></h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Receipts</p>
-                                    <h6 class="fs-16 fw-semibold text-success">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-success">$<?= (int) Order::calculateOrderAmount()->order_amount ?></h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Expenses</p>
-                                    <h6 class="fs-16 fw-semibold text-danger">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-danger">$<?= (int) Purchase::calculateTotalPurchase()->total_purchase ?></h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Earnings</p>
                                     <h6 class="fs-16 fw-semibold">$
                                         <?php
-                                        $sales = Order::calculateOrderAmount()->order_amount;
-                                        $purchase = Purchase::calculateTotalPurchase()->total_purchase;
+                                        $sales = (int) Order::calculateOrderAmount()->order_amount;
+                                        $purchase = (int) Purchase::calculateTotalPurchase()->total_purchase;
                                         $income = $sales - $purchase;
                                         echo $income;
                                         ?>
@@ -389,7 +389,7 @@ if ($hour >= 5 && $hour < 12) {
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap mb-3">
                         <h6 class="mb-1">Recent Orders</h6>
-                        <a href="invoices.html" class="btn btn-sm btn-dark mb-1">View all orders</a>
+                        <a href="<?= $base_url ?>/order" class="btn btn-sm btn-dark mb-1">View all orders</a>
                     </div>
                     <div class="table-responsive no-filter no-pagination">
                         <table class="table table-nowrap border mb-0">
@@ -399,118 +399,74 @@ if ($hour >= 5 && $hour < 12) {
                                     <th>Customer</th>
                                     <th>Amount</th>
                                     <th>Status</th>
+                                    <th>Order Date</th>
+                                    <th>Invoice</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                <tr>
-                                    <td>
-                                        <a href="invoice-details.html" class="link-default">INV00025</a>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
-                                            </a>
-                                            <div>
-                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-dark">$10,000</td>
-                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                            <i class="isax isax-add-circle me-1"></i> Invoice
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="invoice-details.html" class="link-default">INV00025</a>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
-                                            </a>
-                                            <div>
-                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-dark">$10,000</td>
-                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                            <i class="isax isax-add-circle me-1"></i> Invoice
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="invoice-details.html" class="link-default">INV00025</a>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
-                                            </a>
-                                            <div>
-                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-dark">$10,000</td>
-                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                            <i class="isax isax-add-circle me-1"></i> Invoice
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="invoice-details.html" class="link-default">INV00025</a>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
-                                            </a>
-                                            <div>
-                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-dark">$10,000</td>
-                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                            <i class="isax isax-add-circle me-1"></i> Invoice
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="invoice-details.html" class="link-default">INV00025</a>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <a href="customer-details.html" class="avatar avatar-sm rounded-circle me-2 flex-shrink-0">
-                                                <img class="rounded-circle" alt="img" data-cfsrc="assets/img/users/user-22.jpg" style="display:none;visibility:hidden;"><noscript><img src="assets/img/users/user-22.jpg" class="rounded-circle" alt="img"></noscript>
-                                            </a>
-                                            <div>
-                                                <h6 class="fs-14 fw-medium mb-0"><a href="customer-details.html">Emily Clark</a></h6>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-dark">$10,000</td>
-                                    <td class="text-dark"><span class="badge badge-soft-success badge-sm d-inline-flex align-items-center">Paid<i class="isax isax-tick-circle ms-1"></i></span></td>
-                                    <td><a href="#" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
-                                            <i class="isax isax-add-circle me-1"></i> Invoice
-                                        </a>
-                                    </td>
-                                </tr>
+                                <?php
+                                foreach ($data as $row) :
+                                ?>
 
+                                    <tr class="odd">
 
+                                        <td>
+                                            #<?= $row->id ?>
+                                        </td>
+                                        <td>
+                                            <h6 class="fs-14 fw-medium mb-0"><?= htmlspecialchars($row->customer_name) ?></h6>
+                                        </td>
+
+                                        <td>$ <?= $row->total_amount ?></td>
+                                        <td>
+                                            <?php if ($row->status == 'paid'): ?>
+                                                <span class="badge bg-success-subtle text-success">Paid</span>
+
+                                            <?php elseif ($row->status == 'unpaid'): ?>
+                                                <span class="badge bg-danger-subtle text-info">unpaid</span>
+
+                                            <?php else: ?>
+                                                <span class="badge bg-danger-subtle text-danger"><?= ucfirst($row->status) ?></span>
+                                            <?php endif; ?>
+
+                                        </td>
+
+                                        <td><?= date('Y-m-d', strtotime($row->order_date)) ?></td>
+                                        <td>
+                                            <a href="<?= $base_url ?>/order/show/<?= $row->id ?>" class="btn btn-sm btn-outline-white d-inline-flex align-items-center me-1">
+                                                <i class="isax isax-add-circle me-1"></i> Invoice
+                                            </a>
+                                        </td>
+
+                                        <td class="action-item">
+                                            <a href="javascript:void(0);" data-bs-toggle="dropdown" aria-expanded="false" class="">
+                                                <i class="isax isax-more"></i>
+                                            </a>
+                                            <ul class="dropdown-menu" style="">
+                                                <li>
+                                                    <a href="<?= $base_url ?>/order/show/<?= $row->id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#"
+                                                        class="dropdown-item d-flex align-items-center deleteOrderBtn"
+                                                        data-id="<?= $row->id ?>"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#delete_Order_modal">
+                                                        <i class="isax isax-trash me-2"></i> Delete
+                                                    </a>
+
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                <?php
+                                endforeach;
+                                ?>
                             </tbody>
                         </table>
                     </div>

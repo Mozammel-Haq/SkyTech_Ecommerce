@@ -4,7 +4,8 @@ class HomeController{
 
     }
     public function index(){
-       view("dashboard");
+      $data = Order::recentOrders();
+       view("dashboard",$data);
     }
     public function manager(){
        view("dashboard");
