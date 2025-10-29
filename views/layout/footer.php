@@ -721,12 +721,38 @@
                 });
             }
 
+            function loadSummary(period = 'monthly') {
+                $.ajax({
+                    url: '<?= $base_url ?>/api/summary_analytics.php',
+                    method: 'GET',
+                    data: {
+                        period: period
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (!res.success) return;
+
+                        // Update numbers dynamically
+                        $('[data-summary="sales"]').text('$' + res.sales.toLocaleString());
+                        $('[data-summary="receipts"]').text('$' + res.receipts.toLocaleString());
+                        $('[data-summary="expenses"]').text('$' + res.expenses.toLocaleString());
+                        $('[data-summary="earnings"]').text('$' + res.earnings.toLocaleString());
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Summary AJAX error:", status, error);
+                    }
+                });
+            }
+
             // Initial load
             loadSalesAnalytics();
+            loadSummary();
 
             // Change period
             $('.select').on('change', function() {
-                loadSalesAnalytics($(this).val().toLowerCase());
+                const period = $(this).val().toLowerCase();
+                loadSalesAnalytics(period);
+                loadSummary(period);
             });
         }
     });

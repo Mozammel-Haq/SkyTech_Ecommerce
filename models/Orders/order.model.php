@@ -133,13 +133,49 @@ class Order extends Model implements JsonSerializable
 		$supplier = $result->fetch_object();
 		return $supplier;
 	}
-	public static function calculateOrderAmount()
+	public static function calculateOrderAmount($period = 'monthly')
 	{
 		global $db, $tx;
-		$result = $db->query("select sum(total_amount) as order_amount from {$tx}orders");
-		$supplier = $result->fetch_object();
-		return $supplier;
+
+		$currentYear = date('Y');
+		$previousYear = date('Y', strtotime('-1 year'));
+		$currentMonth = date('m');
+		$previousMonth = date('m', strtotime('-1 month'));
+		$currentWeek = date('W');
+		$previousWeek = date('W', strtotime('-1 week'));
+
+		// Build SQL dynamically based on period
+		switch (strtolower($period)) {
+			case 'weekly':
+				$sql = "SELECT SUM(total_amount) AS order_amount 
+                    FROM {$tx}orders 
+                    WHERE WEEK(order_date, 1) = '{$currentWeek}' 
+                    AND YEAR(order_date) = '{$currentYear}'";
+				break;
+
+			case 'yearly':
+				$sql = "SELECT SUM(total_amount) AS order_amount 
+                    FROM {$tx}orders 
+                    WHERE YEAR(order_date) = '{$currentYear}'";
+				break;
+
+			default: // monthly
+				$sql = "SELECT SUM(total_amount) AS order_amount 
+                    FROM {$tx}orders 
+                    WHERE MONTH(order_date) = '{$currentMonth}' 
+                    AND YEAR(order_date) = '{$currentYear}'";
+				break;
+		}
+
+		$result = $db->query($sql);
+		$data = $result ? $result->fetch_object() : null;
+
+		// Return standardized object
+		return (object)[
+			'order_amount' => (float)($data->order_amount ?? 0)
+		];
 	}
+
 	public static function getSalesAnalytics($period = 'monthly')
 	{
 		global $db;
@@ -211,6 +247,42 @@ class Order extends Model implements JsonSerializable
 		}
 
 		return $data;
+	}
+
+	public static function calculateMonthlyComparison()
+	{
+		global $db, $tx;
+
+		$currentMonth = date('m');
+		$currentYear  = date('Y');
+
+		$previousMonth = date('m', strtotime('-1 month'));
+		$previousYear  = date('Y', strtotime('-1 month'));
+
+		// Current month total
+		$currentQuery = "SELECT SUM(total_amount) AS total FROM {$tx}orders 
+                     WHERE MONTH(order_date) = '{$currentMonth}' 
+                     AND YEAR(order_date) = '{$currentYear}'";
+		$currentResult = $db->query($currentQuery)->fetch_object();
+		$currentTotal = (float)($currentResult->total ?? 0);
+
+		// Previous month total
+		$previousQuery = "SELECT SUM(total_amount) AS total FROM {$tx}orders 
+                     WHERE MONTH(order_date) = '{$previousMonth}' 
+                     AND YEAR(order_date) = '{$previousYear}'";
+		$previousResult = $db->query($previousQuery)->fetch_object();
+		$previousTotal = (float)($previousResult->total ?? 0);
+
+		// Percentage change
+		$change = $previousTotal > 0
+			? (($currentTotal - $previousTotal) / $previousTotal) * 100
+			: 0;
+
+		return (object)[
+			'current' => $currentTotal,
+			'previous' => $previousTotal,
+			'change' => $change
+		];
 	}
 
 

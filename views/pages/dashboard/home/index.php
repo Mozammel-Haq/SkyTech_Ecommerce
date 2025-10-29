@@ -11,6 +11,7 @@ if ($hour >= 5 && $hour < 12) {
     $greeting = "Good Night";
 }
 
+$period = $_GET['period'] ?? 'monthly';
 
 
 ?>
@@ -241,28 +242,35 @@ if ($hour >= 5 && $hour < 12) {
                             <div class="d-flex align-items-center flex-wrap gap-4">
                                 <div>
                                     <p class="fs-13 mb-1">Total Sales</p>
-                                    <h6 class="fs-16 fw-semibold text-primary">$<?= (int) Order::calculateOrderAmount()->order_amount ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-primary" data-summary="sales">
+                                        $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
+                                    </h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Receipts</p>
-                                    <h6 class="fs-16 fw-semibold text-success">$<?= (int) Order::calculateOrderAmount()->order_amount ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-success" data-summary="receipts">
+                                        $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
+                                    </h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Expenses</p>
-                                    <h6 class="fs-16 fw-semibold text-danger">$<?= (int) Purchase::calculateTotalPurchase()->total_purchase ?></h6>
+                                    <h6 class="fs-16 fw-semibold text-danger" data-summary="expenses">
+                                        $<?= (int) Purchase::calculateTotalPurchase($period)->total_purchase ?>
+                                    </h6>
                                 </div>
                                 <div>
                                     <p class="fs-13 mb-1">Earnings</p>
-                                    <h6 class="fs-16 fw-semibold">$
+                                    <h6 class="fs-16 fw-semibold" data-summary="earnings">
                                         <?php
-                                        $sales = (int) Order::calculateOrderAmount()->order_amount;
-                                        $purchase = (int) Purchase::calculateTotalPurchase()->total_purchase;
-                                        $income = $sales - $purchase;
-                                        echo $income;
+                                        $total_purchase = (int) Purchase::calculateTotalPurchase($period)->total_purchase;
+                                        $total_sales = (int) Order::calculateOrderAmount($period)->order_amount;
+                                        $income = $total_purchase - $total_sales;
                                         ?>
+                                        $<?= $income ?>
                                     </h6>
                                 </div>
                             </div>
+
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-info fs-12 me-1"></i>Received </p>
@@ -279,69 +287,64 @@ if ($hour >= 5 && $hour < 12) {
     <div class="row">
 
         <!-- Start Amount -->
-        <div class="col-sm-6 col-xl-3 d-flex">
-            <div class="card overflow-hidden z-1 flex-fill">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
-                        <div>
-                            <p class="mb-1">Sales</p>
-                            <h6 class="fs-16 fw-semibold">$<?= Order::calculateOrderAmount()->order_amount ?></h6>
+        <?php
+        function renderMonthlyCard($label, $current, $previous, $icon, $bgClass = 'bg-primary', $iconSize = 'fs-16', $prefix = '$', $decimals = 2)
+        {
+            $change = $previous > 0 ? (($current - $previous) / $previous) * 100 : 0;
+            $changeClass = $change >= 0 ? 'text-success' : 'text-danger';
+            $iconClass   = $change >= 0 ? 'isax isax-send' : 'isax isax-received';
+            $sign        = $change >= 0 ? '+' : '';
+
+        ?>
+            <div class="col-sm-6 col-xl-3 d-flex">
+                <div class="card overflow-hidden z-1 flex-fill">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
+                            <div>
+                                <p class="mb-1"><?= htmlspecialchars($label) ?></p>
+                                <h6 class="fs-16 fw-semibold"><?= $prefix . number_format($current, $decimals) ?></h6>
+                            </div>
+                            <span class="avatar avatar-lg <?= $bgClass ?> text-white avatar-rounded">
+                                <i class="<?= $icon ?> <?= $iconSize ?>"></i>
+                            </span>
                         </div>
-                        <span class="avatar avatar-lg bg-primary text-white avatar-rounded">
-                            <i class="isax isax-receipt-item fs-16"></i>
-                        </span>
+                        <p class="fs-13">
+                            <span class="<?= $changeClass ?> d-inline-flex align-items-center">
+                                <i class="<?= $iconClass ?> me-1"></i>
+                                <?= $sign . number_format($change, 2) ?>%
+                            </span> from last month
+                        </p>
                     </div>
-                    <p class="fs-13"><span class="text-success d-inline-flex align-items-center"><i class="isax isax-send me-1"></i>5.62%</span> from last month</p>
-                </div> <!-- end card body -->
-                <div class="position-absolute end-0 bottom-0 z-n1">
-                    <img src="<?= $base_url ?>/assets/img/bg/card-bg-04.svg" alt="img">
                 </div>
-            </div><!-- end card -->
-        </div><!-- end col -->
+            </div>
+        <?php
+        }
+
+        ?>
+
+        <?php
+        $salesData    = Order::calculateMonthlyComparison();
+
+        renderMonthlyCard('Sales', $salesData->current, $salesData->previous, 'isax isax-receipt-item fs-16', 'bg-primary', 'fs-16', '$', 2);
+        ?>
+        <!-- end col -->
         <!-- End Amount -->
 
         <!-- Start Customers -->
-        <div class="col-sm-6 col-xl-3 d-flex">
-            <div class="card overflow-hidden z-1 flex-fill">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
-                        <div>
-                            <p class="mb-1">Customers</p>
-                            <h6 class="fs-16 fw-semibold"><?= Customer::countTotalCustomer()->customers ?></h6>
-                        </div>
-                        <span class="avatar avatar-lg bg-success text-white avatar-rounded">
-                            <i class="isax isax-tick-circle fs-16"></i>
-                        </span>
-                    </div>
-                    <p class="fs-13"><span class="text-success d-inline-flex align-items-center"><i class="isax isax-send me-1"></i>11.4%</span> from last month</p>
-                </div><!-- end card body -->
-                <div class="position-absolute end-0 bottom-0 z-n1">
-                    <img src="<?= $base_url ?>/assets/img/bg/card-bg-05.svg" alt="img">
-                </div>
-            </div><!-- end card -->
-        </div><!-- end col -->
+        <?php
+        $customerData = Customer::calculateMonthlyCustomerComparison();
+        renderMonthlyCard('Customers', $customerData->current, $customerData->previous, 'isax isax-user fs-16', 'bg-info', 'fs-16', '', 0);
+
+
+
+        ?>
         <!-- End Customers -->
 
         <!-- Start Invoices -->
-        <div class="col-sm-6 col-xl-3 d-flex">
-            <div class="card overflow-hidden z-1 flex-fill">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
-                        <div>
-                            <p class="mb-1">Purchases</p>
-                            <h6 class="fs-16 fw-semibold">$<?= Purchase::calculateTotalPurchase()->total_purchase ?></h6>
-                        </div>
-                        <span class="avatar avatar-lg bg-warning text-white avatar-rounded">
-                            <i class="isax isax-programming-arrow fs-20"></i>
-                        </span>
-                    </div>
-                    <p class="fs-13"><span class="text-success d-inline-flex align-items-center"><i class="isax isax-send me-1"></i>8.52%</span> from last month</p>
-                </div><!-- end card body -->
-                <div class="position-absolute end-0 bottom-0 z-n1">
-                    <img src="<?= $base_url ?>/assets/img/bg/card-bg-06.svg" alt="img">
-                </div>
-            </div><!-- end card -->
-        </div><!-- end col -->
+        <?php
+        $purchaseData = Purchase::calculateMonthlyPurchaseComparison();
+        renderMonthlyCard('Purchases', $purchaseData->current, $purchaseData->previous, 'isax isax-programming-arrow fs-20', 'bg-warning', 'fs-20', '$', 2);
+        ?>
         <!-- End Invoices -->
 
         <!-- Start Estimates -->
@@ -350,8 +353,8 @@ if ($hour >= 5 && $hour < 12) {
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between border-bottom mb-2 pb-2">
                         <div>
-                            <p class="mb-1">Estimates</p>
-                            <h6 class="fs-16 fw-semibold">2,000</h6>
+                            <p class="mb-1">(DEVELOP_ESTIMATES)</p>
+                            <h6 class="fs-16 fw-semibold">######</h6>
                         </div>
                         <span class="avatar avatar-lg bg-danger text-white avatar-rounded">
                             <i class="isax isax-information fs-16"></i>

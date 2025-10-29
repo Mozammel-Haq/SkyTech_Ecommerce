@@ -104,13 +104,75 @@ class Purchase extends Model implements JsonSerializable
 		$purchase = $result->fetch_object();
 		return $purchase;
 	}
-	public static function calculateTotalPurchase()
+	// In Purchase.php
+	public static function calculateTotalPurchase($period = 'monthly')
 	{
 		global $db, $tx;
-		$result = $db->query("select sum(total_amount) as total_purchase from {$tx}purchases");
-		$supplier = $result->fetch_object();
-		return $supplier;
+
+		$whereClause = '';
+		$currentDate = date('Y-m-d');
+
+		switch ($period) {
+			case 'weekly':
+				$startOfWeek = date('Y-m-d', strtotime('monday this week'));
+				$whereClause = "WHERE order_date >= '$startOfWeek'";
+				break;
+
+			case 'monthly':
+				$startOfMonth = date('Y-m-01');
+				$whereClause = "WHERE order_date >= '$startOfMonth'";
+				break;
+
+			case 'yearly':
+				$startOfYear = date('Y-01-01');
+				$whereClause = "WHERE order_date >= '$startOfYear'";
+				break;
+
+			default:
+				$whereClause = '';
+				break;
+		}
+
+		$query = "SELECT SUM(total_amount) AS total_purchase FROM {$tx}purchases $whereClause";
+		$result = $db->query($query);
+		return $result->fetch_object();
 	}
+	public static function calculateMonthlyPurchaseComparison()
+	{
+		global $db, $tx;
+
+		$currentMonth = date('m');
+		$currentYear  = date('Y');
+
+		$previousMonth = date('m', strtotime('-1 month'));
+		$previousYear  = date('Y', strtotime('-1 month'));
+
+		// Current month total purchases
+		$currentQuery = "SELECT SUM(total_amount) AS total FROM {$tx}purchases 
+                     WHERE MONTH(order_date) = '{$currentMonth}' 
+                     AND YEAR(order_date) = '{$currentYear}'";
+		$currentResult = $db->query($currentQuery)->fetch_object();
+		$currentTotal = (float)($currentResult->total ?? 0);
+
+		// Previous month total purchases
+		$previousQuery = "SELECT SUM(total_amount) AS total FROM {$tx}purchases 
+                      WHERE MONTH(order_date) = '{$previousMonth}' 
+                      AND YEAR(order_date) = '{$previousYear}'";
+		$previousResult = $db->query($previousQuery)->fetch_object();
+		$previousTotal = (float)($previousResult->total ?? 0);
+
+		// Percentage change
+		$change = $previousTotal > 0
+			? (($currentTotal - $previousTotal) / $previousTotal) * 100
+			: 0;
+
+		return (object)[
+			'current' => $currentTotal,
+			'previous' => $previousTotal,
+			'change' => $change
+		];
+	}
+
 	public static function countTotalPurchase()
 	{
 		global $db, $tx;

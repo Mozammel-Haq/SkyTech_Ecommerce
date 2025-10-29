@@ -61,6 +61,42 @@ class Customer extends Model implements JsonSerializable
 		$supplier = $result->fetch_object();
 		return $supplier;
 	}
+	public static function calculateMonthlyCustomerComparison()
+	{
+		global $db, $tx;
+
+		$currentMonth = date('m');
+		$currentYear  = date('Y');
+
+		$previousMonth = date('m', strtotime('-1 month'));
+		$previousYear  = date('Y', strtotime('-1 month'));
+
+		// Current month total customers
+		$currentQuery = "SELECT COUNT(id) AS total FROM {$tx}customers 
+                     WHERE MONTH(created_at) = '{$currentMonth}' 
+                     AND YEAR(created_at) = '{$currentYear}'";
+		$currentResult = $db->query($currentQuery)->fetch_object();
+		$currentTotal = (int)($currentResult->total ?? 0);
+
+		// Previous month total customers
+		$previousQuery = "SELECT COUNT(id) AS total FROM {$tx}customers 
+                      WHERE MONTH(created_at) = '{$previousMonth}' 
+                      AND YEAR(created_at) = '{$previousYear}'";
+		$previousResult = $db->query($previousQuery)->fetch_object();
+		$previousTotal = (int)($previousResult->total ?? 0);
+
+		// Percentage change
+		$change = $previousTotal > 0
+			? (($currentTotal - $previousTotal) / $previousTotal) * 100
+			: 0;
+
+		return (object)[
+			'current' => $currentTotal,
+			'previous' => $previousTotal,
+			'change' => $change
+		];
+	}
+
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{
 		global $db, $tx;
