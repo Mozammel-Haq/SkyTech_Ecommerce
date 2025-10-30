@@ -214,7 +214,7 @@ $period = $_GET['period'] ?? 'monthly';
                                     <i class="isax isax-building-3 fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Warhouses</p>
+                                    <p class="mb-1 text-truncate">Warehouses</p>
                                     <h6 class="fs-16 fw-semibold text-truncate mb-0"><?= Warehouse::countWarehouses()->warehouses ?></h6>
                                 </div>
                             </div>
