@@ -221,7 +221,7 @@
         // Fetch customer info
         $("#customer").on("change", function() {
             let id = $(this).val();
-            $.get("http://localhost/elctro_Ecom_project/Admin/api/customer/find", {
+            $.get("<?= $base_url ?>/api/customer/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res);
@@ -232,7 +232,7 @@
         // Fetch product info
         $("#product").on("change", function() {
             let id = $(this).val();
-            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+            $.get("<?= $base_url ?>/api/product/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res).product;
@@ -371,7 +371,7 @@
         $("#productForPurchase").on("change", function() {
             let id = $(this).val();
 
-            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+            $.get("<?= $base_url ?>/api/product/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res).product;
@@ -642,7 +642,7 @@
 
             function loadSalesAnalytics(period = 'monthly') {
                 $.ajax({
-                    url: '<?= $base_url ?>/api/sale_analytics.php',
+                    url: '<?= $base_url ?>/api/Order/saleAnalytics',
                     method: 'GET',
                     data: {
                         period: period
@@ -723,7 +723,7 @@
 
             function loadSummary(period = 'monthly') {
                 $.ajax({
-                    url: '<?= $base_url ?>/api/summary_analytics.php',
+                    url: '<?= $base_url ?>/api/Order/summaryAnalytics',
                     method: 'GET',
                     data: {
                         period: period

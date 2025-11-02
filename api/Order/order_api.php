@@ -63,4 +63,61 @@ class OrderApi
 
 		echo json_encode(["success" => $data]);
 	}
+
+	function saleAnalytics()
+	{
+		$period = $_GET['period'] ?? $_POST['period'] ?? 'monthly';
+
+		try {
+			$result = Order::getSalesAnalytics($period);
+
+			$labels = [];
+			$paid_series = [];
+			$pending_series = [];
+
+			foreach ($result as $row) {
+				$labels[] = $row['period'];
+				$paid_series[] = (float)$row['paid'];
+				$pending_series[] = (float)$row['pending'];
+			}
+
+			echo json_encode([
+				'success' => true,
+				'labels' => $labels,
+				'series' => [
+					['name' => 'Paid', 'data' => $paid_series],
+					['name' => 'Pending', 'data' => $pending_series]
+				]
+			]);
+		} catch (Exception $e) {
+			echo json_encode([
+				'success' => false,
+				'message' => $e->getMessage()
+			]);
+		}
+	}
+	function summaryAnalytics(){
+		$period = strtolower($_GET['period'] ?? 'monthly');
+
+		// --- SALES & RECEIPTS ---
+		$order = Order::calculateOrderAmount($period);
+		$totalSales = (float)$order->order_amount;
+		$receipts = (float)$order->order_amount; // assuming receipts = sales (modify if different)
+
+		// --- EXPENSES ---
+		$purchase = Purchase::calculateTotalPurchase($period);
+		$totalExpenses = (float)$purchase->total_purchase;
+
+		// --- EARNINGS ---
+		$earnings = $totalSales - $totalExpenses;
+
+		echo json_encode([
+			'success' => true,
+			'sales' => $totalSales,
+			'receipts' => $receipts,
+			'expenses' => $totalExpenses,
+			'earnings' => $earnings
+		]);
+		exit;
+	}
 }
