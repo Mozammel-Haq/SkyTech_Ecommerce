@@ -17,21 +17,28 @@ class CustomerApi{
 		Customer::delete($data["id"]);
 		echo json_encode(["success" => "yes"]);
 	}
+	function deleteMultiple($data){
+		Customer::delete($data["id"]);
+		echo json_encode(["success" => "yes"]);
+	}
 	function save($data,$file=[]){
+		// $data = $data['customer'];
+		global $now;
 		$customer=new Customer();
 		$customer->name=$data["name"];
 		$customer->email=$data["email"];
 		$customer->phone=$data["phone"];
-		$customer->photo=upload($file["photo"], "../img",$data["name"]);
+		$customer->photo=upload($file["photo"], "../img");
 		$customer->address=$data["address"];
 		$customer->status=$data["status"];
-		$customer->created_at=$data["created_at"];
-		$customer->updated_at=$data["updated_at"];
+		$customer->created_at=$now;
+		$customer->updated_at=$now;
 
 		$customer->save();
 		echo json_encode(["success" => "yes"]);
 	}
 	function update($data,$file=[]){
+		global $now;
 		$customer=new Customer();
 		$customer->id=$data["id"];
 		$customer->name=$data["name"];
@@ -44,11 +51,11 @@ class CustomerApi{
 		}
 		$customer->address=$data["address"];
 		$customer->status=$data["status"];
-		$customer->created_at=$data["created_at"];
-		$customer->updated_at=$data["updated_at"];
+		$customer->created_at=$now;
+		$customer->updated_at=$now;
 
 		$customer->update();
-		echo json_encode(["success" => "yes"]);
+		echo json_encode(["success" => "yes","data"=>$data]);
 	}
 }
 ?>
