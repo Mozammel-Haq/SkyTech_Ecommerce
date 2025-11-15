@@ -222,7 +222,7 @@
         // Fetch customer info
         $("#customer").on("change", function() {
             let id = $(this).val();
-            $.get("http://localhost/elctro_Ecom_project/Admin/api/customer/find", {
+            $.get("<?= $base_url ?>/api/customer/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res);
@@ -233,7 +233,7 @@
         // Fetch product info
         $("#product").on("change", function() {
             let id = $(this).val();
-            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+            $.get("<?= $base_url ?>/api/product/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res).product;
@@ -370,7 +370,7 @@
         $("#productForPurchase").on("change", function() {
             let id = $(this).val();
 
-            $.get("http://localhost/elctro_Ecom_project/admin/api/product/find", {
+            $.get("<?= $base_url ?>/api/product/find", {
                 id
             }, function(res) {
                 let data = JSON.parse(res).product;
@@ -509,8 +509,13 @@
                 };
 
                 $.ajax({
+<<<<<<< HEAD
                     url: "<?= $base_url ?>/api/order/order_payment_update",
                     type: "POST",
+=======
+                    url: '<?= $base_url ?>/api/Order/saleAnalytics',
+                    method: 'GET',
+>>>>>>> 515a49143ab4da5c28c09abc195001ef38fc4e75
                     data: {
                         data
                     },
@@ -525,6 +530,118 @@
                 });
             })
 
+<<<<<<< HEAD
+=======
+            function loadSummary(period = 'monthly') {
+                $.ajax({
+                    url: '<?= $base_url ?>/api/Order/summaryAnalytics',
+                    method: 'GET',
+                    data: {
+                        period: period
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        if (!res.success) return;
+
+                        // Update numbers dynamically
+                        $('[data-summary="sales"]').text('$' + res.sales.toLocaleString());
+                        $('[data-summary="receipts"]').text('$' + res.receipts.toLocaleString());
+                        $('[data-summary="expenses"]').text('$' + res.expenses.toLocaleString());
+                        $('[data-summary="earnings"]').text('$' + res.earnings.toLocaleString());
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Summary AJAX error:", status, error);
+                    }
+                });
+            }
+
+            // Initial load
+            loadSalesAnalytics();
+            loadSummary();
+
+            // Change period
+            $('.select').on('change', function() {
+                const period = $(this).val().toLowerCase();
+                loadSalesAnalytics(period);
+                loadSummary(period);
+            });
+        }
+    });
+</script>
+
+
+
+
+
+
+
+<script>
+    const BASE_URL = "<?= $base_url ?>";
+</script>
+<script>
+    $(function() {
+        var radialOptions = {
+            series: [], // will be percentages
+            chart: {
+                height: 350,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    dataLabels: {
+                        show: true,
+                        name: {
+                            fontSize: '14px'
+                        },
+                        value: {
+                            fontSize: '12px',
+                            formatter: function(val) {
+                                return val + "%"; // keep bar as percentage
+                            }
+                        },
+                        total: {
+                            show: true,
+                            label: 'Total Sold',
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            formatter: function(w) {
+                                // sum of the actual units, not percentages
+                                return radialOptions.actualSeries.reduce((a, b) => a + b, 0);
+                            }
+                        }
+                    }
+                }
+            },
+            labels: [], // product names
+            colors: ["#0d6efd", "#e2b93b", "#198754"],
+            legend: {
+                show: true,
+                position: 'bottom'
+            }
+        };
+
+        var radialChart = new ApexCharts(document.querySelector("#radial-chart"), radialOptions);
+        radialChart.render();
+
+        // Load data dynamically
+        $.getJSON(BASE_URL + "/views/pages/dashboard/home/top_selling_data.php", function(data) {
+            if (data && data.labels && data.series) {
+                var total = data.series.reduce((a, b) => a + b, 0);
+                var percentages = data.series.map(v => parseFloat(((v / total) * 100).toFixed(1)));
+
+                // Store actual series to use in total formatter
+                radialOptions.actualSeries = data.series;
+
+                radialChart.updateOptions({
+                    labels: data.labels
+                });
+                radialChart.updateSeries(percentages);
+            } else {
+                console.error("Invalid chart data:", data);
+            }
+        }).fail(function(xhr, status, error) {
+            console.error("Failed to load chart data:", error);
+>>>>>>> 515a49143ab4da5c28c09abc195001ef38fc4e75
         });
     });
 </script>

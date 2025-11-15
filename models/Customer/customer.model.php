@@ -40,6 +40,11 @@ class Customer extends Model implements JsonSerializable
 		global $db, $tx;
 		$db->query("delete from {$tx}customers where id={$id}");
 	}
+	public static function deleteMultiple($id)
+	{
+		global $db, $tx;
+		$db->query("delete from {$tx}customers where id IN {$id}");
+	}
 	public function jsonSerialize(): mixed
 	{
 		return get_object_vars($this);

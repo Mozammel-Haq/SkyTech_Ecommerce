@@ -116,15 +116,20 @@ $period = $_GET['period'] ?? 'monthly';
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-4 d-flex">
+    <div class="row gy-4 gx-3">
+        <!-- Overview & Inventory Statistics -->
+        <div class="col-12 col-lg-5 col-xl-4 d-flex">
             <div class="card flex-fill">
                 <div class="card-body">
-                    <div class="mb-4">
-                        <h6 class="d-flex align-items-center mb-1"><i class="isax isax-category5 text-default me-2"></i>Overview</h6>
+                    <!-- Overview -->
+                    <div class="mb-3">
+                        <h6 class="d-flex align-items-center mb-1">
+                            <i class="isax isax-category5 text-default me-2"></i>Overview
+                        </h6>
                     </div>
-                    <div class="row g-4 mb-4">
-                        <div class="col-xl-6">
+
+                    <div class="row gy-3 gx-2">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-primary-subtle text-primary flex-shrink-0 me-2">
                                     <i class="isax isax-document-text-1 fs-20"></i>
@@ -137,97 +142,117 @@ $period = $_GET['period'] ?? 'monthly';
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center me-2">
                                 <span class="avatar avatar-44 avatar-rounded bg-success-subtle text-success-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-profile-2user fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Customers</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Customer::countTotalCustomer()->customers ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Customer::countTotalCustomer()->customers ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-warning-subtle text-warning-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-dcube fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Categories</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Category::countTotalCategory()->categories ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Category::countTotalCategory()->categories ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center me-2">
                                 <span class="avatar avatar-44 avatar-rounded bg-info-subtle text-info-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-document-text fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Orders</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Order::countTotalOrders()->orders ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Order::countTotalOrders()->orders ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <h6 class="d-flex align-items-center mb-1"><i class="isax isax-chart-success5 text-default me-2"></i>Inventory Statistics</h6>
+
+                    <!-- Inventory Statistics -->
+                    <div class="mt-4 mb-3">
+                        <h6 class="d-flex align-items-center mb-1">
+                            <i class="isax isax-chart-success5 text-default me-2"></i>Inventory Statistics
+                        </h6>
                     </div>
-                    <div class="row g-4 mb-4">
-                        <div class="col-xl-6">
+
+                    <div class="row gy-3 gx-2">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-primary-subtle text-primary flex-shrink-0 me-2">
                                     <i class="isax isax-document fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Total Stock</p>
-                                    <h6 class="fs-16 fw-semibold mb-0"><?= Inventory::calculateTotalStock()->total_stock ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0">
+                                        <?= Inventory::calculateTotalStock()->total_stock ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center me-2">
                                 <span class="avatar avatar-44 avatar-rounded bg-success-subtle text-success-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-programming-arrow fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Purchases</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Purchase::countTotalPurchase()->total_purchase ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Purchase::countTotalPurchase()->total_purchase ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center">
                                 <span class="avatar avatar-44 avatar-rounded bg-warning-subtle text-warning-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-building fs-20"></i>
                                 </span>
                                 <div>
                                     <p class="mb-1 text-truncate">Suppliers</p>
-                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate"><?= Supplier::countSuppliers()->suppliers ?></h6>
+                                    <h6 class="fs-16 fw-semibold mb-0 text-truncate">
+                                        <?= Supplier::countSuppliers()->suppliers ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-6 col-sm-6 col-lg-6">
                             <div class="d-flex align-items-center me-2">
                                 <span class="avatar avatar-44 avatar-rounded bg-info-subtle text-info-emphasis flex-shrink-0 me-2">
                                     <i class="isax isax-building-3 fs-20"></i>
                                 </span>
                                 <div>
-                                    <p class="mb-1 text-truncate">Warhouses</p>
-                                    <h6 class="fs-16 fw-semibold text-truncate mb-0"><?= Warehouse::countWarehouses()->warehouses ?></h6>
+                                    <p class="mb-1 text-truncate">Warehouses</p>
+                                    <h6 class="fs-16 fw-semibold text-truncate mb-0">
+                                        <?= Warehouse::countWarehouses()->warehouses ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> <!-- end card body -->
-            </div> <!-- end card -->
-        </div> <!-- end col -->
+                </div>
+            </div>
+        </div>
 
-        <div class="col-xl-8 d-flex">
+        <!-- Sales Analytics -->
+        <div class="col-12 col-lg-7 col-xl-8 d-flex">
             <div class="card flex-fill">
                 <div class="card-body pb-0">
-                    <div class="mb-3 d-flex align-items-center justify-content-between">
+                    <div class="mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <h6 class="mb-1">Sales Analytics</h6>
                         <div class="select-sm mb-1">
                             <select class="select" id="period_selector">
@@ -237,53 +262,56 @@ $period = $_GET['period'] ?? 'monthly';
                             </select>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                        <div>
-                            <div class="d-flex align-items-center flex-wrap gap-4">
-                                <div>
-                                    <p class="fs-13 mb-1">Total Sales</p>
-                                    <h6 class="fs-16 fw-semibold text-primary" data-summary="sales">
-                                        $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
-                                    </h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Receipts</p>
-                                    <h6 class="fs-16 fw-semibold text-success" data-summary="receipts">
-                                        $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
-                                    </h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Expenses</p>
-                                    <h6 class="fs-16 fw-semibold text-danger" data-summary="expenses">
-                                        $<?= (int) Purchase::calculateTotalPurchase($period)->total_purchase ?>
-                                    </h6>
-                                </div>
-                                <div>
-                                    <p class="fs-13 mb-1">Earnings</p>
-                                    <h6 class="fs-16 fw-semibold" data-summary="earnings">
-                                        <?php
-                                        $total_purchase = (int) Purchase::calculateTotalPurchase($period)->total_purchase;
-                                        $total_sales = (int) Order::calculateOrderAmount($period)->order_amount;
-                                        $income = $total_purchase - $total_sales;
-                                        ?>
-                                        $<?= $income ?>
-                                    </h6>
-                                </div>
-                            </div>
 
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="d-flex align-items-center flex-wrap gap-4">
+                            <div>
+                                <p class="fs-13 mb-1">Total Sales</p>
+                                <h6 class="fs-16 fw-semibold text-primary" data-summary="sales">
+                                    $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
+                                </h6>
+                            </div>
+                            <div>
+                                <p class="fs-13 mb-1">Receipts</p>
+                                <h6 class="fs-16 fw-semibold text-success" data-summary="receipts">
+                                    $<?= (int) Order::calculateOrderAmount($period)->order_amount ?>
+                                </h6>
+                            </div>
+                            <div>
+                                <p class="fs-13 mb-1">Expenses</p>
+                                <h6 class="fs-16 fw-semibold text-danger" data-summary="expenses">
+                                    $<?= (int) Purchase::calculateTotalPurchase($period)->total_purchase ?>
+                                </h6>
+                            </div>
+                            <div>
+                                <p class="fs-13 mb-1">Earnings</p>
+                                <h6 class="fs-16 fw-semibold" data-summary="earnings">
+                                    <?php
+                                    $total_purchase = (int) Purchase::calculateTotalPurchase($period)->total_purchase;
+                                    $total_sales = (int) Order::calculateOrderAmount($period)->order_amount;
+                                    $income = $total_purchase - $total_sales;
+                                    ?>
+                                    $<?= $income ?>
+                                </h6>
+                            </div>
                         </div>
+
                         <div class="d-flex align-items-center gap-2">
-                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-info fs-12 me-1"></i>Received </p>
-                            <p class="fs-13 text-dark d-flex align-items-center mb-0"><i class="fa-solid fa-circle text-warning fs-12 me-1"></i>Pending</p>
+                            <p class="fs-13 text-dark d-flex align-items-center mb-0">
+                                <i class="fa-solid fa-circle text-info fs-12 me-1"></i>Received
+                            </p>
+                            <p class="fs-13 text-dark d-flex align-items-center mb-0">
+                                <i class="fa-solid fa-circle text-warning fs-12 me-1"></i>Pending
+                            </p>
                         </div>
                     </div>
+
                     <div id="sales_analytic"></div>
-                </div><!-- end card body -->
-            </div><!-- end card -->
+                </div>
+            </div>
         </div>
-
-
     </div>
+
     <div class="row">
 
         <!-- Start Amount -->

@@ -46,5 +46,6 @@ class InventoryApi{
 		$inventory->update();
 		echo json_encode(["success" => "yes"]);
 	}
+
 }
 ?>
