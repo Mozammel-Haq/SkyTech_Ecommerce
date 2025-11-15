@@ -64,16 +64,6 @@ class OrderApi
 		echo json_encode(["success" => $data]);
 	}
 
-<<<<<<< HEAD
-	function order_payment_update($data)
-	{
-		$data = $data['data'];
-
-		$id = $data["id"];
-		$newStatus = $data['newStatus'];
-		global $db;
-		$stmt = $db->query("UPDATE orders SET status='$newStatus' WHERE id=$id");
-=======
 	function saleAnalytics()
 	{
 		$period = $_GET['period'] ?? $_POST['period'] ?? 'monthly';
@@ -106,7 +96,8 @@ class OrderApi
 			]);
 		}
 	}
-	function summaryAnalytics(){
+	function summaryAnalytics()
+	{
 		$period = strtolower($_GET['period'] ?? 'monthly');
 
 		// --- SALES & RECEIPTS ---
@@ -129,6 +120,5 @@ class OrderApi
 			'earnings' => $earnings
 		]);
 		exit;
->>>>>>> 515a49143ab4da5c28c09abc195001ef38fc4e75
 	}
 }
