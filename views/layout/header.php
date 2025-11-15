@@ -17,11 +17,11 @@ $uid = $_SESSION["uid"];
   <!-- Meta Tags -->
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admin Dashboard | Kanakku - Invoice and Billing Management Admin Dashboard Template</title>
+  <title>SkyTech | Your Trusted online Tech Shop</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Kanakku is a Sales, Invoices & Accounts Admin template for Accountant or Companies/Offices with various features for all your needs. Try Demo and Buy Now.">
+  <meta name="description" content="SkyTech is a Sales, Invoices & Accounts Admin dashboard for Admins  with various features for all their needs">
   <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
-  <meta name="author" content="Dreams Technologies">
+  <meta name="author" content="SkyTech">
 
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="<?= $base_url ?>/assets/img/favicon.png">

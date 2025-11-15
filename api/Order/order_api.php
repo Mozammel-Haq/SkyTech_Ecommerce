@@ -63,4 +63,14 @@ class OrderApi
 
 		echo json_encode(["success" => $data]);
 	}
+
+	function order_payment_update($data)
+	{
+		$data = $data['data'];
+
+		$id = $data["id"];
+		$newStatus = $data['newStatus'];
+		global $db;
+		$stmt = $db->query("UPDATE orders SET status='$newStatus' WHERE id=$id");
+	}
 }

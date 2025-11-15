@@ -93,7 +93,7 @@ class Order extends Model implements JsonSerializable
         FROM orders AS o
         JOIN customers AS c ON o.customer_id = c.id
         LEFT JOIN trackings AS t ON t.id = o.tracking_id
-        ORDER BY o.id DESC;
+        ORDER BY o.id DESC LIMIT 5;
     ");
 
 		$data = [];
