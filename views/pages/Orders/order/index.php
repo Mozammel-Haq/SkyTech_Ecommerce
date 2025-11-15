@@ -175,13 +175,13 @@
                             <td>
                                 <?php if ($row->status == 'paid'): ?>
                                     <span class="badge bg-success-subtle text-success">Paid</span>
-
                                 <?php elseif ($row->status == 'unpaid'): ?>
-                                    <span class="badge bg-danger-subtle text-info">unpaid</span>
-
+                                    <span class="badge bg-danger-subtle text-info">Unpaid</span>
                                 <?php else: ?>
                                     <span class="badge bg-danger-subtle text-danger"><?= ucfirst($row->status) ?></span>
                                 <?php endif; ?>
+
+
 
                             </td>
 
@@ -201,8 +201,23 @@
                                         <a href="<?= $base_url ?>/order/show/<?= $row->id ?>" class="dropdown-item d-flex align-items-center"><i class="isax isax-eye me-2"></i>View</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0);" class="dropdown-item d-flex align-items-center"><i class="isax isax-archive-2 me-2"></i>Archive</a>
+                                        <?php if ($row->status == 'paid'): ?>
+                                            <a href="javascript:void(0);"
+                                                class="dropdown-item d-flex align-items-center updateStatusBtn"
+                                                data-id="<?= $row->id ?>"
+                                                data-status="unpaid">
+                                                <i class="isax isax-money-remove me-2"></i> Mark as Unpaid
+                                            </a>
+                                        <?php else: ?>
+                                            <a href="javascript:void(0);"
+                                                class="dropdown-item d-flex align-items-center updateStatusBtn"
+                                                data-id="<?= $row->id ?>"
+                                                data-status="paid">
+                                                <i class="isax isax-money-add me-2"></i> Mark as Paid
+                                            </a>
+                                        <?php endif; ?>
                                     </li>
+
                                     <li>
                                         <a href="#"
                                             class="dropdown-item d-flex align-items-center deleteOrderBtn"

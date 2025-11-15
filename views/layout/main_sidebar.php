@@ -64,7 +64,7 @@
         <div class="sidebar" id="sidebar-two">
 
             <!-- Start Logo -->
-            <div class="sidebar-logo">
+            <div class="sidebar-logo d-flex align-items-center gap-2">
                 <a href="<?= $base_url ?>/home" class="logo logo-normal">
                     <img src="<?= $base_url ?>/assets/img/logo.svg" alt="Logo">
                 </a>
@@ -72,15 +72,15 @@
                     <img src="<?= $base_url ?>/assets/img/logo-small.svg" alt="Logo">
                 </a>
                 <a href="<?= $base_url ?>/home" class="dark-logo">
-                    <img src="<?= $base_url ?>/assets/img/logo-white.svg" alt="Logo">
+                    <img src="<?= $base_url ?>/assets/img/logo.svg" alt="Logo">
                 </a>
                 <a href="<?= $base_url ?>/home" class="dark-small">
-                    <img src="<?= $base_url ?>/assets/img/logo-small-white.svg" alt="Logo">
+                    <img src="<?= $base_url ?>/assets/img/logo-small.svg" alt="Logo">
                 </a>
 
                 <!-- Sidebar Hover Menu Toggle Button -->
                 <a id="toggle_btn" href="javascript:void(0);">
-                    <i class="isax isax-menu-1"></i>
+                    <i class="isax isax-menu-1 mt-2"></i>
                 </a>
             </div>
             <!-- End Logo -->

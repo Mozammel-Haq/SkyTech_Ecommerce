@@ -1,7 +1,7 @@
 <!-- Start Footer-->
 <div class="footer d-sm-flex align-items-center justify-content-between bg-white py-2 px-4 border-top">
-    <p class="text-dark mb-0">&copy; 2025 <a href="javascript:void(0);" class="link-primary">Kanakku</a>, All Rights Reserved</p>
-    <p class="text-dark">Version : 1.3.8</p>
+    <p class="text-dark mb-0">&copy; 2025 <a href="javascript:void(0);" class="link-primary">SkyTech</a>, All Rights Reserved</p>
+    <p class="text-dark">Version : 1.0.0</p>
 </div>
 <!-- End Footer-->
 
@@ -149,8 +149,7 @@
     $(function() {
         $("select").select2();
         const orderCart = new Cart("order");
-        const purchaseCart = new Cart("purchase")
-
+        const purchaseCart = new Cart("purchase");
         // Calculate line total dynamically
         function calculateLineTotal() {
             let qty = parseFloat($("#qty").val()) || 0;
@@ -216,6 +215,8 @@
             $("#summary_grand_total").text(`$${grandTotal.toFixed(2)}`);
             $("#summary_total_words").text(numberToWords(Math.round(grandTotal)) + " Dollars");
         }
+
+
         // Render on load
         renderOrderCart();
         // Fetch customer info
@@ -325,8 +326,6 @@
                 }
             });
         });
-
-
         // Purchase Logic===========
 
         function renderPurchaseCart() {
@@ -493,234 +492,46 @@
                 }
             });
         });
-
-
-
-    });
-</script>
-<!-- ApexCharts JS -->
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-<script>
-    $(document).ready(function() {
-        if ($('#total_sales').length > 0) {
-
-            // Initialize empty chart first
-            var options = {
-                series: [],
-                chart: {
-                    type: 'donut',
-                    height: 300,
-                },
-                labels: [],
-                colors: ['#F38BBB', '#5297FE', '#7DCEA0', '#FFB84C'],
-                plotOptions: {
-                    pie: {
-                        startAngle: -110,
-                        endAngle: 110,
-                        donut: {
-                            size: '60%',
-                            labels: {
-                                show: true,
-                                total: {
-                                    show: true,
-                                    label: 'Total Sold',
-                                    formatter: function() {
-                                        return 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                legend: {
-                    show: true,
-                    position: 'bottom'
-                },
-            };
-
-            var chart = new ApexCharts(document.querySelector("#total_sales"), options);
-            chart.render();
-
-            // Load data dynamically using jQuery
-            $.ajax({
-                url: 'top_selling_data.php',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (data.labels.length > 0 && data.series.length > 0) {
-                        // Update chart dynamically
-                        chart.updateOptions({
-                            labels: data.labels,
-                        });
-
-                        chart.updateSeries(data.series);
-
-                        // Optional: Update the total count label dynamically
-                        var total = data.series.reduce((a, b) => a + b, 0);
-                        chart.updateOptions({
-                            plotOptions: {
-                                pie: {
-                                    donut: {
-                                        labels: {
-                                            total: {
-                                                show: true,
-                                                label: 'Total Sold',
-                                                formatter: function() {
-                                                    return total;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    } else {
-                        console.warn("No data available for chart.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error loading chart data:", error);
-                }
-            });
-        }
     });
 </script>
 
 <script>
-    $(document).ready(function() {
-        if ($('#sales_analytic').length > 0) {
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.updateStatusBtn').forEach(btn => {
 
-            var options = {
-                chart: {
-                    type: 'bar', // column style
-                    height: 350,
-                    stacked: false,
-                    toolbar: {
-                        show: true
-                    }
-                },
-                series: [],
-                xaxis: {
-                    categories: [],
-                    title: {
-                        text: 'Period'
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: 'Amount ($)',
-                        offsetX: 1.5
-                    }
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '50%',
-                        endingShape: 'rounded'
-                    }
-                },
-                colors: ['#06aed4', '#e2b93b'],
-                legend: {
-                    show: false
-                },
-                tooltip: {
-                    shared: true,
-                    intersect: false
-                },
-                // Disable numbers on bars
-                dataLabels: {
-                    enabled: false
-                }
-            };
+            btn.addEventListener("click", function() {
+                const id = this.dataset.id;
+                const newStatus = this.dataset.status;
 
-            var chart = new ApexCharts(document.querySelector("#sales_analytic"), options);
-            chart.render();
+                let data = {
+                    id,
+                    newStatus
+                };
 
-            function loadSalesAnalytics(period = 'monthly') {
                 $.ajax({
+<<<<<<< HEAD
+                    url: "<?= $base_url ?>/api/order/order_payment_update",
+                    type: "POST",
+=======
                     url: '<?= $base_url ?>/api/Order/saleAnalytics',
                     method: 'GET',
+>>>>>>> 515a49143ab4da5c28c09abc195001ef38fc4e75
                     data: {
-                        period: period
+                        data
                     },
-                    dataType: 'json',
                     success: function(res) {
-                        if (!res.success || !res.labels.length) {
-                            chart.updateOptions({
-                                xaxis: {
-                                    categories: []
-                                },
-                                series: []
-                            });
-                            return;
-                        }
-
-                        let categories = res.labels;
-                        let series = [];
-
-                        if (period.toLowerCase() === 'yearly') {
-                            // Align Paid/Pending by year
-                            let paidData = [],
-                                pendingData = [];
-                            res.labels.forEach((label, i) => {
-                                paidData.push(res.series[0].data[i] ?? 0);
-                                pendingData.push(res.series[1].data[i] ?? 0);
-                            });
-                            series = [{
-                                    name: 'Paid',
-                                    data: paidData
-                                },
-                                {
-                                    name: 'Pending',
-                                    data: pendingData
-                                }
-                            ];
-                        } else if (period.toLowerCase() === 'weekly') {
-                            // Only current week data, x-axis as day names
-                            series = [{
-                                    name: 'Paid',
-                                    data: res.series[0].data
-                                },
-                                {
-                                    name: 'Pending',
-                                    data: res.series[1].data
-                                }
-                            ];
-                        } else if (period.toLowerCase() === 'monthly') {
-                            // Month names on x-axis
-                            categories = categories.map(c => {
-                                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                                const parts = c.split('-'); // '2025-10'
-                                return parts.length > 1 ? monthNames[parseInt(parts[1]) - 1] : c;
-                            });
-                            series = [{
-                                    name: 'Paid',
-                                    data: res.series[0].data
-                                },
-                                {
-                                    name: 'Pending',
-                                    data: res.series[1].data
-                                }
-                            ];
-                        }
-
-                        chart.updateOptions({
-                            xaxis: {
-                                categories: categories
-                            },
-                            series: series
-                        });
+                        //  let data = JSON.parse(res);
+                        console.log(res);
+                        window.location.href = "<?= $base_url ?>/order";
                     },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
+                    error: function(err) {
+                        console.log(err);
                     }
                 });
-            }
+            })
 
+<<<<<<< HEAD
+=======
             function loadSummary(period = 'monthly') {
                 $.ajax({
                     url: '<?= $base_url ?>/api/Order/summaryAnalytics',
@@ -830,9 +641,11 @@
             }
         }).fail(function(xhr, status, error) {
             console.error("Failed to load chart data:", error);
+>>>>>>> 515a49143ab4da5c28c09abc195001ef38fc4e75
         });
     });
 </script>
+
 <script script src="<?= $base_url ?>/assets/js/custom.js">
 </script>
 
