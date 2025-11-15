@@ -1,39 +1,49 @@
 <?php
  //--------------------Upload--------------
-function upload($file, $path = "img", $name = "") {
+function upload($file, $path = "img", $name = "")
+{
     if (!file_exists($path)) {
         mkdir($path, 0777, true);
     }
 
-    if (is_array($file) && isset($file["name"]) && $file["error"] === UPLOAD_ERR_OK) {
+    if (is_array($file)) {
+
         $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
-        $baseName = pathinfo($file["name"], PATHINFO_FILENAME);
-        $type = $file["type"];
+        $size = $file["size"] / 1024;
 
-        // ✅ Allow only safe types
-        if ($type === "image/png" || $type === "image/jpeg" || $type === "image/jpg") {
+        // Real MIME type checking (browser independent)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $type  = finfo_file($finfo, $file["tmp_name"]);
+        finfo_close($finfo);
 
-            // ✅ Use the original filename (slugified)
-            $name = slugify($baseName);
-            $finalName = "{$name}.{$ext}";
+        $allowed = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
 
-            // ✅ Make unique only if file already exists
-            $target = "{$path}/{$finalName}";
-            if (file_exists($target)) {
-                $finalName = "{$name}_" . time() . ".{$ext}";
-                $target = "{$path}/{$finalName}";
+        if (in_array($type, $allowed)) {
+
+            // Use provided name OR original filename without extension
+            $baseName = $name != "" 
+                ? $name 
+                : pathinfo($file["name"], PATHINFO_FILENAME);
+
+            $baseName = slugify($baseName);
+
+            // Only 1 extension added
+            $finalName = $baseName . "." . $ext;
+
+            $target = "$path/$finalName";
+
+            if (!move_uploaded_file($file["tmp_name"], $target)) {
+                copy($file["tmp_name"], $target);
             }
 
-            move_uploaded_file($file["tmp_name"], $target);
             return $finalName;
+
         } else {
-            return -1; // invalid file type
+            return -1;
         }
     }
 
-    return null; // invalid upload
+    return "";
 }
 
 
-
-?>

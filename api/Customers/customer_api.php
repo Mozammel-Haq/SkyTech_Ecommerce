@@ -45,7 +45,7 @@ class CustomerApi{
 		$customer->email=$data["email"];
 		$customer->phone=$data["phone"];
 		if(isset($file["photo"]["name"])){
-			$customer->photo=upload($file["photo"], "../img",$data["name"]);
+			$customer->photo=upload($file["photo"], "../assets/img/profiles");
 		}else{
 			$customer->photo=Customer::find($data["id"])->photo;
 		}
@@ -55,7 +55,7 @@ class CustomerApi{
 		$customer->updated_at=$now;
 
 		$customer->update();
-		echo json_encode(["success" => "yes","data"=>$data]);
+		echo json_encode(["success" => "yes","data"=>$file["photo"]]);
 	}
 }
 ?>
