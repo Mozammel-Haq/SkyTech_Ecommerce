@@ -846,7 +846,7 @@ CREATE TABLE `test_products` (
   `warranty` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_products`
@@ -889,7 +889,7 @@ CREATE TABLE `test_product_badges` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `badge` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_badges`
@@ -936,7 +936,7 @@ CREATE TABLE `test_product_brands` (
   `featured` tinyint(1) DEFAULT '0',
   `founded` int DEFAULT NULL,
   `origin` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_brands`
@@ -981,7 +981,7 @@ CREATE TABLE `test_product_categories` (
   `description` text,
   `image` varchar(255) DEFAULT NULL,
   `heroColor` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_categories`
@@ -1005,7 +1005,7 @@ CREATE TABLE `test_product_highlights` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `highlight_text` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_highlights`
@@ -1050,7 +1050,7 @@ CREATE TABLE `test_product_images` (
   `image_path` varchar(255) DEFAULT NULL,
   `is_main` tinyint(1) DEFAULT '0',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_images`
@@ -1121,7 +1121,7 @@ CREATE TABLE `test_product_recommendations` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `recommended_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_recommendations`
@@ -1164,7 +1164,7 @@ CREATE TABLE `test_product_relations` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `related_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_relations`
@@ -1207,7 +1207,7 @@ CREATE TABLE `test_product_specs` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `spec_text` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_specs`
@@ -1252,7 +1252,7 @@ CREATE TABLE `test_product_tags` (
   `id` int NOT NULL,
   `product_id` int DEFAULT NULL,
   `tag` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_tags`
@@ -1300,7 +1300,7 @@ CREATE TABLE `test_product_variants` (
   `storage` varchar(100) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `test_product_variants`
