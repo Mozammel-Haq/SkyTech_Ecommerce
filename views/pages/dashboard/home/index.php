@@ -956,7 +956,7 @@ $period = $_GET['period'] ?? 'monthly';
 
             function loadSalesAnalytics(period = 'monthly') {
                 $.ajax({
-                    url: '<?= $base_url ?>/api/sale_analytics.php',
+                    url: '<?= $base_url ?>/api/order/saleAnalytics',
                     method: 'GET',
                     data: {
                         period: period
@@ -1037,7 +1037,7 @@ $period = $_GET['period'] ?? 'monthly';
 
             function loadSummary(period = 'monthly') {
                 $.ajax({
-                    url: '<?= $base_url ?>/api/summary_analytics.php',
+                    url: '<?= $base_url ?>/api/order/summaryAnalytics',
                     method: 'GET',
                     data: {
                         period: period
@@ -1072,9 +1072,6 @@ $period = $_GET['period'] ?? 'monthly';
     });
 </script>
 
-<script>
-    const BASE_URL = "<?= $base_url ?>";
-</script>
 <script>
     $(function() {
         var radialOptions = {
@@ -1121,7 +1118,7 @@ $period = $_GET['period'] ?? 'monthly';
         radialChart.render();
 
         // Load data dynamically
-        $.getJSON(BASE_URL + "/views/pages/dashboard/home/top_selling_data.php", function(data) {
+        $.getJSON("<?= $base_url ?>/views/pages/dashboard/home/top_selling_data.php", function(data) {
             if (data && data.labels && data.series) {
                 var total = data.series.reduce((a, b) => a + b, 0);
                 var percentages = data.series.map(v => parseFloat(((v / total) * 100).toFixed(1)));
