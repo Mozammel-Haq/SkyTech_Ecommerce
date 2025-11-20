@@ -15,7 +15,7 @@ class TestUserApi
 	}
 	function find($data)
 	{
-		echo json_encode(["testuser" => TestUser::find($data["id"])]);
+		echo json_encode(TestUser::find($data["id"]));
 	}
 	function delete($data)
 	{
@@ -79,7 +79,7 @@ class TestUserApi
 		}
 
 		$testuser->update();
-		echo json_encode(["success" => "yes"]);
+		echo json_encode(["success" => "yes",$data]);
 	}
 
 	function login($data)
