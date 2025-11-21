@@ -65,7 +65,7 @@ class TestUserApi
 		$testuser->city = $data["city"] ?? '';
 		$testuser->postal_code = $data["postal_code"] ?? '';
 		$testuser->country = $data["country"] ?? '';
-		$testuser->role_id = $data["role_id"] ?? 2; // default role_id
+		$testuser->role_id = $data["role_id"] ?? 3; // default role_id
 		$testuser->token = $data["token"] ?? bin2hex(random_bytes(32));
 		$testuser->expiresAt = $data["expiresAt"] ?? date("Y-m-d H:i:s", strtotime("+1 day"));
 
@@ -79,7 +79,7 @@ class TestUserApi
 		}
 
 		$testuser->update();
-		echo json_encode(["success" => "yes",$data]);
+		echo json_encode(["success" => "yes", $data]);
 	}
 
 	function login($data)

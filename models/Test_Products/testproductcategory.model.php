@@ -6,28 +6,27 @@ class TestProductCategory extends Model implements JsonSerializable
 	public $slug;
 	public $description;
 	public $image;
-	public $heroColor;
+
 
 	public function __construct() {}
-	public function set($id, $name, $slug, $description, $image, $heroColor)
+	public function set($id, $name, $slug, $description, $image)
 	{
 		$this->id = $id;
 		$this->name = $name;
 		$this->slug = $slug;
 		$this->description = $description;
 		$this->image = $image;
-		$this->heroColor = $heroColor;
 	}
 	public function save()
 	{
 		global $db, $tx;
-		$db->query("insert into {$tx}test_product_categories(name,slug,description,image,heroColor)values('$this->name','$this->slug','$this->description','$this->image','$this->heroColor')");
+		$db->query("insert into {$tx}test_product_categories(name,slug,description,image,heroColor)values('$this->name','$this->slug','$this->description','$this->image'");
 		return $db->insert_id;
 	}
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_categories set name='$this->name',slug='$this->slug',description='$this->description',image='$this->image',heroColor='$this->heroColor' where id='$this->id'");
+		$db->query("update {$tx}test_product_categories set name='$this->name',slug='$this->slug',description='$this->description',image='$this->image', where id='$this->id'");
 	}
 	public static function delete($id)
 	{
@@ -41,7 +40,7 @@ class TestProductCategory extends Model implements JsonSerializable
 	public static function all()
 	{
 		global $db, $tx;
-		$result = $db->query("select id,name,slug,description,image,heroColor from {$tx}test_product_categories");
+		$result = $db->query("select id,name,slug,description,image from {$tx}test_product_categories");
 		$data = [];
 		while ($testproductcategory = $result->fetch_object()) {
 			$data[] = $testproductcategory;
@@ -69,7 +68,7 @@ class TestProductCategory extends Model implements JsonSerializable
 	public static function find($id)
 	{
 		global $db, $tx;
-		$result = $db->query("select id,name,slug,description,image,heroColor from {$tx}test_product_categories where id='$id'");
+		$result = $db->query("select id,name,slug,description,image from {$tx}test_product_categories where id='$id'");
 		$testproductcategory = $result->fetch_object();
 		return $testproductcategory;
 	}
@@ -91,7 +90,6 @@ class TestProductCategory extends Model implements JsonSerializable
 		Slug:$this->slug<br> 
 		Description:$this->description<br> 
 		Image:$this->image<br> 
-		Herocolor:$this->heroColor<br> 
 ";
 	}
 
