@@ -25,27 +25,33 @@ class TestProductCategoryApi
 	{
 		$testproductcategory = new TestProductCategory();
 		$testproductcategory->name = $data["name"];
-		$testproductcategory->slug = upload($file["slug"], "../img", $data["name"]);
+		$testproductcategory->slug = $data["slug"];
 		$testproductcategory->description = $data["description"];
-		$testproductcategory->image = $data["image"];
+		$testproductcategory->image = upload($file["image"], "../test_assets/img/categories");
 
 		$testproductcategory->save();
-		echo json_encode(["success" => "yes"]);
+		echo json_encode(["success" => "yes", $data]);
 	}
 	function update($data, $file = [])
 	{
 		$testproductcategory = new TestProductCategory();
 		$testproductcategory->id = $data["id"];
 		$testproductcategory->name = $data["name"];
-		if (isset($file["slug"]["name"])) {
-			$testproductcategory->slug = upload($file["slug"], "../img", $data["name"]);
-		} else {
-			$testproductcategory->slug = TestProductCategory::find($data["id"])->slug;
-		}
+		$testproductcategory->slug = $data["slug"];
 		$testproductcategory->description = $data["description"];
-		$testproductcategory->image = $data["image"];
+		// Handle image
+		if (!empty($file['image']['name'])) {
+			// Upload new image
+			$testproductcategory->image = upload($file["image"], "../test_assets/img/categories");
+		} else if (!empty($data['keep_old_image'])) {
+			// Keep old image
+			$testproductcategory->image = $data['keep_old_image'];
+		} else {
+			// Optional: remove image
+			$testproductcategory->image = '';
+		}
 
 		$testproductcategory->update();
-		echo json_encode(["success" => "yes"]);
+		echo json_encode(["success" => "yes", $data]);
 	}
 }

@@ -20,14 +20,31 @@ class TestProductCategory extends Model implements JsonSerializable
 	public function save()
 	{
 		global $db, $tx;
-		$db->query("insert into {$tx}test_product_categories(name,slug,description,image,heroColor)values('$this->name','$this->slug','$this->description','$this->image'");
+
+		$query = "INSERT INTO {$tx}test_product_categories 
+                (name, slug, description, image) 
+              VALUES 
+                ('$this->name', '$this->slug', '$this->description', '$this->image')";
+
+		$db->query($query);
 		return $db->insert_id;
 	}
+
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_categories set name='$this->name',slug='$this->slug',description='$this->description',image='$this->image', where id='$this->id'");
+
+		$query = "UPDATE {$tx}test_product_categories 
+              SET 
+                name='$this->name',
+                slug='$this->slug',
+                description='$this->description',
+                image='$this->image'
+              WHERE id='$this->id'";
+
+		return $db->query($query);
 	}
+
 	public static function delete($id)
 	{
 		global $db, $tx;
