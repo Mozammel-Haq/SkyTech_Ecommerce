@@ -24,34 +24,147 @@ class TestProductApi
 	}
 	function save($data, $file = [])
 	{
-		$testproduct = new TestProduct();
-		$testproduct->sku = $data["sku"];
-		$testproduct->title = $data["title"];
-		$testproduct->slug = upload($file["slug"], "../img", $data["title"]);
-		$testproduct->description = $data["description"];
-		$testproduct->category = $data["category"];
-		$testproduct->category_slug = $data["category_slug"];
-		$testproduct->subcategory = $data["subcategory"];
-		$testproduct->brand = $data["brand"];
-		$testproduct->brand_slug = $data["brand_slug"];
-		$testproduct->reviews_count = $data["reviews_count"];
-		$testproduct->stock = $data["stock"];
-		$testproduct->stock_status = $data["stock_status"];
-		$testproduct->thumbnail = $data["thumbnail"];
-		$testproduct->featured = $data["featured"];
-		$testproduct->bestseller = $data["bestseller"];
-		$testproduct->new_arrival = $data["new_arrival"];
-		$testproduct->on_sale = $data["on_sale"];
-		$testproduct->best_value = $data["best_value"];
-		$testproduct->deal_end_time = $data["deal_end_time"];
-		$testproduct->shipping_estimate = $data["shipping_estimate"];
-		$testproduct->warranty = $data["warranty"];
-		$testproduct->created_at = $data["created_at"];
-		$testproduct->updated_at = $data["updated_at"];
+		global $now;
+		// Helper to decode JSON or return empty array
+		function decodeArray($value)
+		{
+			if (empty($value)) return [];
+			if (is_array($value)) return $value;
+			$decoded = json_decode($value, true);
+			return is_array($decoded) ? $decoded : [];
+		}
 
-		$testproduct->save();
-		echo json_encode(["success" => "yes"]);
+		// 1) Save parent product
+		$testproduct = new TestProduct();
+		$testproduct->sku               = $data["sku"] ?? '';
+		$testproduct->title             = $data["title"] ?? '';
+		$testproduct->slug              = $data["slug"] ?? '';
+		$testproduct->description       = $data["description"] ?? '';
+		$testproduct->category_id       = $data["category_id"] ?? '';
+		$testproduct->subcategory       = $data["subcategory"] ?? '';
+		$testproduct->brand_id          = $data["brand_id"] ?? '';
+		$testproduct->price             = $data["price"] ?? 0;
+		$testproduct->original_price    = $data["original_price"] ?? 0;
+		$testproduct->discount_percent  = $data["discount_percent"] ?? 0;
+		$testproduct->rating            = $data["rating"] ?? 0;
+		$testproduct->reviews_count     = $data["reviews_count"] ?? 0;
+		$testproduct->stock             = $data["stock"] ?? 0;
+		$testproduct->stock_status      = $data["stock_status"] ?? 'in_stock';
+		$testproduct->thumbnail         = !empty($file['thumbnail'])
+			? upload($file['thumbnail'], "../test_assets/img/products/")
+			: ($data["existingThumbnail"] ?? '');
+		$testproduct->featured          = $data["featured"] ?? 0;
+		$testproduct->bestseller        = $data["bestseller"] ?? 0;
+		$testproduct->new_arrival       = $data["new_arrival"] ?? 0;
+		$testproduct->on_sale           = $data["on_sale"] ?? 0;
+		$testproduct->best_value        = $data["best_value"] ?? 0;
+		$dealEndTime                     = $data['deal_end_time'] ?? null;
+		$testproduct->deal_end_time      = $dealEndTime && $dealEndTime !== '' ? $dealEndTime : null;
+		$testproduct->shipping_estimate  = $data["shipping_estimate"] ?? '';
+		$testproduct->warranty           = $data["warranty"] ?? '';
+		$testproduct->created_at         = $now;
+		$testproduct->updated_at         = $now;
+
+		$product_id = $testproduct->save();
+
+		// 2) Gallery Images
+		$allImages = [];
+		$mainSet = false;
+
+		if (!empty($file["images"])) {
+			foreach ($file["images"] as $imgFile) {
+				$allImages[] = upload($imgFile, "../test_assets/img/products/");
+			}
+		}
+
+		foreach (decodeArray($data["images"]) as $imgPath) {
+			$allImages[] = $imgPath;
+		}
+
+		foreach ($allImages as $img) {
+			$image = new TestProductImage();
+			$image->product_id = $product_id;
+			$image->image_path = $img;
+			$image->is_main    = !$mainSet ? 1 : 0;
+			$mainSet = true;
+			$image->created_at = $now;
+
+			$image->save();
+		}
+
+		// 3) Variants
+		foreach (decodeArray($data["variants"]) as $v) {
+			$variant = new TestProductVariant();
+			$variant->product_id = $product_id;
+			$variant->color      = $v["color"] ?? '';
+			$variant->storage    = $v["storage"] ?? '';
+			$variant->price      = $v["price"] ?? 0;
+			$variant->created_at = $now;
+			$variant->save();
+		}
+
+		// 4) Specifications
+		foreach (decodeArray($data["specs"]) as $spec) {
+			$sp = new TestProductSpec();
+			$sp->product_id = $product_id;
+			$sp->spec_text  = $spec["value"] ?? $spec["specs"] ?? '';
+			$sp->save();
+		}
+
+		// 5) Highlights
+		foreach (decodeArray($data["highlights"]) as $text) {
+			$hl = new TestProductHighlight();
+			$hl->product_id = $product_id;
+			$hl->highlight_text = $text;
+			$hl->save();
+		}
+
+		// 6) Tags
+		foreach (decodeArray($data["tags"]) as $tag) {
+			$t = new TestProductTag();
+			$t->product_id = $product_id;
+			$t->tag = $tag;
+			$t->save();
+		}
+
+		// 7) Badges
+		foreach (decodeArray($data["badges"]) as $badge) {
+			$b = new TestProductBadge();
+			$b->product_id = $product_id;
+			$b->badge = $badge;
+			$b->save();
+		}
+
+		// 8) Related products
+		foreach (decodeArray($data["related_products"]) as $rp) {
+			$rel = new TestProductRelation();
+			$rel->product_id = $product_id;
+			$rel->related_id = $rp;
+			$rel->save();
+		}
+
+		// 9) Recommended products
+		foreach (decodeArray($data["recommended_products"]) as $rr) {
+			$rec = new TestProductRecommendation();
+			$rec->product_id = $product_id;
+			$rec->recommended_id = $rr;
+			$rec->save();
+		}
+
+		// Return success
+		echo json_encode([
+			"success" => true,
+			"product_id" => $product_id,
+			"message" => "Product saved with all child records",
+			"data" => $data,
+			"file" => $file
+		]);
 	}
+
+
+
+
+
 	function update($data, $file = [])
 	{
 		$testproduct = new TestProduct();
