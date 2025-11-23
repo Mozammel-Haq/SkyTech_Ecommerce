@@ -20,7 +20,7 @@ class TestProductApi
 	function delete($data)
 	{
 		TestProduct::delete($data["id"]);
-		echo json_encode(["success" => "yes"]);
+		echo json_encode(["success" => $data]);
 	}
 	function save($data, $file = [])
 	{
@@ -67,30 +67,40 @@ class TestProductApi
 
 		$product_id = $testproduct->save();
 
-		// 2) Gallery Images
-		$allImages = [];
-		$mainSet = false;
+		// 2) Gallery images 
+$allImages = [];
+$mainSet = false;
 
-		if (!empty($file["images"])) {
-			foreach ($file["images"] as $imgFile) {
-				$allImages[] = upload($imgFile, "../test_assets/img/products/");
-			}
-		}
+// 2a) Files uploaded
+if (!empty($file['gallery']['name'] ?? null)) {
+    foreach ($file['gallery']['tmp_name'] as $index => $tmp) {
+        $imgFile = [
+            'name' => $file["gallery"]["name"][$index],
+            'tmp_name' => $file["gallery"]["tmp_name"][$index],
+            'size' => $file["gallery"]["size"][$index],
+            'error' => $file["gallery"]["error"][$index],
+            'type' => $file["gallery"]["type"][$index],
+        ];
+        $allImages[] = upload($imgFile, "../test_assets/img/products/");
+    }
+}
 
-		foreach (decodeArray($data["images"]) as $imgPath) {
-			$allImages[] = $imgPath;
-		}
+// 2b) Existing gallery images from $data
+foreach (decodeArray($data["gallery"] ?? []) as $imgPath) {
+    $allImages[] = $imgPath;
+}
 
-		foreach ($allImages as $img) {
-			$image = new TestProductImage();
-			$image->product_id = $product_id;
-			$image->image_path = $img;
-			$image->is_main    = !$mainSet ? 1 : 0;
-			$mainSet = true;
-			$image->created_at = $now;
+// Save images to DB
+foreach ($allImages as $img) {
+    $image = new TestProductImage();
+    $image->product_id = $product_id;
+    $image->image_path = $img;
+    $image->is_main    = !$mainSet ? 1 : 0;
+    $mainSet = true;
+    $image->created_at = $now;
+    $image->save();
+}
 
-			$image->save();
-		}
 
 		// 3) Variants
 		foreach (decodeArray($data["variants"]) as $v) {
@@ -136,7 +146,7 @@ class TestProductApi
 		}
 
 		// 8) Related products
-		foreach (decodeArray($data["related_products"]) as $rp) {
+		foreach (decodeArray($data["relatedIds"]) as $rp) {
 			$rel = new TestProductRelation();
 			$rel->product_id = $product_id;
 			$rel->related_id = $rp;
@@ -144,7 +154,7 @@ class TestProductApi
 		}
 
 		// 9) Recommended products
-		foreach (decodeArray($data["recommended_products"]) as $rr) {
+		foreach (decodeArray($data["recommendedIds"]) as $rr) {
 			$rec = new TestProductRecommendation();
 			$rec->product_id = $product_id;
 			$rec->recommended_id = $rr;

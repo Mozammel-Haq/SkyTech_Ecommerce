@@ -89,8 +89,11 @@ class TestProduct extends Model implements JsonSerializable
 	}
 	public static function delete($id)
 	{
+		$str = $id;
+		$productID = substr($str, 2);
+		echo $productID;
 		global $db, $tx;
-		$db->query("delete from {$tx}test_products where id={$id}");
+		$db->query("delete from {$tx}test_products where id={$productID}");
 	}
 	public function jsonSerialize(): mixed
 	{
