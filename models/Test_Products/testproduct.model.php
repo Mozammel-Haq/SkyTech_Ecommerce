@@ -84,14 +84,19 @@ class TestProduct extends Model implements JsonSerializable
 
 	public function update()
 	{
+		$str = $this->id;
+		$productID = substr($str, 2);
+		// Make deal_end_time NULL if empty
+		$deal_end_time = $this->deal_end_time !== '' && $this->deal_end_time !== null
+			? "'$this->deal_end_time'"
+			: "NULL";
 		global $db, $tx;
-		$db->query("update {$tx}test_products set sku='$this->sku',title='$this->title',slug='$this->slug',description='$this->description',category_id='$this->category_id',subcategory='$this->subcategory',brand_id='$this->brand_id',price='$this->price',original_price='$this->original_price',discount_percent='$this->discount_percent',rating='$this->rating',reviews_count='$this->reviews_count',stock='$this->stock',stock_status='$this->stock_status',thumbnail='$this->thumbnail',featured='$this->featured',bestseller='$this->bestseller',new_arrival='$this->new_arrival',on_sale='$this->on_sale',best_value='$this->best_value',deal_end_time='$this->deal_end_time',shipping_estimate='$this->shipping_estimate',warranty='$this->warranty',created_at='$this->created_at',updated_at='$this->updated_at' where id='$this->id'");
+		$db->query("update {$tx}test_products set sku='$this->sku',title='$this->title',slug='$this->slug',description='$this->description',category_id='$this->category_id',subcategory='$this->subcategory',brand_id='$this->brand_id',price='$this->price',original_price='$this->original_price',discount_percent='$this->discount_percent',rating='$this->rating',reviews_count='$this->reviews_count',stock='$this->stock',stock_status='$this->stock_status',thumbnail='$this->thumbnail',featured='$this->featured',bestseller='$this->bestseller',new_arrival='$this->new_arrival',on_sale='$this->on_sale',best_value='$this->best_value',deal_end_time=$deal_end_time,shipping_estimate='$this->shipping_estimate',warranty='$this->warranty',updated_at='$this->updated_at' where id=$productID");
 	}
 	public static function delete($id)
 	{
 		$str = $id;
 		$productID = substr($str, 2);
-		echo $productID;
 		global $db, $tx;
 		$db->query("delete from {$tx}test_products where id={$productID}");
 	}

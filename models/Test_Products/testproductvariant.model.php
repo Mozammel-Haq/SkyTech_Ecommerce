@@ -31,8 +31,10 @@ class TestProductVariant extends Model implements JsonSerializable
 	}
 	public static function delete($id)
 	{
+		$str = $id;
+		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_variants where id={$id}");
+		$db->query("delete from {$tx}test_product_variants where id={$productID}");
 	}
 	public function jsonSerialize(): mixed
 	{
