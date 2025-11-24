@@ -22,12 +22,10 @@ class TestProductImage extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_images(product_id,image_path,is_main,created_at)values('$this->product_id','$this->image_path','$this->is_main','$this->created_at')");
 		return $db->insert_id;
 	}
-	public function update($productID)
+	public function update()
 	{
-		$str = $productID;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_images set product_id='$this->product_id',image_path='$this->image_path',is_main='$this->is_main',created_at='$this->created_at' where product_id='$this->id' AND id=$productID");
+		$db->query("update {$tx}test_product_images set product_id='$this->product_id',image_path='$this->image_path',is_main='$this->is_main',created_at='$this->created_at' where product_id='$this->id'");
 	}
 	public static function delete($id)
 	{

@@ -18,12 +18,10 @@ class TestProductHighlight extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_highlights(product_id,highlight_text)values('$this->product_id','$this->highlight_text')");
 		return $db->insert_id;
 	}
-	public function update($productID)
+	public function update()
 	{
-		$str = $productID;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_highlights set product_id='$this->product_id',highlight_text='$this->highlight_text' where product_id='$this->id' AND id=$productID");
+		$db->query("update {$tx}test_product_highlights set product_id='$this->product_id',highlight_text='$this->highlight_text' where product_id='$this->id'");
 	}
 	public static function delete($id)
 	{

@@ -185,6 +185,7 @@ class TestProductApi
 
 		// 1) Save parent product
 		$testproduct = new TestProduct();
+		$testproduct->id = $data['id'];
 		$testproduct->sku               = $data["sku"] ?? '';
 		$testproduct->title             = $data["title"] ?? '';
 		$testproduct->slug              = $data["slug"] ?? '';
@@ -242,13 +243,13 @@ class TestProductApi
 		// Save images to DB
 		foreach ($allImages as $img) {
 			$image = new TestProductImage();
-			$image->id=$product_id;
-			$image->product_id = $product_id;
+			$image->id = $product_id;
+			$image->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$image->image_path = $img;
 			$image->is_main    = !$mainSet ? 1 : 0;
 			$mainSet = true;
 			$image->created_at = $now;
-			$image->update($product_id);
+			$image->update();
 		}
 
 
@@ -256,65 +257,66 @@ class TestProductApi
 		foreach (decodeArray($data["variants"]) as $v) {
 			$variant = new TestProductVariant();
 			$variant->id = $product_id;
-			$variant->product_id = $product_id;
+			$variant->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$variant->color      = $v["color"] ?? '';
 			$variant->storage    = $v["storage"] ?? '';
 			$variant->price      = $v["price"] ?? 0;
 			$variant->created_at = $now;
-			$variant->update($product_id);
+			$variant->update();
 		}
 
 		// 4) Specifications
 		foreach (decodeArray($data["specs"]) as $spec) {
 			$sp = new TestProductSpec();
 			$sp->id = $product_id;
-			$sp->product_id = $product_id;
+			$sp->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$sp->spec_text  = $spec["value"] ?? $spec["specs"] ?? '';
-			$sp->update($product_id);
+			$sp->update();
 		}
 
 		// 5) Highlights
 		foreach (decodeArray($data["highlights"]) as $text) {
 			$hl = new TestProductHighlight();
 			$hl->id = $product_id;
-			$hl->product_id = $product_id;
+			$hl->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$hl->highlight_text = $text;
-			$hl->update($product_id);
+			$hl->update();
 		}
 
 		// 6) Tags
 		foreach (decodeArray($data["tags"]) as $tag) {
 			$t = new TestProductTag();
-			$t->product_id = $product_id;
+			$t->id = $product_id;
+			$t->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$t->tag = $tag;
-			$t->update($product_id);
+			$t->update();
 		}
 
 		// 7) Badges
 		foreach (decodeArray($data["badges"]) as $badge) {
 			$b = new TestProductBadge();
 			$b->id = $product_id;
-			$b->product_id = $product_id;
+			$b->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$b->badge = $badge;
-			$b->update($product_id);
+			$b->update();
 		}
 
 		// 8) Related products
 		foreach (decodeArray($data["relatedIds"]) as $rp) {
 			$rel = new TestProductRelation();
 			$rel->id = $product_id;
-			$rel->product_id = $product_id;
+			$rel->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$rel->related_id = $rp;
-			$rel->update($product_id);
+			$rel->update();
 		}
 
 		// 9) Recommended products
 		foreach (decodeArray($data["recommendedIds"]) as $rr) {
 			$rec = new TestProductRecommendation();
 			$rec->id = $product_id;
-			$rec->product_id = $product_id;
+			$rec->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
 			$rec->recommended_id = $rr;
-			$rec->update($product_id);
+			$rec->update();
 		}
 
 		// Return success
@@ -326,7 +328,7 @@ class TestProductApi
 			"file" => $file
 		]);
 	}
-	
+
 
 
 

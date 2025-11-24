@@ -18,12 +18,10 @@ class TestProductRelation extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_relations(product_id,related_id)values('$this->product_id','$this->related_id')");
 		return $db->insert_id;
 	}
-	public function update($productID)
+	public function update()
 	{
-		$str = $productID;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_relations set product_id='$this->product_id',related_id='$this->related_id' where product_id='$this->id' AND id=$productID");
+		$db->query("update {$tx}test_product_relations set product_id='$this->product_id',related_id='$this->related_id' where product_id='$this->id'");
 	}
 	public static function delete($id)
 	{
