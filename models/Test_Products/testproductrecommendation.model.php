@@ -18,10 +18,12 @@ class TestProductRecommendation extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_recommendations(product_id,recommended_id)values('$this->product_id','$this->recommended_id')");
 		return $db->insert_id;
 	}
-	public function update()
+	public function update($productID)
 	{
+		$str = $productID;
+		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_recommendations set product_id='$this->product_id',recommended_id='$this->recommended_id' where id='$this->id'");
+		$db->query("update {$tx}test_product_recommendations set product_id='$this->product_id',recommended_id='$this->recommended_id' where product_id='$this->id' AND id=$productID");
 	}
 	public static function delete($id)
 	{

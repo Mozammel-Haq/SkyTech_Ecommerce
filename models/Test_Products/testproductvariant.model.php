@@ -24,10 +24,12 @@ class TestProductVariant extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_variants(product_id,color,storage,price,created_at)values('$this->product_id','$this->color','$this->storage','$this->price','$this->created_at')");
 		return $db->insert_id;
 	}
-	public function update()
+	public function update($productID)
 	{
+		$str = $productID;
+		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_variants set product_id='$this->product_id',color='$this->color',storage='$this->storage',price='$this->price',created_at='$this->created_at' where id='$this->id'");
+		$db->query("update {$tx}test_product_variants set product_id='$this->product_id',color='$this->color',storage='$this->storage',price='$this->price',created_at='$this->created_at' where product_id='$this->id' AND id=$productID");
 	}
 	public static function delete($id)
 	{

@@ -18,10 +18,12 @@ class TestProductSpec extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_specs(product_id,spec_text)values('$this->product_id','$this->spec_text')");
 		return $db->insert_id;
 	}
-	public function update()
+	public function update($productID)
 	{
+		$str = $productID;
+		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_specs set product_id='$this->product_id',spec_text='$this->spec_text' where id='$this->id'");
+		$db->query("update {$tx}test_product_specs set product_id='$this->product_id',spec_text='$this->spec_text' where product_id='$this->id' AND id=$productID");
 	}
 	public static function delete($id)
 	{

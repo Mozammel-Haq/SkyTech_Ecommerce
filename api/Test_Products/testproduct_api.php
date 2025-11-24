@@ -174,7 +174,7 @@ class TestProductApi
 	function update($data, $file = [])
 	{
 		global $now;
-
+		// Helper to decode JSON or return empty array
 		function decodeArray($value)
 		{
 			if (empty($value)) return [];
@@ -183,12 +183,8 @@ class TestProductApi
 			return is_array($decoded) ? $decoded : [];
 		}
 
-		// -----------------------------
-		// 1) UPDATE MAIN PRODUCT
-		// -----------------------------
+		// 1) Save parent product
 		$testproduct = new TestProduct();
-		$testproduct->id = $data["id"];
-
 		$testproduct->sku               = $data["sku"] ?? '';
 		$testproduct->title             = $data["title"] ?? '';
 		$testproduct->slug              = $data["slug"] ?? '';
@@ -203,46 +199,28 @@ class TestProductApi
 		$testproduct->reviews_count     = $data["reviews_count"] ?? 0;
 		$testproduct->stock             = $data["stock"] ?? 0;
 		$testproduct->stock_status      = $data["stock_status"] ?? 'in_stock';
-
-		$testproduct->thumbnail = !empty($file['thumbnail'])
+		$testproduct->thumbnail         = !empty($file['thumbnail'])
 			? upload($file['thumbnail'], "../test_assets/img/products/")
-			: ($data["existingThumbnail"] ?? $testproduct->thumbnail);
-
+			: ($data["existingThumbnail"] ?? '');
 		$testproduct->featured          = $data["featured"] ?? 0;
 		$testproduct->bestseller        = $data["bestseller"] ?? 0;
 		$testproduct->new_arrival       = $data["new_arrival"] ?? 0;
 		$testproduct->on_sale           = $data["on_sale"] ?? 0;
 		$testproduct->best_value        = $data["best_value"] ?? 0;
-
-		$dealEndTime = $data['deal_end_time'] ?? null;
-		$testproduct->deal_end_time = $dealEndTime ? $dealEndTime : null;
-
+		$dealEndTime                     = $data['deal_end_time'] ?? null;
+		$testproduct->deal_end_time      = $dealEndTime && $dealEndTime !== '' ? $dealEndTime : null;
 		$testproduct->shipping_estimate  = $data["shipping_estimate"] ?? '';
 		$testproduct->warranty           = $data["warranty"] ?? '';
+		$testproduct->created_at         = $now;
 		$testproduct->updated_at         = $now;
 
-		$testproduct->update();
+		$product_id = $testproduct->update();
 
-		$product_id = $data["id"];
-
-		// ----------------------------------
-		// DELETE OLD CHILD ROWS
-		// ----------------------------------
-		TestProductImage::delete($product_id);
-		TestProductVariant::delete($product_id);
-		TestProductSpec::delete($product_id);
-		TestProductHighlight::delete($product_id);
-		TestProductTag::delete($product_id);
-		TestProductBadge::delete($product_id);
-		TestProductRelation::delete($product_id);
-		TestProductRecommendation::delete($product_id);
-
-		// ----------------------------------
-		// 2) INSERT NEW GALLERY IMAGES
-		// ----------------------------------
+		// 2) Gallery images 
 		$allImages = [];
 		$mainSet = false;
 
+		// 2a) Files uploaded
 		if (!empty($file['gallery']['name'] ?? null)) {
 			foreach ($file['gallery']['tmp_name'] as $index => $tmp) {
 				$imgFile = [
@@ -256,99 +234,99 @@ class TestProductApi
 			}
 		}
 
+		// 2b) Existing gallery images from $data
 		foreach (decodeArray($data["gallery"] ?? []) as $imgPath) {
 			$allImages[] = $imgPath;
 		}
 
+		// Save images to DB
 		foreach ($allImages as $img) {
 			$image = new TestProductImage();
+			$image->id=$product_id;
 			$image->product_id = $product_id;
 			$image->image_path = $img;
 			$image->is_main    = !$mainSet ? 1 : 0;
 			$mainSet = true;
 			$image->created_at = $now;
-			$image->save();
+			$image->update($product_id);
 		}
 
-		// ----------------------------------
-		// 3) INSERT VARIANTS
-		// ----------------------------------
+
+		// 3) Variants
 		foreach (decodeArray($data["variants"]) as $v) {
 			$variant = new TestProductVariant();
+			$variant->id = $product_id;
 			$variant->product_id = $product_id;
 			$variant->color      = $v["color"] ?? '';
 			$variant->storage    = $v["storage"] ?? '';
 			$variant->price      = $v["price"] ?? 0;
 			$variant->created_at = $now;
-			$variant->save();
+			$variant->update($product_id);
 		}
 
-		// ----------------------------------
-		// 4) INSERT SPECS
-		// ----------------------------------
+		// 4) Specifications
 		foreach (decodeArray($data["specs"]) as $spec) {
 			$sp = new TestProductSpec();
+			$sp->id = $product_id;
 			$sp->product_id = $product_id;
 			$sp->spec_text  = $spec["value"] ?? $spec["specs"] ?? '';
-			$sp->save();
+			$sp->update($product_id);
 		}
 
-		// ----------------------------------
-		// 5) INSERT HIGHLIGHTS
-		// ----------------------------------
+		// 5) Highlights
 		foreach (decodeArray($data["highlights"]) as $text) {
 			$hl = new TestProductHighlight();
+			$hl->id = $product_id;
 			$hl->product_id = $product_id;
 			$hl->highlight_text = $text;
-			$hl->save();
+			$hl->update($product_id);
 		}
 
-		// ----------------------------------
-		// 6) INSERT TAGS
-		// ----------------------------------
+		// 6) Tags
 		foreach (decodeArray($data["tags"]) as $tag) {
 			$t = new TestProductTag();
 			$t->product_id = $product_id;
 			$t->tag = $tag;
-			$t->save();
+			$t->update($product_id);
 		}
 
-		// ----------------------------------
-		// 7) INSERT BADGES
-		// ----------------------------------
+		// 7) Badges
 		foreach (decodeArray($data["badges"]) as $badge) {
 			$b = new TestProductBadge();
+			$b->id = $product_id;
 			$b->product_id = $product_id;
 			$b->badge = $badge;
-			$b->save();
+			$b->update($product_id);
 		}
 
-		// ----------------------------------
-		// 8) INSERT RELATED
-		// ----------------------------------
+		// 8) Related products
 		foreach (decodeArray($data["relatedIds"]) as $rp) {
 			$rel = new TestProductRelation();
+			$rel->id = $product_id;
 			$rel->product_id = $product_id;
 			$rel->related_id = $rp;
-			$rel->save();
+			$rel->update($product_id);
 		}
 
-		// ----------------------------------
-		// 9) INSERT RECOMMENDED
-		// ----------------------------------
+		// 9) Recommended products
 		foreach (decodeArray($data["recommendedIds"]) as $rr) {
 			$rec = new TestProductRecommendation();
+			$rec->id = $product_id;
 			$rec->product_id = $product_id;
 			$rec->recommended_id = $rr;
-			$rec->save();
+			$rec->update($product_id);
 		}
 
+		// Return success
 		echo json_encode([
 			"success" => true,
 			"product_id" => $product_id,
-			"message" => "Product updated successfully with all child records"
+			"message" => "Product Updated with all child records",
+			"data" => $data,
+			"file" => $file
 		]);
 	}
+	
 
 
 

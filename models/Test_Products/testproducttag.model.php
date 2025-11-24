@@ -18,10 +18,12 @@ class TestProductTag extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_tags(product_id,tag)values('$this->product_id','$this->tag')");
 		return $db->insert_id;
 	}
-	public function update()
+	public function update($productID)
 	{
+		$str = $productID;
+		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("update {$tx}test_product_tags set product_id='$this->product_id',tag='$this->tag' where id='$this->id'");
+		$db->query("update {$tx}test_product_tags set product_id='$this->product_id',tag='$this->tag' where product_id='$this->id' AND id=$productID");
 	}
 	public static function delete($id)
 	{
