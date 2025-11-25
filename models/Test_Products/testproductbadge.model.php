@@ -21,14 +21,30 @@ class TestProductBadge extends Model implements JsonSerializable
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_badges set product_id='$this->product_id',badge='$this->badge' where product_id='$this->id'");
+
+		if (!empty($this->id) && is_numeric($this->id)) {
+			// ---- UPDATE existing badge ----
+			$db->query("
+            UPDATE {$tx}test_product_badges SET
+                badge      = '$this->badge',
+                product_id = '$this->product_id'
+            WHERE id = '$this->id'
+        ");
+		} else {
+			// ---- INSERT new badge ----
+			$db->query("
+            INSERT INTO {$tx}test_product_badges
+                (product_id, badge)
+            VALUES
+                ('$this->product_id', '$this->badge')
+        ");
+		}
 	}
+
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_badges where id={$productID}");
+		$db->query("delete from {$tx}test_product_badges where product_id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{

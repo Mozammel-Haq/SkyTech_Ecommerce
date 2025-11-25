@@ -25,14 +25,30 @@ class TestProductImage extends Model implements JsonSerializable
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_images set product_id='$this->product_id',image_path='$this->image_path',is_main='$this->is_main',created_at='$this->created_at' where product_id='$this->id'");
+
+		if (!empty($this->id)) {
+			// UPDATE single row
+			$stmt = "UPDATE {$tx}test_product_images SET
+                    product_id      = '$this->product_id',
+                    image_path      = '$this->image_path',
+                    is_main         = '$this->is_main',
+                    created_at      = '$this->created_at'
+                 WHERE id = '$this->id'";   // <------ Correct
+		} else {
+			// INSERT new row
+			$stmt = "INSERT INTO {$tx}test_product_images 
+                    (product_id, image_path, is_main, created_at)
+                 VALUES
+                    ('$this->product_id', '$this->image_path', '$this->is_main', '$this->created_at')";
+		}
+
+		return $db->query($stmt);
 	}
+
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_images where id={$productID}");
+		$db->query("delete from {$tx}test_product_images where product_id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{

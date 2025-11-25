@@ -21,14 +21,33 @@ class TestProductSpec extends Model implements JsonSerializable
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_specs set product_id='$this->product_id',spec_text='$this->spec_text' where product_id='$this->id'");
+
+		if (!empty($this->id) && is_numeric($this->id)) {
+			// UPDATE existing specification
+			$query = "
+            UPDATE {$tx}test_product_specs SET
+                spec_text  = '{$this->spec_text}',
+                product_id = '{$this->product_id}'
+            WHERE id = '{$this->id}'
+        ";
+		} else {
+			// INSERT new specification
+			$query = "
+            INSERT INTO {$tx}test_product_specs
+                (product_id, spec_text)
+            VALUES
+                ('{$this->product_id}', '{$this->spec_text}')
+        ";
+		}
+
+		return $db->query($query);
 	}
+
+
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_specs where id={$productID}");
+		$db->query("delete from {$tx}test_product_specs where product_id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{

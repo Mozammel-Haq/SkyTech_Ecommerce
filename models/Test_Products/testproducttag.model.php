@@ -21,14 +21,32 @@ class TestProductTag extends Model implements JsonSerializable
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_tags set product_id='$this->product_id',tag='$this->tag' where product_id='$this->id'");
+
+		if (!empty($this->id) && is_numeric($this->id)) {
+			// UPDATE existing tag
+			$query = "
+            UPDATE {$tx}test_product_tags SET
+                tag        = '{$this->tag}',
+                product_id = '{$this->product_id}'
+            WHERE id = '{$this->id}'
+        ";
+		} else {
+			// INSERT new tag
+			$query = "
+            INSERT INTO {$tx}test_product_tags
+                (product_id, tag)
+            VALUES
+                ('{$this->product_id}', '{$this->tag}')
+        ";
+		}
+
+		return $db->query($query);
 	}
+
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_tags where id={$productID}");
+		$db->query("delete from {$tx}test_product_tags where product_id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{

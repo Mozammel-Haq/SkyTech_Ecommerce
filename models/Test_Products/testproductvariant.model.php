@@ -28,31 +28,29 @@ class TestProductVariant extends Model implements JsonSerializable
 	{
 		global $db, $tx;
 
-    if (!empty($this->id) && is_numeric($this->id)) {
-        // ---- UPDATE existing variant ----
-        $db->query("
+		if (!empty($this->id) && is_numeric($this->id)) {
+			// ---- UPDATE existing variant ----
+			$db->query("
             UPDATE {$tx}test_product_variants SET
                 color      = '$this->color',
                 storage    = '$this->storage',
                 price      = '$this->price'
             WHERE id = '$this->id'
         ");
-    } else {
-        // ---- INSERT new variant ----
-        $db->query("
+		} else {
+			// ---- INSERT new variant ----
+			$db->query("
             INSERT INTO {$tx}test_product_variants
                 (product_id, color, storage, price, created_at)
             VALUES
                 ('$this->product_id', '$this->color', '$this->storage', '$this->price', '$this->created_at')
         ");
-    }
+		}
 	}
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_product_variants where id={$productID}");
+		$db->query("delete from {$tx}test_product_variants where product_id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{
