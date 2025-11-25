@@ -27,7 +27,25 @@ class TestProductVariant extends Model implements JsonSerializable
 	public function update()
 	{
 		global $db, $tx;
-		$db->query("update {$tx}test_product_variants set product_id='$this->product_id',color='$this->color',storage='$this->storage',price='$this->price',created_at='$this->created_at' WHERE product_id ='$this->id'");
+
+    if (!empty($this->id) && is_numeric($this->id)) {
+        // ---- UPDATE existing variant ----
+        $db->query("
+            UPDATE {$tx}test_product_variants SET
+                color      = '$this->color',
+                storage    = '$this->storage',
+                price      = '$this->price'
+            WHERE id = '$this->id'
+        ");
+    } else {
+        // ---- INSERT new variant ----
+        $db->query("
+            INSERT INTO {$tx}test_product_variants
+                (product_id, color, storage, price, created_at)
+            VALUES
+                ('$this->product_id', '$this->color', '$this->storage', '$this->price', '$this->created_at')
+        ");
+    }
 	}
 	public static function delete($id)
 	{

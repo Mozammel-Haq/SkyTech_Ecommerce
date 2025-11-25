@@ -96,21 +96,18 @@ class TestProduct extends Model implements JsonSerializable
 	}
 	public static function delete($id)
 	{
-		$str = $id;
-		$productID = substr($str, 2);
 		global $db, $tx;
-		$db->query("delete from {$tx}test_products where id={$productID}");
+		$db->query("delete from {$tx}test_products where id=$id");
 	}
 	public function jsonSerialize(): mixed
 	{
 		return get_object_vars($this);
 	}
 	public static function all()
-	{
-		global $db, $tx;
+{
+    global $db, $tx;
 
-		// Fetch all products along with category and brand details
-		$result = $db->query("
+    $result = $db->query("
         SELECT 
             p.id, p.sku, p.title, p.slug, p.description,
             p.subcategory,
@@ -125,113 +122,115 @@ class TestProduct extends Model implements JsonSerializable
         LEFT JOIN {$tx}test_product_brands b ON p.brand_id = b.id
     ");
 
-		$data = [];
+    $data = [];
 
-		while ($product = $result->fetch_object()) {
-			$productId = $product->id;
+    while ($product = $result->fetch_object()) {
+        $productId = $product->id;
 
-			// Fetch images
-			$imagesRes = $db->query("SELECT image_path FROM {$tx}test_product_images WHERE product_id = '{$productId}' ORDER BY is_main DESC");
-			$images = [];
-			while ($img = $imagesRes->fetch_object()) {
-				$images[] = $img->image_path;
-			}
+        // Fetch gallery images
+        $imagesRes = $db->query("SELECT image_path FROM {$tx}test_product_images WHERE product_id = '{$productId}' ORDER BY is_main DESC");
+        $images = [];
+        while ($img = $imagesRes->fetch_object()) {
+            if (!empty($img->image_path)) {
+                $images[] = $img->image_path;
+            }
+        }
 
-			// Fetch variants
-			$variantsRes = $db->query("SELECT id, color, storage, price FROM {$tx}test_product_variants WHERE product_id = '{$productId}'");
-			$variants = [];
-			while ($v = $variantsRes->fetch_object()) {
-				$variants[] = [
-					'id' => $v->id,
-					'color' => $v->color,
-					'storage' => $v->storage,
-					'price' => floatval($v->price)
-				];
-			}
+        // Fetch variants
+        $variantsRes = $db->query("SELECT id, color, storage, price FROM {$tx}test_product_variants WHERE product_id = '{$productId}'");
+        $variants = [];
+        while ($v = $variantsRes->fetch_object()) {
+            $variants[] = [
+                'id' => $v->id,
+                'color' => $v->color,
+                'storage' => $v->storage,
+                'price' => floatval($v->price)
+            ];
+        }
 
-			// Fetch tags
-			$tagsRes = $db->query("SELECT tag FROM {$tx}test_product_tags WHERE product_id = '{$productId}'");
-			$tags = [];
-			while ($t = $tagsRes->fetch_object()) {
-				$tags[] = $t->tag;
-			}
+        // Fetch tags
+        $tagsRes = $db->query("SELECT tag FROM {$tx}test_product_tags WHERE product_id = '{$productId}'");
+        $tags = [];
+        while ($t = $tagsRes->fetch_object()) {
+            if (!empty($t->tag)) $tags[] = $t->tag;
+        }
 
-			// Fetch badges
-			$badgesRes = $db->query("SELECT badge FROM {$tx}test_product_badges WHERE product_id = '{$productId}'");
-			$badges = [];
-			while ($b = $badgesRes->fetch_object()) {
-				$badges[] = $b->badge;
-			}
+        // Fetch badges
+        $badgesRes = $db->query("SELECT badge FROM {$tx}test_product_badges WHERE product_id = '{$productId}'");
+        $badges = [];
+        while ($b = $badgesRes->fetch_object()) {
+            if (!empty($b->badge)) $badges[] = $b->badge;
+        }
 
-			// Fetch short specs
-			$specsRes = $db->query("SELECT spec_text FROM {$tx}test_product_specs WHERE product_id = '{$productId}'");
-			$shortSpecs = [];
-			while ($s = $specsRes->fetch_object()) {
-				$shortSpecs[] = $s->spec_text;
-			}
+        // Fetch short specs
+        $specsRes = $db->query("SELECT spec_text FROM {$tx}test_product_specs WHERE product_id = '{$productId}'");
+        $shortSpecs = [];
+        while ($s = $specsRes->fetch_object()) {
+            if (!empty($s->spec_text)) $shortSpecs[] = $s->spec_text;
+        }
 
-			// Fetch highlights
-			$highlightsRes = $db->query("SELECT highlight_text FROM {$tx}test_product_highlights WHERE product_id = '{$productId}'");
-			$highlights = [];
-			while ($h = $highlightsRes->fetch_object()) {
-				$highlights[] = $h->highlight_text;
-			}
+        // Fetch highlights
+        $highlightsRes = $db->query("SELECT highlight_text FROM {$tx}test_product_highlights WHERE product_id = '{$productId}'");
+        $highlights = [];
+        while ($h = $highlightsRes->fetch_object()) {
+            if (!empty($h->highlight_text)) $highlights[] = $h->highlight_text;
+        }
 
-			// Fetch related products
-			$relatedRes = $db->query("SELECT related_id FROM {$tx}test_product_relations WHERE product_id = '{$productId}'");
-			$relatedIds = [];
-			while ($r = $relatedRes->fetch_object()) {
-				$relatedIds[] = "p-" . $r->related_id;
-			}
+        // Fetch related products
+        $relatedRes = $db->query("SELECT related_id FROM {$tx}test_product_relations WHERE product_id = '{$productId}'");
+        $relatedIds = [];
+        while ($r = $relatedRes->fetch_object()) {
+            if (!empty($r->related_id)) $relatedIds[] = "p-" . $r->related_id;
+        }
 
-			// Fetch recommended products
-			$recRes = $db->query("SELECT recommended_id FROM {$tx}test_product_recommendations WHERE product_id = '{$productId}'");
-			$recommendedIds = [];
-			while ($rec = $recRes->fetch_object()) {
-				$recommendedIds[] = "p-" . $rec->recommended_id;
-			}
+        // Fetch recommended products
+        $recRes = $db->query("SELECT recommended_id FROM {$tx}test_product_recommendations WHERE product_id = '{$productId}'");
+        $recommendedIds = [];
+        while ($rec = $recRes->fetch_object()) {
+            if (!empty($rec->recommended_id)) $recommendedIds[] = "p-" . $rec->recommended_id;
+        }
 
-			// Build structured object
-			$data[] = [
-				'id' => "p-" . $product->id,
-				'sku' => $product->sku,
-				'title' => $product->title,
-				'slug' => $product->slug,
-				'description' => $product->description,
-				'category' => $product->category_name,
-				'categorySlug' => $product->category_slug,
-				'subcategory' => $product->subcategory,
-				'brand' => $product->brand_name,
-				'brandLogo' => $product->brand_logo,
-				'price' => floatval($product->price),
-				'originalPrice' => floatval($product->original_price),
-				'discountPercent' => floatval($product->discount_percent),
-				'rating' => floatval($product->rating),
-				'reviewsCount' => intval($product->reviews_count),
-				'stock' => intval($product->stock),
-				'stockStatus' => $product->stock_status,
-				'images' => $images,
-				'thumbnail' => $product->thumbnail,
-				'variants' => $variants,
-				'tags' => $tags,
-				'featured' => boolval($product->featured),
-				'bestseller' => boolval($product->bestseller),
-				'newArrival' => boolval($product->new_arrival),
-				'onSale' => boolval($product->on_sale),
-				'bestValue' => boolval($product->best_value),
-				'dealEndTime' => $product->deal_end_time,
-				'shortSpecs' => $shortSpecs,
-				'highlights' => $highlights,
-				'shippingEstimate' => $product->shipping_estimate,
-				'warranty' => $product->warranty,
-				'badges' => $badges,
-				'relatedIds' => $relatedIds,
-				'recommendedIds' => $recommendedIds
-			];
-		}
+        // Build structured object
+        $data[] = [
+            'id' => "p-" . $product->id,
+            'sku' => $product->sku,
+            'title' => $product->title,
+            'slug' => $product->slug,
+            'description' => $product->description,
+            'category' => $product->category_name,
+            'categorySlug' => $product->category_slug,
+            'subcategory' => $product->subcategory,
+            'brand' => $product->brand_name,
+            'brandLogo' => $product->brand_logo,
+            'price' => floatval($product->price),
+            'originalPrice' => floatval($product->original_price),
+            'discountPercent' => floatval($product->discount_percent),
+            'rating' => floatval($product->rating),
+            'reviewsCount' => intval($product->reviews_count),
+            'stock' => intval($product->stock),
+            'stockStatus' => $product->stock_status,
+            'images' => $images,
+            'thumbnail' => !empty($product->thumbnail) ? $product->thumbnail : null,
+            'variants' => $variants,
+            'tags' => $tags,
+            'featured' => boolval($product->featured),
+            'bestseller' => boolval($product->bestseller),
+            'newArrival' => boolval($product->new_arrival),
+            'onSale' => boolval($product->on_sale),
+            'bestValue' => boolval($product->best_value),
+            'dealEndTime' => $product->deal_end_time ?: null,
+            'shortSpecs' => $shortSpecs,
+            'highlights' => $highlights,
+            'shippingEstimate' => $product->shipping_estimate,
+            'warranty' => $product->warranty,
+            'badges' => $badges,
+            'relatedIds' => $relatedIds,
+            'recommendedIds' => $recommendedIds
+        ];
+    }
 
-		return $data;
-	}
+    return $data;
+}
 
 	public static function pagination($page = 1, $perpage = 10, $criteria = "")
 	{

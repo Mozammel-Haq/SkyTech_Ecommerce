@@ -19,158 +19,174 @@ class TestProductApi
 	}
 	function delete($data)
 	{
-		TestProduct::delete($data["id"]);
+		TestProduct::delete(is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2));
 
 		echo json_encode(["success" => $data]);
 	}
 	function save($data, $file = [])
-	{
-		global $now;
-		// Helper to decode JSON or return empty array
-		function decodeArray($value)
-		{
-			if (empty($value)) return [];
-			if (is_array($value)) return $value;
-			$decoded = json_decode($value, true);
-			return is_array($decoded) ? $decoded : [];
-		}
+{
+    global $now;
 
-		// 1) Save parent product
-		$testproduct = new TestProduct();
-		$testproduct->sku               = $data["sku"] ?? '';
-		$testproduct->title             = $data["title"] ?? '';
-		$testproduct->slug              = $data["slug"] ?? '';
-		$testproduct->description       = $data["description"] ?? '';
-		$testproduct->category_id       = $data["category_id"] ?? '';
-		$testproduct->subcategory       = $data["subcategory"] ?? '';
-		$testproduct->brand_id          = $data["brand_id"] ?? '';
-		$testproduct->price             = $data["price"] ?? 0;
-		$testproduct->original_price    = $data["original_price"] ?? 0;
-		$testproduct->discount_percent  = $data["discount_percent"] ?? 0;
-		$testproduct->rating            = $data["rating"] ?? 0;
-		$testproduct->reviews_count     = $data["reviews_count"] ?? 0;
-		$testproduct->stock             = $data["stock"] ?? 0;
-		$testproduct->stock_status      = $data["stock_status"] ?? 'in_stock';
-		$testproduct->thumbnail         = !empty($file['thumbnail'])
-			? upload($file['thumbnail'], "../test_assets/img/products/")
-			: ($data["existingThumbnail"] ?? '');
-		$testproduct->featured          = $data["featured"] ?? 0;
-		$testproduct->bestseller        = $data["bestseller"] ?? 0;
-		$testproduct->new_arrival       = $data["new_arrival"] ?? 0;
-		$testproduct->on_sale           = $data["on_sale"] ?? 0;
-		$testproduct->best_value        = $data["best_value"] ?? 0;
-		$dealEndTime                     = $data['deal_end_time'] ?? null;
-		$testproduct->deal_end_time      = $dealEndTime && $dealEndTime !== '' ? $dealEndTime : null;
-		$testproduct->shipping_estimate  = $data["shipping_estimate"] ?? '';
-		$testproduct->warranty           = $data["warranty"] ?? '';
-		$testproduct->created_at         = $now;
-		$testproduct->updated_at         = $now;
+    // Helper to decode JSON or return empty array
+    function decodeArray($value)
+    {
+        if (empty($value)) return [];
+        if (is_array($value)) return $value;
+        $decoded = json_decode($value, true);
+        return is_array($decoded) ? $decoded : [];
+    }
 
-		$product_id = $testproduct->save();
+    // 1) Save parent product
+    $testproduct = new TestProduct();
+    $testproduct->sku               = $data["sku"] ?? '';
+    $testproduct->title             = $data["title"] ?? '';
+    $testproduct->slug              = $data["slug"] ?? '';
+    $testproduct->description       = $data["description"] ?? '';
+    $testproduct->category_id       = $data["category_id"] ?? '';
+    $testproduct->subcategory       = $data["subcategory"] ?? '';
+    $testproduct->brand_id          = $data["brand_id"] ?? '';
+    $testproduct->price             = $data["price"] ?? 0;
+    $testproduct->original_price    = $data["original_price"] ?? 0;
+    $testproduct->discount_percent  = $data["discount_percent"] ?? 0;
+    $testproduct->rating            = $data["rating"] ?? 0;
+    $testproduct->reviews_count     = $data["reviews_count"] ?? 0;
+    $testproduct->stock             = $data["stock"] ?? 0;
+    $testproduct->stock_status      = $data["stock_status"] ?? 'in_stock';
+    $testproduct->thumbnail         = !empty($file['thumbnail'])
+        ? upload($file['thumbnail'], "../test_assets/img/products/")
+        : ($data["existingThumbnail"] ?? '');
+    $testproduct->featured          = $data["featured"] ?? 0;
+    $testproduct->bestseller        = $data["bestseller"] ?? 0;
+    $testproduct->new_arrival       = $data["new_arrival"] ?? 0;
+    $testproduct->on_sale           = $data["on_sale"] ?? 0;
+    $testproduct->best_value        = $data["best_value"] ?? 0;
+    $dealEndTime                     = $data['deal_end_time'] ?? null;
+    $testproduct->deal_end_time      = $dealEndTime && $dealEndTime !== '' ? $dealEndTime : null;
+    $testproduct->shipping_estimate  = $data["shipping_estimate"] ?? '';
+    $testproduct->warranty           = $data["warranty"] ?? '';
+    $testproduct->created_at         = $now;
+    $testproduct->updated_at         = $now;
 
-		// 2) Gallery images 
-		$allImages = [];
-		$mainSet = false;
+    $product_id = $testproduct->save();
 
-		// 2a) Files uploaded
-		if (!empty($file['gallery']['name'] ?? null)) {
-			foreach ($file['gallery']['tmp_name'] as $index => $tmp) {
-				$imgFile = [
-					'name' => $file["gallery"]["name"][$index],
-					'tmp_name' => $file["gallery"]["tmp_name"][$index],
-					'size' => $file["gallery"]["size"][$index],
-					'error' => $file["gallery"]["error"][$index],
-					'type' => $file["gallery"]["type"][$index],
-				];
-				$allImages[] = upload($imgFile, "../test_assets/img/products/");
-			}
-		}
+    // 2) Gallery images 
+    $allImages = [];
+    $mainSet = false;
 
-		// 2b) Existing gallery images from $data
-		foreach (decodeArray($data["gallery"] ?? []) as $imgPath) {
-			$allImages[] = $imgPath;
-		}
+    // 2a) Uploaded files
+    if (!empty($file['gallery']['name'] ?? null)) {
+        foreach ($file['gallery']['tmp_name'] as $index => $tmp) {
+            $imgFile = [
+                'name'     => $file["gallery"]["name"][$index],
+                'tmp_name' => $file["gallery"]["tmp_name"][$index],
+                'size'     => $file["gallery"]["size"][$index],
+                'error'    => $file["gallery"]["error"][$index],
+                'type'     => $file["gallery"]["type"][$index],
+            ];
+            $allImages[] = upload($imgFile, "../test_assets/img/products/");
+        }
+    }
 
-		// Save images to DB
-		foreach ($allImages as $img) {
-			$image = new TestProductImage();
-			$image->product_id = $product_id;
-			$image->image_path = $img;
-			$image->is_main    = !$mainSet ? 1 : 0;
-			$mainSet = true;
-			$image->created_at = $now;
-			$image->save();
-		}
+    // 2b) Existing gallery images (frontend may send objects with id/url)
+    $existingGallery = decodeArray($data["gallery"] ?? []);
+    foreach ($existingGallery as $img) {
+        if (is_array($img) && !empty($img['name'])) {
+            $allImages[] = $img['name'];
+        } elseif (is_string($img) && trim($img) !== "") {
+            $allImages[] = $img;
+        }
+    }
 
+    // Save gallery images to DB
+    foreach ($allImages as $img) {
+        $image = new TestProductImage();
+        $image->product_id = $product_id;
+        $image->image_path = $img;
+        $image->is_main    = !$mainSet ? 1 : 0;
+        $mainSet = true;
+        $image->created_at = $now;
+        $image->save();
+    }
 
-		// 3) Variants
-		foreach (decodeArray($data["variants"]) as $v) {
-			$variant = new TestProductVariant();
-			$variant->product_id = $product_id;
-			$variant->color      = $v["color"] ?? '';
-			$variant->storage    = $v["storage"] ?? '';
-			$variant->price      = $v["price"] ?? 0;
-			$variant->created_at = $now;
-			$variant->save();
-		}
+    // 3) Variants
+    foreach (decodeArray($data["variants"]) as $v) {
+        $variant = new TestProductVariant();
+        $variant->product_id = $product_id;
+        $variant->color      = $v["color"] ?? '';
+        $variant->storage    = $v["storage"] ?? '';
+        $variant->price      = $v["price"] ?? 0;
+        $variant->created_at = $now;
+        $variant->save();
+    }
 
-		// 4) Specifications
-		foreach (decodeArray($data["specs"]) as $spec) {
-			$sp = new TestProductSpec();
-			$sp->product_id = $product_id;
-			$sp->spec_text  = $spec["value"] ?? $spec["specs"] ?? '';
-			$sp->save();
-		}
+    // 4) Specifications
+    foreach (decodeArray($data["specs"]) as $spec) {
+        $sp = new TestProductSpec();
+        $sp->product_id = $product_id;
+        $sp->spec_text  = $spec["value"] ?? $spec["specs"] ?? '';
+        $sp->save();
+    }
 
-		// 5) Highlights
-		foreach (decodeArray($data["highlights"]) as $text) {
-			$hl = new TestProductHighlight();
-			$hl->product_id = $product_id;
-			$hl->highlight_text = $text;
-			$hl->save();
-		}
+    // 5) Highlights
+    foreach (decodeArray($data["highlights"]) as $hl) {
+        $text = is_array($hl) && isset($hl['text']) ? $hl['text'] : (is_string($hl) ? $hl : '');
+        if ($text === '') continue;
+        $highlight = new TestProductHighlight();
+        $highlight->product_id    = $product_id;
+        $highlight->highlight_text = $text;
+        $highlight->save();
+    }
 
-		// 6) Tags
-		foreach (decodeArray($data["tags"]) as $tag) {
-			$t = new TestProductTag();
-			$t->product_id = $product_id;
-			$t->tag = $tag;
-			$t->save();
-		}
+    // 6) Tags
+    foreach (decodeArray($data["tags"]) as $t) {
+        $tagText = is_array($t) && isset($t['tag']) ? $t['tag'] : (is_string($t) ? $t : '');
+        if ($tagText === '') continue;
+        $tag = new TestProductTag();
+        $tag->product_id = $product_id;
+        $tag->tag        = $tagText;
+        $tag->save();
+    }
 
-		// 7) Badges
-		foreach (decodeArray($data["badges"]) as $badge) {
-			$b = new TestProductBadge();
-			$b->product_id = $product_id;
-			$b->badge = $badge;
-			$b->save();
-		}
+    // 7) Badges
+    foreach (decodeArray($data["badges"]) as $b) {
+        $badgeText = is_array($b) && isset($b['badge']) ? $b['badge'] : (is_string($b) ? $b : '');
+        if ($badgeText === '') continue;
+        $badge = new TestProductBadge();
+        $badge->product_id = $product_id;
+        $badge->badge      = $badgeText;
+        $badge->save();
+    }
 
-		// 8) Related products
-		foreach (decodeArray($data["relatedIds"]) as $rp) {
-			$rel = new TestProductRelation();
-			$rel->product_id = $product_id;
-			$rel->related_id = $rp;
-			$rel->save();
-		}
+    // 8) Related products
+    foreach (decodeArray($data["relatedIds"]) as $rp) {
+        $relatedId = is_array($rp) && isset($rp['id']) ? $rp['id'] : $rp;
+        if ($relatedId === '') continue;
+        $rel = new TestProductRelation();
+        $rel->product_id  = $product_id;
+        $rel->related_id  = $relatedId;
+        $rel->save();
+    }
 
-		// 9) Recommended products
-		foreach (decodeArray($data["recommendedIds"]) as $rr) {
-			$rec = new TestProductRecommendation();
-			$rec->product_id = $product_id;
-			$rec->recommended_id = $rr;
-			$rec->save();
-		}
+    // 9) Recommended products
+    foreach (decodeArray($data["recommendedIds"]) as $rr) {
+        $recommendedId = is_array($rr) && isset($rr['id']) ? $rr['id'] : $rr;
+        if ($recommendedId === '') continue;
+        $rec = new TestProductRecommendation();
+        $rec->product_id      = $product_id;
+        $rec->recommended_id  = $recommendedId;
+        $rec->save();
+    }
 
-		// Return success
-		echo json_encode([
-			"success" => true,
-			"product_id" => $product_id,
-			"message" => "Product saved with all child records",
-			"data" => $data,
-			"file" => $file
-		]);
-	}
+    // Return success
+    echo json_encode([
+        "success"    => true,
+        "product_id" => $product_id,
+        "message"    => "Product saved with all child records",
+        "data"       => $data,
+        "file"       => $file
+    ]);
+}
+
 	function update($data, $file = [])
 	{
 		global $now;
@@ -256,8 +272,8 @@ class TestProductApi
 		// 3) Variants
 		foreach (decodeArray($data["variants"]) as $v) {
 			$variant = new TestProductVariant();
-			$variant->id = $product_id;
-			$variant->product_id = is_numeric($data['id']) ? $data['id'] : substr($data['id'], 2);
+			$variant->id = $data['variant_ids'] ?? null;
+			$variant->product_id = $product_id;
 			$variant->color      = $v["color"] ?? '';
 			$variant->storage    = $v["storage"] ?? '';
 			$variant->price      = $v["price"] ?? 0;
