@@ -18,30 +18,69 @@ class TestProductSpec extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_specs(product_id,spec_text)values('$this->product_id','$this->spec_text')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+public function update($incomingSpecs = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// UPDATE existing specification
-			$query = "
-            UPDATE {$tx}test_product_specs SET
-                spec_text  = '{$this->spec_text}',
-                product_id = '{$this->product_id}'
-            WHERE id = '{$this->id}'
-        ";
-		} else {
-			// INSERT new specification
-			$query = "
-            INSERT INTO {$tx}test_product_specs
-                (product_id, spec_text)
-            VALUES
-                ('{$this->product_id}', '{$this->spec_text}')
-        ";
-		}
+        if (is_array($incomingSpecs)) {
+            // Extract IDs present in incoming data
+            $incomingIds = array_filter(array_map(function($s) {
+                return isset($s['id']) ? intval($s['id']) : null;
+            }, $incomingSpecs));
 
-		return $db->query($query);
-	}
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete specs not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_specs 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming specs
+            foreach ($incomingSpecs as $s) {
+                $spec = new TestProductSpec();
+                $spec->id = isset($s['id']) ? intval($s['id']) : null;
+                $spec->product_id = $this->product_id;
+                $spec->spec_text = $db->real_escape_string($s['value'] ?? $s['spec_text'] ?? $s['key'] ?? '');
+
+                if ($spec->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_specs SET
+                            spec_text = '{$spec->spec_text}'
+                        WHERE id = '{$spec->id}'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_specs
+                            (product_id, spec_text)
+                        VALUES
+                            ('{$spec->product_id}', '{$spec->spec_text}')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_specs SET
+                    spec_text = '{$this->spec_text}',
+                    product_id = '{$this->product_id}'
+                WHERE id = '{$this->id}'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_specs
+                    (product_id, spec_text)
+                VALUES
+                    ('{$this->product_id}', '{$this->spec_text}')
+            ");
+        }
+    }
 
 
 	public static function delete($id)

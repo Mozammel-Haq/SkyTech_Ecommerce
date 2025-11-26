@@ -18,30 +18,69 @@ class TestProductTag extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_tags(product_id,tag)values('$this->product_id','$this->tag')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+	public function update($incomingTags = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// UPDATE existing tag
-			$query = "
-            UPDATE {$tx}test_product_tags SET
-                tag        = '{$this->tag}',
-                product_id = '{$this->product_id}'
-            WHERE id = '{$this->id}'
-        ";
-		} else {
-			// INSERT new tag
-			$query = "
-            INSERT INTO {$tx}test_product_tags
-                (product_id, tag)
-            VALUES
-                ('{$this->product_id}', '{$this->tag}')
-        ";
-		}
+        if (is_array($incomingTags)) {
+            // Extract IDs present in incoming data
+            $incomingIds = array_filter(array_map(function($t) {
+                return isset($t['id']) ? intval($t['id']) : null;
+            }, $incomingTags));
 
-		return $db->query($query);
-	}
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete tags not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_tags 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming tags
+            foreach ($incomingTags as $t) {
+                $tagModel = new TestProductTag();
+                $tagModel->id = isset($t['id']) ? intval($t['id']) : null;
+                $tagModel->product_id = $this->product_id;
+                $tagModel->tag = $db->real_escape_string($t['tag'] ?? $t['name'] ?? '');
+
+                if ($tagModel->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_tags SET
+                            tag = '{$tagModel->tag}'
+                        WHERE id = '{$tagModel->id}'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_tags
+                            (product_id, tag)
+                        VALUES
+                            ('{$tagModel->product_id}', '{$tagModel->tag}')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_tags SET
+                    tag = '{$this->tag}',
+                    product_id = '{$this->product_id}'
+                WHERE id = '{$this->id}'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_tags
+                    (product_id, tag)
+                VALUES
+                    ('{$this->product_id}', '{$this->tag}')
+            ");
+        }
+    }
 
 	public static function delete($id)
 	{

@@ -18,28 +18,69 @@ class TestProductBadge extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_badges(product_id,badge)values('$this->product_id','$this->badge')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+	 public function update($incomingBadges = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// ---- UPDATE existing badge ----
-			$db->query("
-            UPDATE {$tx}test_product_badges SET
-                badge      = '$this->badge',
-                product_id = '$this->product_id'
-            WHERE id = '$this->id'
-        ");
-		} else {
-			// ---- INSERT new badge ----
-			$db->query("
-            INSERT INTO {$tx}test_product_badges
-                (product_id, badge)
-            VALUES
-                ('$this->product_id', '$this->badge')
-        ");
-		}
-	}
+        if (is_array($incomingBadges)) {
+            // Extract IDs present in incoming data
+            $incomingIds = array_filter(array_map(function($b) {
+                return isset($b['id']) ? intval($b['id']) : null;
+            }, $incomingBadges));
+
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete badges not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_badges 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming badges
+            foreach ($incomingBadges as $b) {
+                $badgeModel = new TestProductBadge();
+                $badgeModel->id = isset($b['id']) ? intval($b['id']) : null;
+                $badgeModel->product_id = $this->product_id;
+                $badgeModel->badge = $db->real_escape_string($b['badge'] ?? $b['name'] ?? '');
+
+                if ($badgeModel->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_badges SET
+                            badge = '{$badgeModel->badge}'
+                        WHERE id = '{$badgeModel->id}'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_badges
+                            (product_id, badge)
+                        VALUES
+                            ('{$badgeModel->product_id}', '{$badgeModel->badge}')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_badges SET
+                    badge = '{$this->badge}',
+                    product_id = '{$this->product_id}'
+                WHERE id = '{$this->id}'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_badges
+                    (product_id, badge)
+                VALUES
+                    ('{$this->product_id}', '{$this->badge}')
+            ");
+        }
+    }
 
 	public static function delete($id)
 	{

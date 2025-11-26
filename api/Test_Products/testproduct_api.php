@@ -276,179 +276,87 @@ class TestProductApi
 		// -------------------------
 		// 2) Gallery images
 		// -------------------------
-		$allImages = [];   // array of arrays: [ ['id' => ?, 'path' => '...'], ... ]
-		$mainSet = false;
+		// -------------------------
+// 2) Gallery images
+// -------------------------
+$allImages = [];
 
-		// 2a) Newly uploaded gallery files (frontend appends as "galleryFiles[]" so check that key)
-		if (!empty($file['galleryFiles']['name']) && is_array($file['galleryFiles']['name'])) {
-			foreach ($file['galleryFiles']['tmp_name'] as $index => $tmp) {
-				// Build temp file array same shape as upload() expects
-				$imgFile = [
-					'name' => $file["galleryFiles"]["name"][$index],
-					'tmp_name' => $file["galleryFiles"]["tmp_name"][$index],
-					'size' => $file["galleryFiles"]["size"][$index],
-					'error' => $file["galleryFiles"]["error"][$index],
-					'type' => $file["galleryFiles"]["type"][$index],
-				];
-				$path = upload($imgFile, "../test_assets/img/products/");
-				if ($path) {
-					$allImages[] = ['id' => null, 'path' => $path];
-				}
-			}
-		}
+// Collect uploaded files first (same as your current code)
+if (!empty($file['galleryFiles']['name']) && is_array($file['galleryFiles']['name'])) {
+    foreach ($file['galleryFiles']['tmp_name'] as $index => $tmp) {
+        $imgFile = [
+            'name' => $file["galleryFiles"]["name"][$index],
+            'tmp_name' => $file["galleryFiles"]["tmp_name"][$index],
+            'size' => $file["galleryFiles"]["size"][$index],
+            'error' => $file["galleryFiles"]["error"][$index],
+            'type' => $file["galleryFiles"]["type"][$index],
+        ];
+        $path = upload($imgFile, "../test_assets/img/products/");
+        if ($path) $allImages[] = ['id' => null, 'path' => $path];
+    }
+}
 
-		// 2b) Existing gallery items from $data (frontend sends objects {id, name} or strings)
-		foreach (decodeArray($data["gallery"] ?? []) as $g) {
-			$imgId = null;
-			$imgPath = null;
-			if (is_string($g)) {
-				$imgPath = $g;
-			} elseif (is_array($g)) {
-				// Accept both ["id"=>..., "name"=>...] or ["id"=>..., "path"=>...]
-				$imgId = isset($g['id']) ? normalizeId($g['id']) : null;
-				$imgPath = $g['name'] ?? ($g['path'] ?? null);
-				// if frontend sometimes sends only {"id":123} we still accept: try to lookup path later (optional)
-			}
-			if ($imgPath !== null) {
-				$allImages[] = ['id' => $imgId, 'path' => $imgPath];
-			}
-		}
+// Existing gallery from frontend
+foreach (decodeArray($data["gallery"] ?? []) as $g) {
+    $imgId = isset($g['id']) ? normalizeId($g['id']) : null;
+    $imgPath = is_array($g) ? ($g['name'] ?? ($g['path'] ?? null)) : $g;
+    if ($imgPath !== null) $allImages[] = ['id' => $imgId, 'path' => $imgPath];
+}
 
-		// Save images to DB (insert/update)
-		foreach ($allImages as $idx => $img) {
-			$image = new TestProductImage();
-			$image->id = $img['id'] ?? null;                  // allow update when id present
-			$image->product_id = $product_id;
-			$image->image_path = $img['path'] ?? '';
-			$image->is_main = !$mainSet ? 1 : 0;
-			$mainSet = $mainSet || ($image->is_main == 1);
-			$image->created_at = $now;
-			$image->update();
-		}
+// Sync all images in DB
+$imageModel = new TestProductImage();
+$imageModel->product_id = $product_id;
+$imageModel->update($allImages);  // now handles insert/update/delete
+
 
 		// -------------------------
 		// 3) Variants
 		// -------------------------
-		foreach (decodeArray($data["variants"]) as $v) {
-			// each $v expected like: { id: 5|null, color: "...", storage: "...", price: ... }
-			$variant = new TestProductVariant();
-			$variant->id = isset($v['id']) ? normalizeId($v['id']) : null;
-			$variant->product_id = $product_id;
-			$variant->color = $v["color"] ?? '';
-			$variant->storage = $v["storage"] ?? '';
-			$variant->price = $v["price"] ?? 0;
-			$variant->created_at = $now;
-			$variant->update();
-		}
-
+		$variantModel = new TestProductVariant();
+$variantModel->product_id = $product_id;
+$variantModel->update(decodeArray($data["variants"] ?? []));
 		// -------------------------
 		// 4) Specifications
 		// -------------------------
-		foreach (decodeArray($data["specs"]) as $spec) {
-			// each $spec expected like: { id:..., key:..., value:... }
-			$sp = new TestProductSpec();
-			$sp->id = isset($spec['id']) ? normalizeId($spec['id']) : null;
-			$sp->product_id = $product_id;
-			// prefer explicit value; fallback to key or generic text
-			$sp->spec_text = $spec["value"] ?? $spec["spec_text"] ?? $spec["key"] ?? '';
-			$sp->update();
-		}
+		$specModel = new TestProductSpec();
+$specModel->product_id = $product_id;
+$specModel->update(decodeArray($data["specs"] ?? []));
 
 		// -------------------------
 		// 5) Highlights
 		// -------------------------
-		foreach (decodeArray($data["highlights"]) as $hlItem) {
-			// frontend may send string or {id, text}
-			$hlText = '';
-			$hlId = null;
-			if (is_string($hlItem)) {
-				$hlText = $hlItem;
-			} elseif (is_array($hlItem)) {
-				$hlId = isset($hlItem['id']) ? normalizeId($hlItem['id']) : null;
-				$hlText = $hlItem['text'] ?? $hlItem['value'] ?? '';
-			}
-			$hl = new TestProductHighlight();
-			$hl->id = $hlId;
-			$hl->product_id = $product_id;
-			$hl->highlight_text = $hlText;
-			$hl->update();
-		}
+		$highlightModel = new TestProductHighlight();
+$highlightModel->product_id = $product_id;
+$highlightModel->update(decodeArray($data["highlights"] ?? []));
 
 		// -------------------------
 		// 6) Tags
 		// -------------------------
-		foreach (decodeArray($data["tags"]) as $tagItem) {
-			// frontend sends {id, tag} or comma-splitted strings were already converted to [{id,tag}]
-			$tagText = '';
-			$tagId = null;
-			if (is_string($tagItem)) {
-				$tagText = $tagItem;
-			} elseif (is_array($tagItem)) {
-				$tagId = isset($tagItem['id']) ? normalizeId($tagItem['id']) : null;
-				$tagText = $tagItem['tag'] ?? $tagItem['name'] ?? '';
-			}
-			$t = new TestProductTag();
-			$t->id = $tagId;
-			$t->product_id = $product_id;
-			$t->tag = $tagText;
-			$t->update();
-		}
+		$tagModel = new TestProductTag();
+$tagModel->product_id = $product_id;
+$tagModel->update(decodeArray($data["tags"] ?? []));
 
 		// -------------------------
 		// 7) Badges
 		// -------------------------
-		foreach (decodeArray($data["badges"]) as $badgeItem) {
-			$badgeText = '';
-			$badgeId = null;
-			if (is_string($badgeItem)) {
-				$badgeText = $badgeItem;
-			} elseif (is_array($badgeItem)) {
-				$badgeId = isset($badgeItem['id']) ? normalizeId($badgeItem['id']) : null;
-				$badgeText = $badgeItem['badge'] ?? $badgeItem['name'] ?? '';
-			}
-			$b = new TestProductBadge();
-			$b->id = $badgeId;
-			$b->product_id = $product_id;
-			$b->badge = $badgeText;
-			$b->update();
-		}
-
+		$badgeModel = new TestProductBadge();
+$badgeModel->product_id = $product_id;
+$badgeModel->update(decodeArray($data["badges"] ?? []));
 		// -------------------------
 		// 8) Related products
 		// -------------------------
-		foreach (decodeArray($data["relatedIds"]) as $rp) {
-			// frontend sends [{id: '123'}] or ['123', ...]
-			$rid = null;
-			if (is_array($rp)) {
-				$rid = isset($rp['id']) ? normalizeId($rp['id']) : null;
-			} else {
-				$rid = normalizeId($rp);
-			}
-			if ($rid === null) continue;
-			$rel = new TestProductRelation();
-			$rel->id = null;                    // relations often don't have pre-existing id, but allow if frontend sends one later
-			$rel->product_id = $product_id;
-			$rel->related_id = $rid;
-			$rel->update();
-		}
+		$relModel = new TestProductRelation();
+$relModel->product_id = $product_id;
+$relModel->update(decodeArray($data["relatedIds"] ?? []));
+
 
 		// -------------------------
 		// 9) Recommended products
 		// -------------------------
-		foreach (decodeArray($data["recommendedIds"]) as $rr) {
-			$rid = null;
-			if (is_array($rr)) {
-				$rid = isset($rr['id']) ? normalizeId($rr['id']) : null;
-			} else {
-				$rid = normalizeId($rr);
-			}
-			if ($rid === null) continue;
-			$rec = new TestProductRecommendation();
-			$rec->id = null;
-			$rec->product_id = $product_id;
-			$rec->recommended_id = $rid;
-			$rec->update();
-		}
+		$recModel = new TestProductRecommendation();
+$recModel->product_id = $product_id;
+$recModel->update(decodeArray($data["recommendedIds"] ?? []));
+
 
 		// -------------------------
 		// Return success

@@ -18,28 +18,65 @@ class TestProductRelation extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_relations(product_id,related_id)values('$this->product_id','$this->related_id')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+	public function update($incomingRelations = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// ---- UPDATE existing relation ----
-			$db->query("
-            UPDATE {$tx}test_product_relations SET
-                product_id = '$this->product_id',
-                related_id = '$this->related_id'
-            WHERE id = '$this->id'
-        ");
-		} else {
-			// ---- INSERT new relation ----
-			$db->query("
-            INSERT INTO {$tx}test_product_relations
-                (product_id, related_id)
-            VALUES
-                ('$this->product_id', '$this->related_id')
-        ");
-		}
-	}
+        if (is_array($incomingRelations)) {
+            // Normalize incoming IDs
+            $incomingIds = [];
+            foreach ($incomingRelations as $r) {
+                if (is_array($r) && isset($r['id'])) {
+                    $incomingIds[] = intval($r['id']);
+                } elseif (!is_array($r)) {
+                    $incomingIds[] = intval($r);
+                }
+            }
+            $idsToKeep = implode(',', array_filter($incomingIds));
+
+            // Delete relations not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_relations 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND related_id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert new relations
+            foreach ($incomingRelations as $r) {
+                $relatedId = is_array($r) ? intval($r['id'] ?? $r['related_id'] ?? 0) : intval($r);
+                if ($relatedId <= 0) continue;
+
+                $check = $db->query("SELECT id FROM {$tx}test_product_relations 
+                                     WHERE product_id='{$this->product_id}' AND related_id='$relatedId'");
+                if ($check->num_rows === 0) {
+                    $db->query("
+                        INSERT INTO {$tx}test_product_relations
+                            (product_id, related_id)
+                        VALUES
+                            ('{$this->product_id}', '$relatedId')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_relations SET
+                    product_id = '$this->product_id',
+                    related_id = '$this->related_id'
+                WHERE id = '$this->id'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_relations
+                    (product_id, related_id)
+                VALUES
+                    ('$this->product_id', '$this->related_id')
+            ");
+        }
+    }
 
 	public static function delete($id)
 	{

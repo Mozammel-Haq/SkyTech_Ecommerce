@@ -22,28 +22,76 @@ class TestProductImage extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_images(product_id,image_path,is_main,created_at)values('$this->product_id','$this->image_path','$this->is_main','$this->created_at')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+	public function update($incomingImages = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id)) {
-			// UPDATE single row
-			$stmt = "UPDATE {$tx}test_product_images SET
-                    product_id      = '$this->product_id',
-                    image_path      = '$this->image_path',
-                    is_main         = '$this->is_main',
-                    created_at      = '$this->created_at'
-                 WHERE id = '$this->id'";   // <------ Correct
-		} else {
-			// INSERT new row
-			$stmt = "INSERT INTO {$tx}test_product_images 
-                    (product_id, image_path, is_main, created_at)
-                 VALUES
-                    ('$this->product_id', '$this->image_path', '$this->is_main', '$this->created_at')";
-		}
+        if (is_array($incomingImages)) {
+            // Extract IDs that exist in frontend data
+            $incomingIds = array_filter(array_map(function($img) {
+                return isset($img['id']) ? intval($img['id']) : null;
+            }, $incomingImages));
 
-		return $db->query($stmt);
-	}
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete images that are not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_images 
+                            WHERE product_id = '$this->product_id'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming images
+            $mainSet = false;
+            foreach ($incomingImages as $img) {
+                $image = new TestProductImage();
+                $image->id = isset($img['id']) ? intval($img['id']) : null;
+                $image->product_id = $this->product_id;
+                $image->image_path = $db->real_escape_string($img['path'] ?? '');
+                $image->is_main = !$mainSet ? 1 : 0;  // first image is main
+                $mainSet = $mainSet || ($image->is_main == 1);
+                $image->created_at = date('Y-m-d H:i:s');
+
+                if ($image->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_images SET
+                            product_id = '$image->product_id',
+                            image_path = '$image->image_path',
+                            is_main = '$image->is_main',
+                            created_at = '$image->created_at'
+                        WHERE id = '$image->id'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_images
+                            (product_id, image_path, is_main, created_at)
+                        VALUES
+                            ('$image->product_id', '$image->image_path', '$image->is_main', '$image->created_at')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id)) {
+            $stmt = "UPDATE {$tx}test_product_images SET
+                        product_id = '$this->product_id',
+                        image_path = '$this->image_path',
+                        is_main = '$this->is_main',
+                        created_at = '$this->created_at'
+                     WHERE id = '$this->id'";
+        } else {
+            $stmt = "INSERT INTO {$tx}test_product_images
+                        (product_id, image_path, is_main, created_at)
+                     VALUES
+                        ('$this->product_id', '$this->image_path', '$this->is_main', '$this->created_at')";
+        }
+
+        return $db->query($stmt);
+    }
 
 	public static function delete($id)
 	{

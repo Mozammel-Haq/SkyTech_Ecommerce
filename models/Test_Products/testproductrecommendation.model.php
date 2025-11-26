@@ -18,28 +18,65 @@ class TestProductRecommendation extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_recommendations(product_id,recommended_id)values('$this->product_id','$this->recommended_id')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+	public function update($incomingRecommendations = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// ---- UPDATE existing recommendation ----
-			$db->query("
-            UPDATE {$tx}test_product_recommendations SET
-                product_id     = '$this->product_id',
-                recommended_id = '$this->recommended_id'
-            WHERE id = '$this->id'
-        ");
-		} else {
-			// ---- INSERT new recommendation ----
-			$db->query("
-            INSERT INTO {$tx}test_product_recommendations
-                (product_id, recommended_id)
-            VALUES
-                ('$this->product_id', '$this->recommended_id')
-        ");
-		}
-	}
+        if (is_array($incomingRecommendations)) {
+            // Normalize incoming IDs
+            $incomingIds = [];
+            foreach ($incomingRecommendations as $r) {
+                if (is_array($r) && isset($r['id'])) {
+                    $incomingIds[] = intval($r['id']);
+                } elseif (!is_array($r)) {
+                    $incomingIds[] = intval($r);
+                }
+            }
+            $idsToKeep = implode(',', array_filter($incomingIds));
+
+            // Delete recommendations not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_recommendations 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND recommended_id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert new recommendations
+            foreach ($incomingRecommendations as $r) {
+                $recommendedId = is_array($r) ? intval($r['id'] ?? $r['recommended_id'] ?? 0) : intval($r);
+                if ($recommendedId <= 0) continue;
+
+                $check = $db->query("SELECT id FROM {$tx}test_product_recommendations 
+                                     WHERE product_id='{$this->product_id}' AND recommended_id='$recommendedId'");
+                if ($check->num_rows === 0) {
+                    $db->query("
+                        INSERT INTO {$tx}test_product_recommendations
+                            (product_id, recommended_id)
+                        VALUES
+                            ('{$this->product_id}', '$recommendedId')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_recommendations SET
+                    product_id     = '$this->product_id',
+                    recommended_id = '$this->recommended_id'
+                WHERE id = '$this->id'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_recommendations
+                    (product_id, recommended_id)
+                VALUES
+                    ('$this->product_id', '$this->recommended_id')
+            ");
+        }
+    }
 
 	public static function delete($id)
 	{

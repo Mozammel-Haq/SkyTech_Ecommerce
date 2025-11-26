@@ -18,11 +18,69 @@ class TestProductHighlight extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_highlights(product_id,highlight_text)values('$this->product_id','$this->highlight_text')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
-		$db->query("update {$tx}test_product_highlights set product_id='$this->product_id',highlight_text='$this->highlight_text' where product_id='$this->id'");
-	}
+	 public function update($incomingHighlights = null)
+    {
+        global $db, $tx;
+
+        if (is_array($incomingHighlights)) {
+            // Extract IDs present in incoming data
+            $incomingIds = array_filter(array_map(function($h) {
+                return isset($h['id']) ? intval($h['id']) : null;
+            }, $incomingHighlights));
+
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete highlights not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_highlights 
+                            WHERE product_id = '{$this->product_id}'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming highlights
+            foreach ($incomingHighlights as $h) {
+                $highlight = new TestProductHighlight();
+                $highlight->id = isset($h['id']) ? intval($h['id']) : null;
+                $highlight->product_id = $this->product_id;
+                $highlight->highlight_text = $db->real_escape_string($h['text'] ?? $h['value'] ?? '');
+
+                if ($highlight->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_highlights SET
+                            highlight_text = '{$highlight->highlight_text}'
+                        WHERE id = '{$highlight->id}'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_highlights
+                            (product_id, highlight_text)
+                        VALUES
+                            ('{$highlight->product_id}', '{$highlight->highlight_text}')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_highlights SET
+                    product_id = '{$this->product_id}',
+                    highlight_text = '{$this->highlight_text}'
+                WHERE id = '{$this->id}'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_highlights
+                    (product_id, highlight_text)
+                VALUES
+                    ('{$this->product_id}', '{$this->highlight_text}')
+            ");
+        }
+    }
 	public static function delete($id)
 	{
 		global $db, $tx;

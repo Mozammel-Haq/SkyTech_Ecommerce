@@ -24,29 +24,76 @@ class TestProductVariant extends Model implements JsonSerializable
 		$db->query("insert into {$tx}test_product_variants(product_id,color,storage,price,created_at)values('$this->product_id','$this->color','$this->storage','$this->price','$this->created_at')");
 		return $db->insert_id;
 	}
-	public function update()
-	{
-		global $db, $tx;
+public function update($incomingVariants = null)
+    {
+        global $db, $tx;
 
-		if (!empty($this->id) && is_numeric($this->id)) {
-			// ---- UPDATE existing variant ----
-			$db->query("
-            UPDATE {$tx}test_product_variants SET
-                color      = '$this->color',
-                storage    = '$this->storage',
-                price      = '$this->price'
-            WHERE id = '$this->id'
-        ");
-		} else {
-			// ---- INSERT new variant ----
-			$db->query("
-            INSERT INTO {$tx}test_product_variants
-                (product_id, color, storage, price, created_at)
-            VALUES
-                ('$this->product_id', '$this->color', '$this->storage', '$this->price', '$this->created_at')
-        ");
-		}
-	}
+        if (is_array($incomingVariants)) {
+            // Extract IDs that exist in frontend data
+            $incomingIds = array_filter(array_map(function($v) {
+                return isset($v['id']) ? intval($v['id']) : null;
+            }, $incomingVariants));
+
+            $idsToKeep = implode(',', $incomingIds);
+
+            // Delete variants that are not in incoming data
+            $deleteQuery = "DELETE FROM {$tx}test_product_variants 
+                            WHERE product_id = '$this->product_id'" .
+                            (!empty($idsToKeep) ? " AND id NOT IN ($idsToKeep)" : "");
+            $db->query($deleteQuery);
+
+            // Insert/update incoming variants
+            foreach ($incomingVariants as $v) {
+                $variant = new TestProductVariant();
+                $variant->id = isset($v['id']) ? intval($v['id']) : null;
+                $variant->product_id = $this->product_id;
+                $variant->color = $db->real_escape_string($v['color'] ?? '');
+                $variant->storage = $db->real_escape_string($v['storage'] ?? '');
+                $variant->price = floatval($v['price'] ?? 0);
+                $variant->created_at = date('Y-m-d H:i:s');
+
+                if ($variant->id) {
+                    // Update existing
+                    $db->query("
+                        UPDATE {$tx}test_product_variants SET
+                            color = '$variant->color',
+                            storage = '$variant->storage',
+                            price = '$variant->price'
+                        WHERE id = '$variant->id'
+                    ");
+                } else {
+                    // Insert new
+                    $db->query("
+                        INSERT INTO {$tx}test_product_variants
+                            (product_id, color, storage, price, created_at)
+                        VALUES
+                            ('$variant->product_id', '$variant->color', '$variant->storage', '$variant->price', '$variant->created_at')
+                    ");
+                }
+            }
+
+            return true;
+        }
+
+        // Fallback: single insert/update (legacy behavior)
+        if (!empty($this->id) && is_numeric($this->id)) {
+            $db->query("
+                UPDATE {$tx}test_product_variants SET
+                    color = '$this->color',
+                    storage = '$this->storage',
+                    price = '$this->price'
+                WHERE id = '$this->id'
+            ");
+        } else {
+            $db->query("
+                INSERT INTO {$tx}test_product_variants
+                    (product_id, color, storage, price, created_at)
+                VALUES
+                    ('$this->product_id', '$this->color', '$this->storage', '$this->price', '$this->created_at')
+            ");
+        }
+    }
+
 	public static function delete($id)
 	{
 		global $db, $tx;
